@@ -170,10 +170,7 @@ public class IntlinParserTest {
             instance.doParsing(files, con);
             expected = expected && verifyTotal(expectedTotal);
             expected = expected && verifyValues();
-            ArrayList<String> expectedAlts = new ArrayList<>();
-            expectedAlts.add("ahueonao, aweonado, aweonao (eye dialect)");
-            expectedAlts.add("ahueonado (eye dialect, rare)");
-            expected = expected && verifyAlternatives(expectedAlts, 40);
+            expected = expected && verifyAlternatives();
         } catch (SQLException | UnsupportedOperationException | IOException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
@@ -188,7 +185,19 @@ public class IntlinParserTest {
         return total == expectedTotal;
     }
 
-    private static boolean verifyAlternatives(ArrayList<String> expected, int word_id) throws SQLException {
+    private static boolean verifyAlternatives() throws SQLException {
+        boolean result = true;
+        ArrayList<String> expectedAlts = new ArrayList<>();
+        expectedAlts.add("ahueonao, aweonado, aweonao (eye dialect)");
+        expectedAlts.add("ahueonado (eye dialect, rare)");
+        result = result && alternativeCheck(expectedAlts, 40);
+        ArrayList<String> expectedAlts2 = new ArrayList<>();
+        result = result && alternativeCheck(expectedAlts2, 1);
+
+        return result;
+    }
+
+    private static boolean alternativeCheck(ArrayList<String> expected, int word_id) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT alt.extension AS alternative, "
                         + "COUNT(alt.extension) AS size FROM Word w INNER JOIN "
@@ -197,7 +206,9 @@ public class IntlinParserTest {
         stm.setInt(1, word_id);
         ResultSet resSet = stm.executeQuery();
         boolean result = true;
-        if (resSet.getInt("size") == 0) {
+        if (resSet.getInt("size") == 0 && expected.isEmpty()) {
+            result = true;
+        } else if (resSet.getInt("size") == 0 && !expected.isEmpty()) {
             result = false;
         } else {
             while (resSet.next()) {
