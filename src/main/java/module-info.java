@@ -1,5 +1,6 @@
 module ine.ufsc.intlin {
     requires java.sql;
+    requires org.json;
     requires javafx.controls;
     requires javafx.fxml;
 

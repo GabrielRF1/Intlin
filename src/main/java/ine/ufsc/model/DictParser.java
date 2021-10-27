@@ -6,7 +6,9 @@
 package ine.ufsc.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -14,5 +16,6 @@ import java.util.ArrayList;
  * @author Gabriel
  */
 public interface DictParser {
-    public void doParsing(ArrayList<File> files, Connection con);
+
+    public void doParsing(ArrayList<File> files, Connection con) throws IOException, SQLException;
 }
