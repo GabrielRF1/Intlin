@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -155,11 +156,21 @@ public class IntlinParserTest {
         }
     }
 
-    public static boolean verifyTotal(int expectedTotal) throws SQLException {
+    private static boolean verifyTotal(int expectedTotal) throws SQLException {
         Statement stmt = con.createStatement();
         ResultSet resSet = stmt.executeQuery("select count(*) as total from Word");
         int total = resSet.getInt("total");
         return total == expectedTotal;
+    }
+
+    private static boolean verifyCorrectValue(int word_id, String column,
+            String expected) throws SQLException {
+        PreparedStatement stm = con.prepareStatement(String
+                .format("select %s from Word w where w.word_id = ?", column));
+        stm.setInt(1, word_id);
+        ResultSet resSet = stm.executeQuery();
+        String colVal = resSet.getString(column);
+        return (colVal == null ? expected == null : colVal.equals(expected));
     }
 
     /**
@@ -174,6 +185,14 @@ public class IntlinParserTest {
         try {
             instance.doParsing(files, con);
             expected = expected && verifyTotal(expectedTotal);
+            expected = expected && verifyCorrectValue(37, "gender", "m");
+            expected = expected && verifyCorrectValue(3, "gender", "f");
+            expected = expected && verifyCorrectValue(19, "gender", "f pl");
+            expected = expected && verifyCorrectValue(35, "gender", null);
+            expected = expected && verifyCorrectValue(11, "word", "abono");
+            expected = expected && verifyCorrectValue(12, "word", "abono");
+            expected = expected && verifyCorrectValue(11, "word_class", "Noun");
+            expected = expected && verifyCorrectValue(12, "word_class", "Verb");
         } catch (SQLException | UnsupportedOperationException | IOException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
