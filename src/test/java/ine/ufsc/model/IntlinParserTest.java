@@ -67,7 +67,8 @@ public class IntlinParserTest {
             + "{\"word\": \"equis\", \"gender\": \"f\", \"defs\": [{\"_def\": \"The name of the Latin-script letter X.\"}], \"word_class\": \"Noun\"},\n"
             + "{\"word\": \"elfo\", \"gender\": \"m\", \"defs\": [{\"_def\": \"elf\"}], \"word_class\": \"Noun\"},\n"
             + "{\"word\": \"enormemente\", \"defs\": [{\"_def\": \"enormously\"}], \"word_class\": \"Adverb\"},\n"
-            + "{\"word\": \"Adviento\", \"gender\": \"m\", \"alt\": [\"adviento\"], \"defs\": [{\"_def\": \"(Christianity) Advent\"}], \"word_class\": \"Proper noun\"}"
+            + "{\"word\": \"Adviento\", \"gender\": \"m\", \"alt\": [\"adviento\"], \"defs\": [{\"_def\": \"(Christianity) Advent\"}], \"word_class\": \"Proper noun\"},\n"
+            + "{\"word\": \"ahuevonado\", \"alt\": [\"ahueonao, aweonado, aweonao (eye dialect)\", \"ahueonado (eye dialect, rare)\"], \"defs\": [{\"_def\": \"(Chile) dazed\"}, {\"_def\": \"(Chile, vulgar) stupid\"}], \"word_class\": \"Adjective\"}"
             + "]";
 
     public IntlinParserTest() {
@@ -156,43 +157,23 @@ public class IntlinParserTest {
         }
     }
 
-    private static boolean verifyTotal(int expectedTotal) throws SQLException {
-        Statement stmt = con.createStatement();
-        ResultSet resSet = stmt.executeQuery("select count(*) as total from Word");
-        int total = resSet.getInt("total");
-        return total == expectedTotal;
-    }
-
-    private static boolean verifyCorrectValue(int word_id, String column,
-            String expected) throws SQLException {
-        PreparedStatement stm = con.prepareStatement(String
-                .format("select %s from Word w where w.word_id = ?", column));
-        stm.setInt(1, word_id);
-        ResultSet resSet = stm.executeQuery();
-        String colVal = resSet.getString(column);
-        return (colVal == null ? expected == null : colVal.equals(expected));
-    }
-
     /**
      * Test of doParsing method, of class IntlinParser.
      */
     @org.junit.jupiter.api.Test
     public void testDoParsing() {
         System.out.println("doParsing");
-        int expectedTotal = 39;
+        int expectedTotal = 40;
         boolean expected = true;
         IntlinParser instance = new IntlinParser();
         try {
             instance.doParsing(files, con);
             expected = expected && verifyTotal(expectedTotal);
-            expected = expected && verifyCorrectValue(37, "gender", "m");
-            expected = expected && verifyCorrectValue(3, "gender", "f");
-            expected = expected && verifyCorrectValue(19, "gender", "f pl");
-            expected = expected && verifyCorrectValue(35, "gender", null);
-            expected = expected && verifyCorrectValue(11, "word", "abono");
-            expected = expected && verifyCorrectValue(12, "word", "abono");
-            expected = expected && verifyCorrectValue(11, "word_class", "Noun");
-            expected = expected && verifyCorrectValue(12, "word_class", "Verb");
+            expected = expected && verifyValues();
+            ArrayList<String> expectedAlts = new ArrayList<>();
+            expectedAlts.add("ahueonao, aweonado, aweonao (eye dialect)");
+            expectedAlts.add("ahueonado (eye dialect, rare)");
+            expected = expected && verifyAlternatives(expectedAlts, 40);
         } catch (SQLException | UnsupportedOperationException | IOException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
@@ -200,4 +181,53 @@ public class IntlinParserTest {
         assertTrue(expected);
     }
 
+    private static boolean verifyTotal(int expectedTotal) throws SQLException {
+        Statement stmt = con.createStatement();
+        ResultSet resSet = stmt.executeQuery("SELECT COUNT(*) AS total FROM Word");
+        int total = resSet.getInt("total");
+        return total == expectedTotal;
+    }
+
+    private static boolean verifyAlternatives(ArrayList<String> expected, int word_id) throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT alt.extension AS alternative, "
+                        + "COUNT(alt.extension) AS size FROM Word w INNER JOIN "
+                        + "Alternative alt on alt.word_id = w.word_id "
+                        + "where w.word_id = ?");
+        stm.setInt(1, word_id);
+        ResultSet resSet = stm.executeQuery();
+        boolean result = true;
+        if (resSet.getInt("size") == 0) {
+            result = false;
+        } else {
+            while (resSet.next()) {
+                result = result && expected.contains(resSet.getString("alternative"));
+            }
+        }
+
+        return result;
+    }
+
+    private static boolean verifyValues() throws SQLException {
+        boolean result = true;
+        result = result && verifyCorrectValue(37, "gender", "m");
+        result = result && verifyCorrectValue(3, "gender", "f");
+        result = result && verifyCorrectValue(19, "gender", "f pl");
+        result = result && verifyCorrectValue(35, "gender", null);
+        result = result && verifyCorrectValue(11, "word", "abono");
+        result = result && verifyCorrectValue(12, "word", "abono");
+        result = result && verifyCorrectValue(11, "word_class", "Noun");
+        result = result && verifyCorrectValue(12, "word_class", "Verb");
+        return result;
+    }
+
+    private static boolean verifyCorrectValue(int word_id, String column,
+            String expected) throws SQLException {
+        PreparedStatement stm = con.prepareStatement(String
+                .format("SELECT %s FROM Word w WHERE w.word_id = ?", column));
+        stm.setInt(1, word_id);
+        ResultSet resSet = stm.executeQuery();
+        String colVal = resSet.getString(column);
+        return (colVal == null ? expected == null : colVal.equals(expected));
+    }
 }
