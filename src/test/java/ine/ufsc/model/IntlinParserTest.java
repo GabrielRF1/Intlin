@@ -202,6 +202,26 @@ public class IntlinParserTest {
         assertTrue(expected);
     }
 
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectSynonyms() {
+        boolean expected = true;
+        ArrayList<String> expectedSyns = new ArrayList<>();
+        expectedSyns.add("ahí");
+        expectedSyns.add("allá");
+        ArrayList<String> expectedSyns2 = new ArrayList<>();
+        expectedSyns2.add("ogro");
+        try {
+            expected = expected && verifyCorrectSyns(expectedSyns, "there (away from the speaker and the listener)");
+            // verifyCorrectSyns(expectedSyns2, "") should return false, due to
+            // not having synonyms
+            expected = expected && !verifyCorrectSyns(expectedSyns2, "elf");
+        } catch (SQLException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+        assertTrue(expected);
+    }
+
     private static int verifyTotal() throws SQLException {
         Statement stmt = con.createStatement();
         ResultSet resSet = stmt.executeQuery("SELECT COUNT(*) AS total FROM Word");
@@ -257,6 +277,29 @@ public class IntlinParserTest {
         } else {
             while (resSet.next()) {
                 result = result && expected.contains(resSet.getString("definition"));
+            }
+        }
+
+        return result;
+    }
+
+    private boolean verifyCorrectSyns(ArrayList<String> expected, String def_text)
+            throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT s.extension AS synonym, "
+                        + "COUNT(s.syn) AS size FROM Definition d INNER JOIN "
+                        + "Synonym s on d.def_id = s.def_id "
+                        + "where d.def = ?");
+        stm.setString(1, def_text);
+        ResultSet resSet = stm.executeQuery();
+        boolean result = true;
+        if (resSet.getInt("size") == 0 && expected.isEmpty()) {
+            result = true;
+        } else if (expected.size() != resSet.getInt("size")) {
+            result = false;
+        } else {
+            while (resSet.next()) {
+                result = result && expected.contains(resSet.getString("synonym"));
             }
         }
 
