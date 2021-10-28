@@ -217,8 +217,13 @@ public class IntlinParserTest {
         ArrayList<String> expectedDefs = new ArrayList<>();
         expectedDefs.add("directly, firsthand");
         expectedDefs.add("outright");
+        ArrayList<String> expectedDefs2 = new ArrayList<>();
+        expectedDefs2.add("compost, fertilizer, manure");
         try {
             expected = expected && verifyCorrectDefs(expectedDefs, 2);
+            // verifyCorrectDefs(expectedDefs2, 11) should return false, due to
+            // missing definitions in expectedDefs2
+            expected = expected && !verifyCorrectDefs(expectedDefs2, 11);
         } catch (SQLException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
