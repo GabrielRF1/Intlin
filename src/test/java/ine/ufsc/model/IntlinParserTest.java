@@ -230,16 +230,23 @@ public class IntlinParserTest {
 
     private static boolean verifyAlternatives(ArrayList<String> expected, int wordId) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT alt.extension AS alternative, "
-                        + "COUNT(alt.extension) AS size FROM Word w INNER JOIN "
+                .prepareStatement("SELECT alt.extension AS alternative "
+                        + "FROM Word w INNER JOIN "
                         + "Alternative alt on alt.word_id = w.word_id "
                         + "where w.word_id = ?");
         stm.setInt(1, wordId);
+        PreparedStatement stmSize = con
+                .prepareStatement("SELECT COUNT(alt.extension) AS size "
+                        + "FROM Word w INNER JOIN "
+                        + "Alternative alt on alt.word_id = w.word_id "
+                        + "where w.word_id = ?");
+        stmSize.setInt(1, wordId);
         ResultSet resSet = stm.executeQuery();
+        ResultSet resSetsize = stmSize.executeQuery();
         boolean result = true;
-        if (resSet.getInt("size") == 0 && expected.isEmpty()) {
+        if (resSetsize.getInt("size") == 0 && expected.isEmpty()) {
             result = true;
-        } else if (expected.size() != resSet.getInt("size")) {
+        } else if (expected.size() != resSetsize.getInt("size")) {
             result = false;
         } else {
             while (resSet.next()) {
@@ -262,16 +269,23 @@ public class IntlinParserTest {
 
     private static boolean verifyCorrectDefs(ArrayList<String> expected, int wordId) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT d.def AS definition, "
-                        + "COUNT(d.def) AS size FROM Word w INNER JOIN "
+                .prepareStatement("SELECT d.def AS definition "
+                        + "FROM Word w INNER JOIN "
                         + "Definition d on d.word_id = w.word_id "
                         + "where w.word_id = ?");
         stm.setInt(1, wordId);
+        PreparedStatement stmSize = con
+                .prepareStatement("SELECT COUNT(d.def) AS size "
+                        + "FROM Word w INNER JOIN "
+                        + "Definition d on d.word_id = w.word_id "
+                        + "where w.word_id = ?");
+        stmSize.setInt(1, wordId);
         ResultSet resSet = stm.executeQuery();
+        ResultSet resSetsize = stmSize.executeQuery();
         boolean result = true;
-        if (resSet.getInt("size") == 0 && expected.isEmpty()) {
+        if (resSetsize.getInt("size") == 0 && expected.isEmpty()) {
             result = true;
-        } else if (expected.size() != resSet.getInt("size")) {
+        } else if (expected.size() != resSetsize.getInt("size")) {
             result = false;
         } else {
             while (resSet.next()) {
