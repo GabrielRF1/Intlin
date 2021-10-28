@@ -31,43 +31,14 @@ public class IntlinParserTest {
             + "{\"word\": \"estampido\", \"gender\": \"m\", \"defs\": [{\"_def\": \"crack, bang (noise)\"}], \"word_class\": \"Noun\"},\n"
             + "{\"word\": \"directamente\", \"defs\": [{\"_def\": \"directly, firsthand\"}, {\"_def\": \"outright\"}], \"word_class\": \"Adverb\"},\n"
             + "{\"word\": \"crisálida\", \"gender\": \"f\", \"defs\": [{\"_def\": \"chrysalis\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"barrio bajo\", \"gender\": \"m\", \"defs\": [{\"_def\": \"slum (dilapidated neighborhood)\", \"_synonyms\": [\"pocilga\"]}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"amanerado\", \"defs\": [{\"_def\": \"mannered\"}, {\"_def\": \"effeminate, camp\", \"_synonyms\": [\"amujerado\", \"afeminado\"]}], \"word_class\": \"Adjective\"},\n"
-            + "{\"word\": \"adorador\", \"gender\": \"m\", \"defs\": [{\"_def\": \"admirer, adorer, worshiper\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"altruista\", \"defs\": [{\"_def\": \"altruistic\"}], \"word_class\": \"Adjective\"},\n"
-            + "{\"word\": \"altruista\", \"gender\": \"m or f\", \"defs\": [{\"_def\": \"altruist\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"apasionadamente\", \"defs\": [{\"_def\": \"passionately\"}], \"word_class\": \"Adverb\"},\n"
-            + "{\"word\": \"altitud\", \"gender\": \"f\", \"defs\": [{\"_def\": \"height\", \"_synonyms\": [\"altura\"]}, {\"_def\": \"altitude\"}], \"word_class\": \"Noun\"},\n"
             + "{\"word\": \"abono\", \"gender\": \"m\", \"defs\": [{\"_def\": \"compost, fertilizer, manure\", \"_synonyms\": [\"fertilizante\"], \"extras\": [\"2002, Clara Inés Ríos Katto, Guía para el cultivo y aprovechamiento del botón de oro: Tithoni diversifolia (Hemsl.) Gray, Concenio Andrés Bello, page 22.\", \"En menor medida se utiliza abono de vaca, vermicompost, mantillo, abono de caballo[,] restos de cultivos, restos de cocina.To a lesser extent, cow manure, vermicompost, humus, horse manure, crop residues, and kitchen scraps are used.\", \"En campos de cultivos de arroz por inundación, los agricultores cosechan el botón de oro[. L]o incorporan al suelo como abono verde y mejorador de suelos.In rice paddies watered by flooding, farmers harvest buttercups. They incorporate it into the soil as a green fertilizer and soil improver.\", \"2009, Alfredo Tolón Becerra &amp; Xavier B. Lastra Bravo (eds.), Actas del III Seminario Internacional de Cooperación y Desarrollo en Espacios Rurales Iberoamericanos, Editorial Universidad de  Almería, page 205.\"]}, {\"_def\": \"subscription; season ticket\", \"extras\": [\"2006 December 6,  “La emisora británica TV Channel 4 permitirá descargar sus programas a través de Internet”, in  La Vanguardia:BT Vision, como se llama el nuevo servicio, ofrece también cuarenta canales de TV gratuitos sin que el cliente tenga que pagar abono mensual alguno.BT Vision, as the new service is called, also offers forty free TV channels without the customer having to pay any monthly subscription.\"]}, {\"_def\": \"payment, installment\", \"_synonyms\": [\"pago\"], \"extras\": [\"1982, Brígida von Mentz, Los Pioneros del imperialismo alemán en México, CIESAS, page 490\", \"Uhink cumple con sus obligaciones, cancelándose finalmente la escritura por entero en 1875, catorce años más tarde de la última fecha estipulada originalmente para el último abono.Uhink fulfills his obligations, finally paying himself off completely in writing in 1875, fourteen years after the originally stipulated final date for the last installment.\"]}, {\"_def\": \"guarantee, security\"}], \"word_class\": \"Noun\"},\n"
             + "{\"word\": \"abono\", \"defs\": [{\"_def\": \"First-person singular   (yo)  present indicative  form of abonar.\"}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"ángel\", \"gender\": \"m\", \"alt\": [\"ángelo (obsolete)\"], \"defs\": [{\"_def\": \"angel (an incorporeal and sometimes divine messenger from a deity)\"}, {\"_def\": \"angel (one of the lowest order of such beings, below virtues)\"}, {\"_def\": \"angel (a person having the qualities attributed to angels, such as purity or selflessness)\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"araquidonato\", \"gender\": \"m\", \"defs\": [{\"_def\": \"(organic chemistry) arachidonate\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"al pie de la letra\", \"defs\": [{\"_def\": \"(idiomatic) to the letter\", \"_synonyms\": [\"a la letra\"]}], \"word_class\": \"Adverb\"},\n"
-            + "{\"word\": \"a lo largo\", \"defs\": [{\"_def\": \"lengthwise (in the long direction)\"}, {\"_def\": \"along (in a line with, moving forward)\", \"extras\": [\"Andamos a lo largo de la calle.Let's walk along the street.\"]}, {\"_def\": \"in the distance, far away\", \"_synonyms\": [\"a lo lejos\"]}], \"word_class\": \"Adverb\"},\n"
-            + "{\"word\": \"apretujar\", \"defs\": [{\"_def\": \"to squash\"}, {\"_def\": \"to scrunch, scrunch up\"}, {\"_def\": \"to squeeze\"}], \"word_class\": \"Verb\"},\n"
             + "{\"word\": \"allí\", \"defs\": [{\"_def\": \"there (away from the speaker and the listener)\", \"_synonyms\": [\"ahí\", \"allá\"], \"antonyms\": [\"aquí\", \"acá\"]}], \"word_class\": \"Adverb\"},\n"
-            + "{\"word\": \"albóndigas\", \"gender\": \"f pl\", \"defs\": [{\"_def\": \"plural of albóndiga\"}, {\"_def\": \"A soup made with albóndigas (meatballs)\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"alinear\", \"defs\": [{\"_def\": \"(transitive) to line up, to align\"}], \"word_class\": \"Verb\"}]";
+            + "]";
     static String json2 = "["
-            + "{\"word\": \"eugenol\", \"gender\": \"m\", \"defs\": [{\"_def\": \"(organic chemistry) eugenol\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"embobar\", \"defs\": [{\"_def\": \"to fascinate\", \"_synonyms\": [\"fascinar\"]}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"etnología\", \"gender\": \"f\", \"defs\": [{\"_def\": \"ethnology\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"error\", \"gender\": \"m\", \"defs\": [{\"_def\": \"error\", \"_synonyms\": [\"equivocación\", \"yerro\"]}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"empalar\", \"defs\": [{\"_def\": \"to impale\"}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"ego\", \"gender\": \"m\", \"defs\": [{\"_def\": \"ego\", \"_synonyms\": [\"yo\"]}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"equipo\", \"gender\": \"m\", \"defs\": [{\"_def\": \"team\", \"extras\": [\"equipo editorial ― editorial team\"]}, {\"_def\": \"equipment, kit, hardware\", \"extras\": [\"equipo de audio/sonido ― audio/sound equipment\"]}, {\"_def\": \"device\"}, {\"_def\": \"computer\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"equipo\", \"defs\": [{\"_def\": \"First-person singular   (yo)  present indicative  form of equipar.\"}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"escarpado\", \"defs\": [{\"_def\": \"steep\"}, {\"_def\": \"craggy\"}], \"word_class\": \"Adjective\"},\n"
-            + "{\"word\": \"esprintar\", \"defs\": [{\"_def\": \"(intransitive) to sprint\"}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"exclamación\", \"gender\": \"f\", \"defs\": [{\"_def\": \"exclamation\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"entrevista\", \"gender\": \"f\", \"defs\": [{\"_def\": \"interview\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"entrevista\", \"defs\": [{\"_def\": \"Informal second-person singular (tú) affirmative imperative form of entrevistar.\"}, {\"_def\": \"Formal  second-person singular   (usted)  present indicative  form of entrevistar.\"}, {\"_def\": \"Third-person singular   (él, ella, also used with usted?)  present indicative  form of entrevistar.\"}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"entrevista\", \"gender\": \"f sg\", \"defs\": [{\"_def\": \"Feminine singular past participle of entrever.\"}], \"word_class\": \"Verb\"},\n"
+            + "{\"word\": \"albóndigas\", \"gender\": \"f pl\", \"defs\": [{\"_def\": \"plural of albóndiga\"}, {\"_def\": \"A soup made with albóndigas (meatballs)\"}], \"word_class\": \"Noun\"},\n"
             + "{\"word\": \"enfilar\", \"defs\": [{\"_def\": \"(transitive) to line up\"}, {\"_def\": \"(transitive) to thread (a needle)\"}, {\"_def\": \"(transitive) to string (pearls, beads, etc.)\", \"_synonyms\": [\"ensartar\"]}, {\"_def\": \"(intransitive) to go straight down (a path)\"}, {\"_def\": \"(intransitive) to head for\", \"_synonyms\": [\"dirigirse a\"]}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"equis\", \"gender\": \"f\", \"defs\": [{\"_def\": \"The name of the Latin-script letter X.\"}], \"word_class\": \"Noun\"},\n"
             + "{\"word\": \"elfo\", \"gender\": \"m\", \"defs\": [{\"_def\": \"elf\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"enormemente\", \"defs\": [{\"_def\": \"enormously\"}], \"word_class\": \"Adverb\"},\n"
-            + "{\"word\": \"Adviento\", \"gender\": \"m\", \"alt\": [\"adviento\"], \"defs\": [{\"_def\": \"(Christianity) Advent\"}], \"word_class\": \"Proper noun\"},\n"
             + "{\"word\": \"ahuevonado\", \"alt\": [\"ahueonao, aweonado, aweonao (eye dialect)\", \"ahueonado (eye dialect, rare)\"], \"defs\": [{\"_def\": \"(Chile) dazed\"}, {\"_def\": \"(Chile, vulgar) stupid\"}], \"word_class\": \"Adjective\"}"
             + "]";
 
@@ -164,7 +135,7 @@ public class IntlinParserTest {
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAmount() {
         System.out.println("doParsing");
-        int expectedTotal = 40;
+        int expectedTotal = 10;
         int total = 0;
         try {
             total = verifyTotal();
@@ -183,7 +154,7 @@ public class IntlinParserTest {
         expectedAlts.add("ahueonado (eye dialect, rare)");
         ArrayList<String> expectedAlts2 = new ArrayList<>();
         try {
-            expected = expected && verifyAlternatives(expectedAlts, 40);
+            expected = expected && verifyAlternatives(expectedAlts, 10);
             expected = expected && verifyAlternatives(expectedAlts2, 1);
         } catch (SQLException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -196,14 +167,14 @@ public class IntlinParserTest {
     public void testDoParsingYieldsCorrectWordValues() {
         boolean expected = true;
         try {
-            expected = expected && verifyCorrectValue(37, "gender", "m");
+            expected = expected && verifyCorrectValue(9, "gender", "m");
             expected = expected && verifyCorrectValue(3, "gender", "f");
-            expected = expected && verifyCorrectValue(19, "gender", "f pl");
-            expected = expected && verifyCorrectValue(35, "gender", null);
-            expected = expected && verifyCorrectValue(11, "word", "abono");
-            expected = expected && verifyCorrectValue(12, "word", "abono");
-            expected = expected && verifyCorrectValue(11, "word_class", "Noun");
-            expected = expected && verifyCorrectValue(12, "word_class", "Verb");
+            expected = expected && verifyCorrectValue(7, "gender", "f pl");
+            expected = expected && verifyCorrectValue(8, "gender", null);
+            expected = expected && verifyCorrectValue(4, "word", "abono");
+            expected = expected && verifyCorrectValue(5, "word", "abono");
+            expected = expected && verifyCorrectValue(4, "word_class", "Noun");
+            expected = expected && verifyCorrectValue(5, "word_class", "Verb");
         } catch (SQLException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
@@ -221,9 +192,9 @@ public class IntlinParserTest {
         expectedDefs2.add("compost, fertilizer, manure");
         try {
             expected = expected && verifyCorrectDefs(expectedDefs, 2);
-            // verifyCorrectDefs(expectedDefs2, 11) should return false, due to
+            // verifyCorrectDefs(expectedDefs2, 4) should return false, due to
             // missing definitions in expectedDefs2
-            expected = expected && !verifyCorrectDefs(expectedDefs2, 11);
+            expected = expected && !verifyCorrectDefs(expectedDefs2, 4);
         } catch (SQLException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
