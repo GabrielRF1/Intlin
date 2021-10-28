@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,37 +38,37 @@ public class IntlinParser implements DictParser {
                 JSONArray alternatives = null;
                 JSONArray definitions = null;
                 for (String keyStr : jsonObject.keySet()) {
-                    Object keyvalue = jsonObject.get(keyStr);
+                    Object keyValue = jsonObject.get(keyStr);
                     switch (keyStr) {
                         case "word":
                         case "word_class":
                         case "gender":
                             int index = keyStr.equals("word") ? 1
                                     : keyStr.equals("word_class") ? 2 : 3;
-                            stm.setString(index, (String) keyvalue);
+                            stm.setString(index, (String) keyValue);
                             break;
                         case "alt":
-                            alternatives = (JSONArray) keyvalue;
+                            alternatives = (JSONArray) keyValue;
                             break;
                         case "defs":
-                            definitions = (JSONArray) keyvalue;
+                            definitions = (JSONArray) keyValue;
                             break;
                         default:
                     }
                 }
                 stm.execute();
+                Statement stmLast = con.createStatement();
+                ResultSet resSet = stmLast.executeQuery("select last_insert_rowid() as word_id");
+                int word_id = resSet.getInt("word_id");
                 if (alternatives != null) {
-                    parseAlternatives(alternatives, con);
+                    parseAlternatives(alternatives, con, word_id);
                 }
-                parseDefinitons(definitions, con);
+                parseDefinitons(definitions, con, word_id);
             }
         }
     }
 
-    private void parseAlternatives(JSONArray alternatives, Connection con) throws SQLException {
-        Statement stm = con.createStatement();
-        ResultSet resSet = stm.executeQuery("select last_insert_rowid() as word_id");
-        int word_id = resSet.getInt("word_id");
+    private void parseAlternatives(JSONArray alternatives, Connection con, int word_id) throws SQLException {
         for (Object alternative : alternatives) {
             PreparedStatement prepStem = con
                     .prepareStatement("INSERT OR IGNORE INTO Extension VALUES (?)");
@@ -81,7 +82,22 @@ public class IntlinParser implements DictParser {
         }
     }
 
-    private void parseDefinitons(JSONArray definitions, Connection con) {
-        
+    private void parseDefinitons(JSONArray definitions, Connection con, int word_id) throws SQLException {
+        for (Iterator<Object> it = definitions.iterator(); it.hasNext();) {
+            JSONObject definition = (JSONObject) it.next();
+            for (String keyStr : definition.keySet()) {
+                Object keyValue = definition.get(keyStr);
+                switch (keyStr) {
+                    case "_def":
+                        PreparedStatement prepStem = con.prepareStatement("INSERT OR IGNORE INTO "
+                                + "Definition(def, word_id) VALUES (?, ?)");
+                        prepStem.setString(1, (String) keyValue);
+                        prepStem.setInt(2, word_id);
+                        prepStem.execute();
+                        break;
+                    default:
+                }
+            }
+        }
     }
 }
