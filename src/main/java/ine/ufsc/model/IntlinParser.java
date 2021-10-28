@@ -31,41 +31,45 @@ public class IntlinParser implements DictParser {
             String content = new String(Files.readAllBytes(Paths.get(file.getPath())));
             JSONArray json = new JSONArray(content);
             for (int i = 0; i < json.length(); i++) {
-                JSONObject jsonObject = json.getJSONObject(i);
-                PreparedStatement stm = con.prepareStatement("INSERT OR "
-                        + "IGNORE INTO Word(word, word_class, gender) "
-                        + "VALUES(?, ?, ?)");
-                JSONArray alternatives = null;
-                JSONArray definitions = null;
-                for (String keyStr : jsonObject.keySet()) {
-                    Object keyValue = jsonObject.get(keyStr);
-                    switch (keyStr) {
-                        case "word":
-                        case "word_class":
-                        case "gender":
-                            int index = keyStr.equals("word") ? 1
-                                    : keyStr.equals("word_class") ? 2 : 3;
-                            stm.setString(index, (String) keyValue);
-                            break;
-                        case "alt":
-                            alternatives = (JSONArray) keyValue;
-                            break;
-                        case "defs":
-                            definitions = (JSONArray) keyValue;
-                            break;
-                        default:
-                    }
-                }
-                stm.execute();
-                Statement stmLast = con.createStatement();
-                ResultSet resSet = stmLast.executeQuery("select last_insert_rowid() as word_id");
-                int word_id = resSet.getInt("word_id");
-                if (alternatives != null) {
-                    parseAlternatives(alternatives, con, word_id);
-                }
-                parseDefinitons(definitions, con, word_id);
+                parseLine(json, con, i);
             }
         }
+    }
+
+    private void parseLine(JSONArray json, Connection con, int index) throws SQLException {
+        JSONObject jsonObject = json.getJSONObject(index);
+        PreparedStatement stm = con.prepareStatement("INSERT OR "
+                + "IGNORE INTO Word(word, word_class, gender) "
+                + "VALUES(?, ?, ?)");
+        JSONArray alternatives = null;
+        JSONArray definitions = null;
+        for (String keyStr : jsonObject.keySet()) {
+            Object keyValue = jsonObject.get(keyStr);
+            switch (keyStr) {
+                case "word":
+                case "word_class":
+                case "gender":
+                    int pos = keyStr.equals("word") ? 1
+                            : keyStr.equals("word_class") ? 2 : 3;
+                    stm.setString(pos, (String) keyValue);
+                    break;
+                case "alt":
+                    alternatives = (JSONArray) keyValue;
+                    break;
+                case "defs":
+                    definitions = (JSONArray) keyValue;
+                    break;
+                default:
+            }
+        }
+        stm.execute();
+        Statement stmLast = con.createStatement();
+        ResultSet resSet = stmLast.executeQuery("select last_insert_rowid() as word_id");
+        int word_id = resSet.getInt("word_id");
+        if (alternatives != null) {
+            parseAlternatives(alternatives, con, word_id);
+        }
+        parseDefinitons(definitions, con, word_id);
     }
 
     private void parseAlternatives(JSONArray alternatives, Connection con, int word_id) throws SQLException {
@@ -86,6 +90,8 @@ public class IntlinParser implements DictParser {
         for (Iterator<Object> it = definitions.iterator(); it.hasNext();) {
             JSONObject definition = (JSONObject) it.next();
             JSONArray synonyms = null;
+            JSONArray antonyms = null;
+            JSONArray extras = null;
             for (String keyStr : definition.keySet()) {
                 Object keyValue = definition.get(keyStr);
                 switch (keyStr) {
@@ -97,8 +103,13 @@ public class IntlinParser implements DictParser {
                         prepStem.execute();
                         break;
                     case "_synonyms":
-                    case "_synonym":
                         synonyms = (JSONArray) keyValue;
+                        break;
+                    case "antonyms":
+                        antonyms = (JSONArray) keyValue;
+                        break;
+                    case "extras":
+                        extras = (JSONArray) keyValue;
                         break;
                     default:
                 }
@@ -107,18 +118,30 @@ public class IntlinParser implements DictParser {
             ResultSet resDefId = stmLast.executeQuery("select last_insert_rowid() as def_id");
             int defId = resDefId.getInt("def_id");
             if (synonyms != null) {
-                for (Object syn : synonyms) {
-                    PreparedStatement prepStem2 = con
-                            .prepareStatement("INSERT OR IGNORE INTO Extension VALUES (?)");
-                    prepStem2.setString(1, (String) syn);
-                    prepStem2.execute();
-                    PreparedStatement prepStem3 = con
-                            .prepareStatement("INSERT OR IGNORE INTO Synonym VALUES (?, ?)");
-                    prepStem3.setInt(1, defId);
-                    prepStem3.setString(2, (String) syn);
-                    prepStem3.execute();
-                }
+                parseInterest(synonyms, con, defId, "Synonym");
             }
+            if (antonyms != null) {
+                parseInterest(antonyms, con, defId, "Antonym");
+            }
+            if (extras != null) {
+                parseInterest(extras, con, defId, "Extra");
+            }
+        }
+    }
+
+    private void parseInterest(JSONArray interest, Connection con, int defId,
+            String interestString) throws SQLException {
+        for (Object in : interest) {
+            PreparedStatement prepStem2 = con
+                    .prepareStatement("INSERT OR IGNORE INTO Extension VALUES (?)");
+            prepStem2.setString(1, (String) in);
+            prepStem2.execute();
+            PreparedStatement prepStem3 = con
+                    .prepareStatement(String
+                            .format("INSERT OR IGNORE INTO %s VALUES (?, ?)", interestString));
+            prepStem3.setInt(1, defId);
+            prepStem3.setString(2, (String) in);
+            prepStem3.execute();
         }
     }
 }

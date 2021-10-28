@@ -210,10 +210,58 @@ public class IntlinParserTest {
         ArrayList<String> expectedSyns2 = new ArrayList<>();
         expectedSyns2.add("ogro");
         try {
-            expected = expected && verifyCorrectSyns(expectedSyns, "there (away from the speaker and the listener)");
+            expected = expected && verifyCorrectAsset(expectedSyns,
+                    "there (away from the speaker and the listener)", "Synonym");
             // verifyCorrectSyns(expectedSyns2, "") should return false, due to
             // not having synonyms
-            expected = expected && !verifyCorrectSyns(expectedSyns2, "elf");
+            expected = expected && !verifyCorrectAsset(expectedSyns2, "elf",
+                    "Synonym");
+        } catch (SQLException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+        assertTrue(expected);
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectAntonyms() {
+        boolean expected = true;
+        ArrayList<String> expectedAnts = new ArrayList<>();
+        expectedAnts.add("aquí");
+        expectedAnts.add("acá");
+        ArrayList<String> expectedAnts2 = new ArrayList<>();
+        expectedAnts2.add("humano");
+        try {
+            expected = expected && verifyCorrectAsset(expectedAnts,
+                    "there (away from the speaker and the listener)", "Antonym");
+            // verifyCorrectSyns(expectedSyns2, "") should return false, due to
+            // not having antonym
+            expected = expected && !verifyCorrectAsset(expectedAnts2, "elf",
+                    "Antonym");
+        } catch (SQLException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+        assertTrue(expected);
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectExtras() {
+        boolean expected = true;
+        ArrayList<String> expectedExt = new ArrayList<>();
+        expectedExt.add("2002, Clara Inés Ríos Katto, Guía para el cultivo y aprovechamiento del botón de oro: Tithoni diversifolia (Hemsl.) Gray, Concenio Andrés Bello, page 22.");
+        expectedExt.add("En menor medida se utiliza abono de vaca, vermicompost, mantillo, abono de caballo[,] restos de cultivos, restos de cocina.To a lesser extent, cow manure, vermicompost, humus, horse manure, crop residues, and kitchen scraps are used.");
+        expectedExt.add("En campos de cultivos de arroz por inundación, los agricultores cosechan el botón de oro[. L]o incorporan al suelo como abono verde y mejorador de suelos.In rice paddies watered by flooding, farmers harvest buttercups. They incorporate it into the soil as a green fertilizer and soil improver.");
+        expectedExt.add("2009, Alfredo Tolón Becerra &amp; Xavier B. Lastra Bravo (eds.), Actas del III Seminario Internacional de Cooperación y Desarrollo en Espacios Rurales Iberoamericanos, Editorial Universidad de  Almería, page 205.");
+        ArrayList<String> expectedExt2 = new ArrayList<>();
+        expectedExt2.add("2005, Tolkien, El Señor de los Anillos: el elfo come las manzanas");
+        try {
+            expected = expected && verifyCorrectAsset(expectedExt,
+                    "compost, fertilizer, manure", "Extra");
+            // verifyCorrectSyns(expectedSyns2, "") should return false, due to
+            // not having synonyms
+            expected = expected && !verifyCorrectAsset(expectedExt2, "elf",
+                    "Extra");
         } catch (SQLException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
@@ -296,19 +344,19 @@ public class IntlinParserTest {
         return result;
     }
 
-    private boolean verifyCorrectSyns(ArrayList<String> expected, String def_text)
+    private boolean verifyCorrectAsset(ArrayList<String> expected, String def_text, String asset)
             throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT s.extension AS synonym "
+                .prepareStatement(String.format("SELECT s.extension AS %s "
                         + "FROM Definition d INNER JOIN "
-                        + "Synonym s on d.def_id = s.def_id "
-                        + "where d.def = ?");
+                        + "%s s on d.def_id = s.def_id "
+                        + "where d.def = ?", asset, asset));
         stm.setString(1, def_text);
         PreparedStatement stmSize = con
-                .prepareStatement("SELECT count(*) AS size "
+                .prepareStatement(String.format("SELECT count(*) AS size "
                         + "FROM Definition d INNER JOIN "
-                        + "Synonym s on d.def_id = s.def_id "
-                        + "where d.def = ?");
+                        + "%s s on d.def_id = s.def_id "
+                        + "where d.def = ?", asset));
         stmSize.setString(1, def_text);
         ResultSet resSet = stm.executeQuery();
         ResultSet resSetsize = stmSize.executeQuery();
@@ -319,7 +367,7 @@ public class IntlinParserTest {
             result = false;
         } else {
             while (resSet.next()) {
-                result = result && expected.contains(resSet.getString("synonym"));
+                result = result && expected.contains(resSet.getString(asset));
             }
         }
 
