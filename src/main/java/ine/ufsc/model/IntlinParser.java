@@ -82,9 +82,10 @@ public class IntlinParser implements DictParser {
         }
     }
 
-    private void parseDefinitons(JSONArray definitions, Connection con, int word_id) throws SQLException {
+    private void parseDefinitons(JSONArray definitions, Connection con, int wordId) throws SQLException {
         for (Iterator<Object> it = definitions.iterator(); it.hasNext();) {
             JSONObject definition = (JSONObject) it.next();
+            JSONArray synonyms = null;
             for (String keyStr : definition.keySet()) {
                 Object keyValue = definition.get(keyStr);
                 switch (keyStr) {
@@ -92,10 +93,30 @@ public class IntlinParser implements DictParser {
                         PreparedStatement prepStem = con.prepareStatement("INSERT OR IGNORE INTO "
                                 + "Definition(def, word_id) VALUES (?, ?)");
                         prepStem.setString(1, (String) keyValue);
-                        prepStem.setInt(2, word_id);
+                        prepStem.setInt(2, wordId);
                         prepStem.execute();
                         break;
+                    case "_synonyms":
+                    case "_synonym":
+                        synonyms = (JSONArray) keyValue;
+                        break;
                     default:
+                }
+            }
+            Statement stmLast = con.createStatement();
+            ResultSet resDefId = stmLast.executeQuery("select last_insert_rowid() as def_id");
+            int defId = resDefId.getInt("def_id");
+            if (synonyms != null) {
+                for (Object syn : synonyms) {
+                    PreparedStatement prepStem2 = con
+                            .prepareStatement("INSERT OR IGNORE INTO Extension VALUES (?)");
+                    prepStem2.setString(1, (String) syn);
+                    prepStem2.execute();
+                    PreparedStatement prepStem3 = con
+                            .prepareStatement("INSERT OR IGNORE INTO Synonym VALUES (?, ?)");
+                    prepStem3.setInt(1, defId);
+                    prepStem3.setString(2, (String) syn);
+                    prepStem3.execute();
                 }
             }
         }

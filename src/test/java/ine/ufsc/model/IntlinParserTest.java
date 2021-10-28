@@ -134,7 +134,6 @@ public class IntlinParserTest {
      */
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAmount() {
-        System.out.println("doParsing");
         int expectedTotal = 10;
         int total = 0;
         try {
@@ -229,13 +228,13 @@ public class IntlinParserTest {
         return total;
     }
 
-    private static boolean verifyAlternatives(ArrayList<String> expected, int word_id) throws SQLException {
+    private static boolean verifyAlternatives(ArrayList<String> expected, int wordId) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT alt.extension AS alternative, "
                         + "COUNT(alt.extension) AS size FROM Word w INNER JOIN "
                         + "Alternative alt on alt.word_id = w.word_id "
                         + "where w.word_id = ?");
-        stm.setInt(1, word_id);
+        stm.setInt(1, wordId);
         ResultSet resSet = stm.executeQuery();
         boolean result = true;
         if (resSet.getInt("size") == 0 && expected.isEmpty()) {
@@ -251,23 +250,23 @@ public class IntlinParserTest {
         return result;
     }
 
-    private static boolean verifyCorrectValue(int word_id, String column,
+    private static boolean verifyCorrectValue(int wordId, String column,
             String expected) throws SQLException {
         PreparedStatement stm = con.prepareStatement(String
                 .format("SELECT %s FROM Word w WHERE w.word_id = ?", column));
-        stm.setInt(1, word_id);
+        stm.setInt(1, wordId);
         ResultSet resSet = stm.executeQuery();
         String colVal = resSet.getString(column);
         return (colVal == null ? expected == null : colVal.equals(expected));
     }
 
-    private static boolean verifyCorrectDefs(ArrayList<String> expected, int word_id) throws SQLException {
+    private static boolean verifyCorrectDefs(ArrayList<String> expected, int wordId) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT d.def AS definition, "
                         + "COUNT(d.def) AS size FROM Word w INNER JOIN "
                         + "Definition d on d.word_id = w.word_id "
                         + "where w.word_id = ?");
-        stm.setInt(1, word_id);
+        stm.setInt(1, wordId);
         ResultSet resSet = stm.executeQuery();
         boolean result = true;
         if (resSet.getInt("size") == 0 && expected.isEmpty()) {
@@ -286,16 +285,23 @@ public class IntlinParserTest {
     private boolean verifyCorrectSyns(ArrayList<String> expected, String def_text)
             throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT s.extension AS synonym, "
-                        + "COUNT(s.syn) AS size FROM Definition d INNER JOIN "
+                .prepareStatement("SELECT s.extension AS synonym "
+                        + "FROM Definition d INNER JOIN "
                         + "Synonym s on d.def_id = s.def_id "
                         + "where d.def = ?");
         stm.setString(1, def_text);
+        PreparedStatement stmSize = con
+                .prepareStatement("SELECT count(*) AS size "
+                        + "FROM Definition d INNER JOIN "
+                        + "Synonym s on d.def_id = s.def_id "
+                        + "where d.def = ?");
+        stmSize.setString(1, def_text);
         ResultSet resSet = stm.executeQuery();
+        ResultSet resSetsize = stmSize.executeQuery();
         boolean result = true;
-        if (resSet.getInt("size") == 0 && expected.isEmpty()) {
+        if (resSetsize.getInt("size") == 0 && expected.isEmpty()) {
             result = true;
-        } else if (expected.size() != resSet.getInt("size")) {
+        } else if (expected.size() != resSetsize.getInt("size")) {
             result = false;
         } else {
             while (resSet.next()) {
