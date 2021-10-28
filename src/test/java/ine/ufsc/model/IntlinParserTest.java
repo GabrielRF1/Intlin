@@ -7,7 +7,6 @@ package ine.ufsc.model;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Gabriel
  */
 public class IntlinParserTest {
-    
+
     static IntlinParser instance = new IntlinParser();
     static Connection con;
     static ArrayList<File> files;
@@ -182,9 +181,9 @@ public class IntlinParserTest {
         ArrayList<String> expectedAlts = new ArrayList<>();
         expectedAlts.add("ahueonao, aweonado, aweonao (eye dialect)");
         expectedAlts.add("ahueonado (eye dialect, rare)");
+        ArrayList<String> expectedAlts2 = new ArrayList<>();
         try {
             expected = expected && verifyAlternatives(expectedAlts, 40);
-            ArrayList<String> expectedAlts2 = new ArrayList<>();
             expected = expected && verifyAlternatives(expectedAlts2, 1);
         } catch (SQLException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -212,6 +211,21 @@ public class IntlinParserTest {
         assertTrue(expected);
     }
 
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectDefinitions() {
+        boolean expected = true;
+        ArrayList<String> expectedDefs = new ArrayList<>();
+        expectedDefs.add("directly, firsthand");
+        expectedDefs.add("outright");
+        try {
+            expected = expected && verifyCorrectDefs(expectedDefs, 2);
+        } catch (SQLException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+        assertTrue(expected);
+    }
+
     private static int verifyTotal() throws SQLException {
         Statement stmt = con.createStatement();
         ResultSet resSet = stmt.executeQuery("SELECT COUNT(*) AS total FROM Word");
@@ -230,7 +244,7 @@ public class IntlinParserTest {
         boolean result = true;
         if (resSet.getInt("size") == 0 && expected.isEmpty()) {
             result = true;
-        } else if (resSet.getInt("size") == 0 && !expected.isEmpty()) {
+        } else if (expected.size() != resSet.getInt("size")) {
             result = false;
         } else {
             while (resSet.next()) {
@@ -249,5 +263,27 @@ public class IntlinParserTest {
         ResultSet resSet = stm.executeQuery();
         String colVal = resSet.getString(column);
         return (colVal == null ? expected == null : colVal.equals(expected));
+    }
+
+    private static boolean verifyCorrectDefs(ArrayList<String> expected, int word_id) throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT d.def AS definition, "
+                        + "COUNT(d.def) AS size FROM Word w INNER JOIN "
+                        + "Definition d on d.word_id = w.word_id "
+                        + "where w.word_id = ?");
+        stm.setInt(1, word_id);
+        ResultSet resSet = stm.executeQuery();
+        boolean result = true;
+        if (resSet.getInt("size") == 0 && expected.isEmpty()) {
+            result = true;
+        } else if (expected.size() != resSet.getInt("size")) {
+            result = false;
+        } else {
+            while (resSet.next()) {
+                result = result && expected.contains(resSet.getString("definition"));
+            }
+        }
+
+        return result;
     }
 }

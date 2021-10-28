@@ -59,6 +59,7 @@ public class IntlinParser implements DictParser {
                 if (alternatives != null) {
                     parseAlternatives(alternatives, con);
                 }
+                parseDefinitons(definitions, con);
             }
         }
     }
@@ -67,7 +68,6 @@ public class IntlinParser implements DictParser {
         Statement stm = con.createStatement();
         ResultSet resSet = stm.executeQuery("select last_insert_rowid() as word_id");
         int word_id = resSet.getInt("word_id");
-        System.out.println("WORD_ID: " + word_id);
         for (Object alternative : alternatives) {
             PreparedStatement prepStem = con
                     .prepareStatement("INSERT OR IGNORE INTO Extension VALUES (?)");
@@ -79,5 +79,9 @@ public class IntlinParser implements DictParser {
             prepStem2.setString(2, (String) alternative);
             prepStem2.execute();
         }
+    }
+
+    private void parseDefinitons(JSONArray definitions, Connection con) {
+        
     }
 }
