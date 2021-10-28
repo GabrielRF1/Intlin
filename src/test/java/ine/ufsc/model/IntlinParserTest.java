@@ -24,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Gabriel
  */
 public class IntlinParserTest {
-
+    
+    static IntlinParser instance = new IntlinParser();
     static Connection con;
     static ArrayList<File> files;
     static String json1 = "["
@@ -145,6 +146,7 @@ public class IntlinParserTest {
         files = new ArrayList<>();
         files.add(f1);
         files.add(f2);
+        instance.doParsing(files, con);
     }
 
     @org.junit.jupiter.api.AfterAll
@@ -161,43 +163,63 @@ public class IntlinParserTest {
      * Test of doParsing method, of class IntlinParser.
      */
     @org.junit.jupiter.api.Test
-    public void testDoParsing() {
+    public void testDoParsingYieldsCorrectAmount() {
         System.out.println("doParsing");
         int expectedTotal = 40;
-        boolean expected = true;
-        IntlinParser instance = new IntlinParser();
+        int total = 0;
         try {
-            instance.doParsing(files, con);
-            expected = expected && verifyTotal(expectedTotal);
-            expected = expected && verifyValues();
-            expected = expected && verifyAlternatives();
-        } catch (SQLException | UnsupportedOperationException | IOException ex) {
+            total = verifyTotal();
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+        assertEquals(expectedTotal, total);
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectAlternativeForms() {
+        boolean expected = true;
+        ArrayList<String> expectedAlts = new ArrayList<>();
+        expectedAlts.add("ahueonao, aweonado, aweonao (eye dialect)");
+        expectedAlts.add("ahueonado (eye dialect, rare)");
+        try {
+            expected = expected && verifyAlternatives(expectedAlts, 40);
+            ArrayList<String> expectedAlts2 = new ArrayList<>();
+            expected = expected && verifyAlternatives(expectedAlts2, 1);
+        } catch (SQLException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
         }
         assertTrue(expected);
     }
 
-    private static boolean verifyTotal(int expectedTotal) throws SQLException {
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectWordValues() {
+        boolean expected = true;
+        try {
+            expected = expected && verifyCorrectValue(37, "gender", "m");
+            expected = expected && verifyCorrectValue(3, "gender", "f");
+            expected = expected && verifyCorrectValue(19, "gender", "f pl");
+            expected = expected && verifyCorrectValue(35, "gender", null);
+            expected = expected && verifyCorrectValue(11, "word", "abono");
+            expected = expected && verifyCorrectValue(12, "word", "abono");
+            expected = expected && verifyCorrectValue(11, "word_class", "Noun");
+            expected = expected && verifyCorrectValue(12, "word_class", "Verb");
+        } catch (SQLException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+        assertTrue(expected);
+    }
+
+    private static int verifyTotal() throws SQLException {
         Statement stmt = con.createStatement();
         ResultSet resSet = stmt.executeQuery("SELECT COUNT(*) AS total FROM Word");
         int total = resSet.getInt("total");
-        return total == expectedTotal;
+        return total;
     }
 
-    private static boolean verifyAlternatives() throws SQLException {
-        boolean result = true;
-        ArrayList<String> expectedAlts = new ArrayList<>();
-        expectedAlts.add("ahueonao, aweonado, aweonao (eye dialect)");
-        expectedAlts.add("ahueonado (eye dialect, rare)");
-        result = result && alternativeCheck(expectedAlts, 40);
-        ArrayList<String> expectedAlts2 = new ArrayList<>();
-        result = result && alternativeCheck(expectedAlts2, 1);
-
-        return result;
-    }
-
-    private static boolean alternativeCheck(ArrayList<String> expected, int word_id) throws SQLException {
+    private static boolean verifyAlternatives(ArrayList<String> expected, int word_id) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT alt.extension AS alternative, "
                         + "COUNT(alt.extension) AS size FROM Word w INNER JOIN "
@@ -216,19 +238,6 @@ public class IntlinParserTest {
             }
         }
 
-        return result;
-    }
-
-    private static boolean verifyValues() throws SQLException {
-        boolean result = true;
-        result = result && verifyCorrectValue(37, "gender", "m");
-        result = result && verifyCorrectValue(3, "gender", "f");
-        result = result && verifyCorrectValue(19, "gender", "f pl");
-        result = result && verifyCorrectValue(35, "gender", null);
-        result = result && verifyCorrectValue(11, "word", "abono");
-        result = result && verifyCorrectValue(12, "word", "abono");
-        result = result && verifyCorrectValue(11, "word_class", "Noun");
-        result = result && verifyCorrectValue(12, "word_class", "Verb");
         return result;
     }
 
