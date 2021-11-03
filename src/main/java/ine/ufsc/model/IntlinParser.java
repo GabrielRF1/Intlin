@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,21 +24,31 @@ import org.json.JSONObject;
  */
 public class IntlinParser implements DictParser {
 
-    private final Connection con;
     private int curId = 1;
+    private int curDefId = 0;
+    private final Connection con;
     private final PreparedStatement stmWord;
-    private final PreparedStatement stmExt;
+    private final PreparedStatement stmExtension;
     private final PreparedStatement stmAlt;
+    private final PreparedStatement stmDef;
+    private final PreparedStatement stmSyn;
+    private final PreparedStatement stmAnt;
+    private final PreparedStatement stmExt;
 
     public IntlinParser(Connection con) throws SQLException {
         this.con = con;
         stmWord = con.prepareStatement("INSERT OR "
                 + "IGNORE INTO Word(word, word_class, gender) "
                 + "VALUES(?, ?, ?)");
-        stmExt = con.prepareStatement("INSERT OR IGNORE INTO Extension "
+        stmExtension = con.prepareStatement("INSERT OR IGNORE INTO Extension "
                 + "VALUES (?)");
         stmAlt = con.prepareStatement("INSERT OR IGNORE INTO Alternative "
                 + "VALUES (?, ?)");
+        stmDef = con.prepareStatement("INSERT OR IGNORE INTO "
+                + "Definition(def, word_id) VALUES (?, ?)");
+        stmSyn = con.prepareStatement("INSERT OR IGNORE INTO Synonym VALUES (?, ?)");
+        stmAnt = con.prepareStatement("INSERT OR IGNORE INTO Antonym VALUES (?, ?)");
+        stmExt = con.prepareStatement("INSERT OR IGNORE INTO Extra VALUES (?, ?)");
     }
 
     @Override
@@ -53,23 +64,28 @@ public class IntlinParser implements DictParser {
                 parseLine(json, i);
                 curId++;
                 if (i % 1000 == 0) {
-                    stmWord.executeBatch();
-                    stmExt.executeBatch();
-                    stmAlt.executeBatch();
-                    con.commit();
+                    execBatches();
                 }
             }
-            stmWord.executeBatch();
-            stmExt.executeBatch();
-            stmAlt.executeBatch();
-            con.commit();
+            execBatches();
         }
+    }
+
+    private void execBatches() throws SQLException {
+        stmWord.executeBatch();
+        stmExtension.executeBatch();
+        stmAlt.executeBatch();
+        stmDef.executeBatch();
+        stmSyn.executeBatch();
+        stmAnt.executeBatch();
+        stmExt.executeBatch();
+        con.commit();
     }
 
     private void parseLine(JSONArray json, int index) throws SQLException {
         JSONObject jsonObject = json.getJSONObject(index);
         JSONArray alternatives = null;
-//        JSONArray definitions = null;
+        JSONArray definitions = null;
         for (String keyStr : jsonObject.keySet()) {
             Object keyValue = jsonObject.get(keyStr);
             switch (keyStr) {
@@ -84,87 +100,89 @@ public class IntlinParser implements DictParser {
                     alternatives = (JSONArray) keyValue;
                     break;
                 case "defs":
-                    //definitions = (JSONArray) keyValue;
+                    definitions = (JSONArray) keyValue;
                     break;
                 default:
             }
         }
         stmWord.addBatch();
-//        Statement stmLast = con.createStatement();
-//        ResultSet resSet = stmLast.executeQuery("select last_insert_rowid() as word_id");
-//        int word_id = resSet.getInt("word_id");
         if (alternatives != null) {
             parseAlternatives(alternatives, curId);
         }
-//        parseDefinitons(definitions, con, word_id);
+        parseDefinitons(definitions, curId);
     }
 
     private void parseAlternatives(JSONArray alternatives, int wordId) throws SQLException {
         for (Object alternative : alternatives) {
-            stmExt.setString(1, (String) alternative);
-            stmExt.addBatch();
+            stmExtension.setString(1, (String) alternative);
+            stmExtension.addBatch();
             stmAlt.setInt(1, wordId);
             stmAlt.setString(2, (String) alternative);
             stmAlt.addBatch();
         }
     }
-//
-//    private void parseDefinitons(JSONArray definitions, Connection con, int wordId) throws SQLException {
-//        for (Iterator<Object> it = definitions.iterator(); it.hasNext();) {
-//            JSONObject definition = (JSONObject) it.next();
-//            JSONArray synonyms = null;
-//            JSONArray antonyms = null;
-//            JSONArray extras = null;
-//            for (String keyStr : definition.keySet()) {
-//                Object keyValue = definition.get(keyStr);
-//                switch (keyStr) {
-//                    case "_def":
-//                        PreparedStatement prepStem = con.prepareStatement("INSERT OR IGNORE INTO "
-//                                + "Definition(def, word_id) VALUES (?, ?)");
-//                        prepStem.setString(1, (String) keyValue);
-//                        prepStem.setInt(2, wordId);
-//                        prepStem.execute();
-//                        break;
-//                    case "_synonyms":
-//                        synonyms = (JSONArray) keyValue;
-//                        break;
-//                    case "antonyms":
-//                        antonyms = (JSONArray) keyValue;
-//                        break;
-//                    case "extras":
-//                        extras = (JSONArray) keyValue;
-//                        break;
-//                    default:
-//                }
-//            }
-//            Statement stmLast = con.createStatement();
-//            ResultSet resDefId = stmLast.executeQuery("select last_insert_rowid() as def_id");
-//            int defId = resDefId.getInt("def_id");
-//            if (synonyms != null) {
-//                parseInterest(synonyms, con, defId, "Synonym");
-//            }
-//            if (antonyms != null) {
-//                parseInterest(antonyms, con, defId, "Antonym");
-//            }
-//            if (extras != null) {
-//                parseInterest(extras, con, defId, "Extra");
-//            }
-//        }
-//    }
-//
-//    private void parseInterest(JSONArray interest, Connection con, int defId,
-//            String interestString) throws SQLException {
-//        for (Object in : interest) {
-//            PreparedStatement prepStem2 = con
-//                    .prepareStatement("INSERT OR IGNORE INTO Extension VALUES (?)");
-//            prepStem2.setString(1, (String) in);
-//            prepStem2.execute();
-//            PreparedStatement prepStem3 = con
-//                    .prepareStatement(String
-//                            .format("INSERT OR IGNORE INTO %s VALUES (?, ?)", interestString));
-//            prepStem3.setInt(1, defId);
-//            prepStem3.setString(2, (String) in);
-//            prepStem3.execute();
-//        }
-//    }
+
+    private void parseDefinitons(JSONArray definitions, int wordId) throws SQLException {
+        for (Iterator<Object> it = definitions.iterator(); it.hasNext();) {
+            JSONObject definition = (JSONObject) it.next();
+            JSONArray synonyms = null;
+            JSONArray antonyms = null;
+            JSONArray extras = null;
+            for (String keyStr : definition.keySet()) {
+                Object keyValue = definition.get(keyStr);
+                switch (keyStr) {
+                    case "_def":
+                        stmDef.setString(1, (String) keyValue);
+                        stmDef.setInt(2, wordId);
+                        stmDef.addBatch();
+                        curDefId++;
+                        break;
+                    case "_synonyms":
+                        synonyms = (JSONArray) keyValue;
+                        break;
+                    case "antonyms":
+                        antonyms = (JSONArray) keyValue;
+                        break;
+                    case "extras":
+                        extras = (JSONArray) keyValue;
+                        break;
+                    default:
+                }
+            }
+            if (synonyms != null) {
+                parseInterest(synonyms, curDefId, 0);
+            }
+            if (antonyms != null) {
+                parseInterest(antonyms, curDefId, 1);
+            }
+            if (extras != null) {
+                parseInterest(extras, curDefId, 2);
+            }
+        }
+    }
+
+    private void parseInterest(JSONArray interest, int defId,
+            int interestCode) throws SQLException {
+        for (Object in : interest) {
+            stmExtension.setString(1, (String) in);
+            stmExtension.addBatch();
+            switch (interestCode) {
+                case 0:
+                    stmSyn.setInt(1, defId);
+                    stmSyn.setString(2, (String) in);
+                    stmSyn.addBatch();
+                    break;
+                case 1:
+                    stmAnt.setInt(1, defId);
+                    stmAnt.setString(2, (String) in);
+                    stmAnt.addBatch();
+                    break;
+                case 2:
+                    stmExt.setInt(1, defId);
+                    stmExt.setString(2, (String) in);
+                    stmExt.addBatch();
+                    break;
+            }
+        }
+    }
 }
