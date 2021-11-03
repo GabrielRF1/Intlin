@@ -7,6 +7,7 @@ package ine.ufsc.model;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -106,12 +107,12 @@ public class IntlinParserTest {
         File f1 = new File("testDict/test_1.json");
         f1.createNewFile();
         FileWriter fw = new FileWriter(f1.getPath());
-        fw.write(json1);
+        fw.write(new String(json1.getBytes(StandardCharsets.UTF_8)));
         fw.close();
         File f2 = new File("testDict/test_2.json");
         f2.createNewFile();
         FileWriter fw2 = new FileWriter(f2.getPath());
-        fw2.write(json2);
+        fw2.write(new String(json2.getBytes(StandardCharsets.UTF_8)));
         fw2.close();
         files = new ArrayList<>();
         files.add(f1);
