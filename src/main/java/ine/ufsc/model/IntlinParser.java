@@ -23,33 +23,52 @@ import org.json.JSONObject;
  */
 public class IntlinParser implements DictParser {
 
+    private final Connection con;
+    private int curId = 1;
+    private final PreparedStatement stmWord;
+    private final PreparedStatement stmExt;
+    private final PreparedStatement stmAlt;
+
+    public IntlinParser(Connection con) throws SQLException {
+        this.con = con;
+        stmWord = con.prepareStatement("INSERT OR "
+                + "IGNORE INTO Word(word, word_class, gender) "
+                + "VALUES(?, ?, ?)");
+        stmExt = con.prepareStatement("INSERT OR IGNORE INTO Extension "
+                + "VALUES (?)");
+        stmAlt = con.prepareStatement("INSERT OR IGNORE INTO Alternative "
+                + "VALUES (?, ?)");
+    }
+
     @Override
-    public void doParsing(ArrayList<File> files, Connection con) throws IOException, SQLException {
+    public void doParsing(ArrayList<File> files) throws IOException, SQLException {
         for (File file : files) {
             String content = new String(Files.readAllBytes(Paths.get(file.getPath())),
                     StandardCharsets.UTF_8);
+            //System.out.println(content);
             JSONArray json = new JSONArray(content);
-            PreparedStatement stm = con.prepareStatement("INSERT OR "
-                    + "IGNORE INTO Word(word, word_class, gender) "
-                    + "VALUES(?, ?, ?)");
             con.setAutoCommit(false);
             for (int i = 0; i < json.length(); i++) {
                 System.out.println(i);
-                parseLine(json, con, i, stm);
+                parseLine(json, i);
+                curId++;
                 if (i % 1000 == 0) {
-                    stm.executeBatch();
+                    stmWord.executeBatch();
+                    stmExt.executeBatch();
+                    stmAlt.executeBatch();
                     con.commit();
                 }
             }
-            stm.executeBatch();
+            stmWord.executeBatch();
+            stmExt.executeBatch();
+            stmAlt.executeBatch();
             con.commit();
         }
     }
 
-    private void parseLine(JSONArray json, Connection con, int index,
-            PreparedStatement stm) throws SQLException {
+    private void parseLine(JSONArray json, int index) throws SQLException {
         JSONObject jsonObject = json.getJSONObject(index);
-//        JSONArray alternatives = null;
+        JSONArray alternatives = null;
 //        JSONArray definitions = null;
         for (String keyStr : jsonObject.keySet()) {
             Object keyValue = jsonObject.get(keyStr);
@@ -59,10 +78,10 @@ public class IntlinParser implements DictParser {
                 case "gender":
                     int pos = keyStr.equals("word") ? 1
                             : keyStr.equals("word_class") ? 2 : 3;
-                    stm.setString(pos, (String) keyValue);
+                    stmWord.setString(pos, (String) keyValue);
                     break;
                 case "alt":
-                    //alternatives = (JSONArray) keyValue;
+                    alternatives = (JSONArray) keyValue;
                     break;
                 case "defs":
                     //definitions = (JSONArray) keyValue;
@@ -70,29 +89,25 @@ public class IntlinParser implements DictParser {
                 default:
             }
         }
-        stm.addBatch();
+        stmWord.addBatch();
 //        Statement stmLast = con.createStatement();
 //        ResultSet resSet = stmLast.executeQuery("select last_insert_rowid() as word_id");
 //        int word_id = resSet.getInt("word_id");
-//        if (alternatives != null) {
-//            parseAlternatives(alternatives, con, word_id);
-//        }
+        if (alternatives != null) {
+            parseAlternatives(alternatives, curId);
+        }
 //        parseDefinitons(definitions, con, word_id);
     }
 
-//    private void parseAlternatives(JSONArray alternatives, Connection con, int word_id) throws SQLException {
-//        for (Object alternative : alternatives) {
-//            PreparedStatement prepStem = con
-//                    .prepareStatement("INSERT OR IGNORE INTO Extension VALUES (?)");
-//            prepStem.setString(1, (String) alternative);
-//            prepStem.execute();
-//            PreparedStatement prepStem2 = con
-//                    .prepareStatement("INSERT OR IGNORE INTO Alternative VALUES (?, ?)");
-//            prepStem2.setInt(1, word_id);
-//            prepStem2.setString(2, (String) alternative);
-//            prepStem2.execute();
-//        }
-//    }
+    private void parseAlternatives(JSONArray alternatives, int wordId) throws SQLException {
+        for (Object alternative : alternatives) {
+            stmExt.setString(1, (String) alternative);
+            stmExt.addBatch();
+            stmAlt.setInt(1, wordId);
+            stmAlt.setString(2, (String) alternative);
+            stmAlt.addBatch();
+        }
+    }
 //
 //    private void parseDefinitons(JSONArray definitions, Connection con, int wordId) throws SQLException {
 //        for (Iterator<Object> it = definitions.iterator(); it.hasNext();) {

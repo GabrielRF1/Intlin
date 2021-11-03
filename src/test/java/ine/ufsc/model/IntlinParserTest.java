@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class IntlinParserTest {
 
-    static IntlinParser instance = new IntlinParser();
+    static IntlinParser instance;
     static Connection con;
     static ArrayList<File> files;
     static String json1 = "["
@@ -117,7 +117,8 @@ public class IntlinParserTest {
         files = new ArrayList<>();
         files.add(f1);
         files.add(f2);
-        instance.doParsing(files, con);
+        instance = new IntlinParser(con);
+        instance.doParsing(files);
     }
 
     @org.junit.jupiter.api.AfterAll
