@@ -7,6 +7,7 @@ package ine.ufsc.model;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -46,64 +47,62 @@ public class IntlinParserTest {
     public IntlinParserTest() {
     }
 
-    @org.junit.jupiter.api.BeforeAll
-    public static void setUpClass() throws Exception {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtest.db");
-            Statement stm = con.createStatement();
-            // Extension table
-            stm.execute("CREATE TABLE IF NOT EXISTS Extension("
-                    + "extension TEXT NOT NULL PRIMARY KEY)");
-            stm = con.createStatement();
-            // Word table 
-            stm.execute("CREATE TABLE IF NOT EXISTS Word("
-                    + "word_id INTEGER PRIMARY KEY,"
-                    + "word TEXT NOT NULL,"
-                    + "word_class TEXT NOT NULL,"
-                    + "gender text)");
-            stm = con.createStatement();
-            // Definition table 
-            stm.execute("CREATE TABLE IF NOT EXISTS Definition("
-                    + "def_id INTEGER PRIMARY KEY,"
-                    + "def TEXT NOT NULL,"
-                    + "word_id INTEGER NOT NULL,"
-                    + "FOREIGN KEY(word_id) REFERENCES Word(word_id))");
-            stm = con.createStatement();
-            // Alternative table 
-            stm.execute("CREATE TABLE IF NOT EXISTS Alternative("
-                    + "word_id INTEGER NOT NULL,"
-                    + "extension TEXT NOT NULL,"
-                    + "FOREIGN KEY(word_id) REFERENCES Word(word_id),"
-                    + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                    + "PRIMARY KEY(word_id, extension))");
-            stm = con.createStatement();
-            // Synonym table 
-            stm.execute("CREATE TABLE IF NOT EXISTS Synonym("
-                    + "def_id INTEGER NOT NULL,"
-                    + "extension TEXT NOT NULL,"
-                    + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                    + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                    + "PRIMARY KEY(def_id, extension));");
-            stm = con.createStatement();
-            // Antonym table 
-            stm.execute("CREATE TABLE IF NOT EXISTS Antonym("
-                    + "def_id INTEGER NOT NULL,"
-                    + "extension TEXT NOT NULL,"
-                    + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                    + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                    + "PRIMARY KEY(def_id, extension));");
-            stm = con.createStatement();
-            // Extra table 
-            stm.execute("CREATE TABLE IF NOT EXISTS Extra("
-                    + "def_id INTEGER NOT NULL,"
-                    + "extension TEXT NOT NULL,"
-                    + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                    + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                    + "PRIMARY KEY(def_id, extension));");
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private static void setUpDB() throws SQLException, ClassNotFoundException {
+        Class.forName("org.sqlite.JDBC");
+        con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtest.db");
+        Statement stm = con.createStatement();
+        // Extension table
+        stm.execute("CREATE TABLE IF NOT EXISTS Extension("
+                + "extension TEXT NOT NULL PRIMARY KEY)");
+        stm = con.createStatement();
+        // Word table 
+        stm.execute("CREATE TABLE IF NOT EXISTS Word("
+                + "word_id INTEGER PRIMARY KEY,"
+                + "word TEXT NOT NULL,"
+                + "word_class TEXT NOT NULL,"
+                + "gender text)");
+        stm = con.createStatement();
+        // Definition table 
+        stm.execute("CREATE TABLE IF NOT EXISTS Definition("
+                + "def_id INTEGER PRIMARY KEY,"
+                + "def TEXT NOT NULL,"
+                + "word_id INTEGER NOT NULL,"
+                + "FOREIGN KEY(word_id) REFERENCES Word(word_id))");
+        stm = con.createStatement();
+        // Alternative table 
+        stm.execute("CREATE TABLE IF NOT EXISTS Alternative("
+                + "word_id INTEGER NOT NULL,"
+                + "extension TEXT NOT NULL,"
+                + "FOREIGN KEY(word_id) REFERENCES Word(word_id),"
+                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
+                + "PRIMARY KEY(word_id, extension))");
+        stm = con.createStatement();
+        // Synonym table 
+        stm.execute("CREATE TABLE IF NOT EXISTS Synonym("
+                + "def_id INTEGER NOT NULL,"
+                + "extension TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
+                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
+                + "PRIMARY KEY(def_id, extension));");
+        stm = con.createStatement();
+        // Antonym table 
+        stm.execute("CREATE TABLE IF NOT EXISTS Antonym("
+                + "def_id INTEGER NOT NULL,"
+                + "extension TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
+                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
+                + "PRIMARY KEY(def_id, extension));");
+        stm = con.createStatement();
+        // Extra table 
+        stm.execute("CREATE TABLE IF NOT EXISTS Extra("
+                + "def_id INTEGER NOT NULL,"
+                + "extension TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
+                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
+                + "PRIMARY KEY(def_id, extension));");
+    }
+
+    private static ArrayList<File> setUpFiles() throws IOException {
         File f1 = new File("testDict/test_1.json");
         f1.createNewFile();
         FileWriter fw = new FileWriter(f1.getPath());
@@ -117,6 +116,13 @@ public class IntlinParserTest {
         files = new ArrayList<>();
         files.add(f1);
         files.add(f2);
+        return files;
+    }
+
+    @org.junit.jupiter.api.BeforeAll
+    public static void setUpClass() throws Exception {
+        setUpDB();
+        ArrayList<File> files = setUpFiles();
         instance = new IntlinParser(con);
         instance.doParsing(files);
     }

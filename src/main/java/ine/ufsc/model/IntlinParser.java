@@ -56,11 +56,9 @@ public class IntlinParser implements DictParser {
         for (File file : files) {
             String content = new String(Files.readAllBytes(Paths.get(file.getPath())),
                     StandardCharsets.UTF_8);
-            //System.out.println(content);
             JSONArray json = new JSONArray(content);
             con.setAutoCommit(false);
             for (int i = 0; i < json.length(); i++) {
-                System.out.println(i);
                 parseLine(json, i);
                 curId++;
                 if (i % 1000 == 0) {
