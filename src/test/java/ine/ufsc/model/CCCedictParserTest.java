@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CCCedictParserTest {
 
-    static CCCedictParser instance = new CCCedictParser();
+    static CCCedictParser instance;
     static Connection con;
     static ArrayList<File> files = new ArrayList<>();
 
@@ -32,7 +32,7 @@ public class CCCedictParserTest {
 
     private static void setUpDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtest.db");
+        con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtestCCCedict.db");
         Statement stm = con.createStatement();
         // Word table 
         stm.execute("CREATE TABLE IF NOT EXISTS Word("
@@ -54,7 +54,7 @@ public class CCCedictParserTest {
                 + "完璧之身 完璧之身 [wan2 bi4 zhi1 shen1] /undefiled (girl)/virgin/(of computer system) clean/uncorrupted/\n"
                 + "完畢 完毕 [wan2 bi4] /to finish/to end/to complete/\n"
                 + "完縣 完县 [Wan2 xian4] /Wan former county, now Shunping county 順平縣|顺平县[Shun4 ping2 xian4] in Baoding 保定[Bao3 ding4], Hebei/\n"
-                + "完美 完美 [wan2 mei3] /perfect/perfection/perfectly/"
+                + "完美 完美 [wan2 mei3] /perfect/perfection/perfectly/\n"
                 + "笓 笓 [pi2] /to comb/fine-toothed comb/trap for prawns/\n"
                 + "笙 笙 [sheng1] /sheng, a free reed wind instrument with vertical bamboo pipes/\n"
                 + "笙歌 笙歌 [sheng1 ge1] /music and song (formal writing)/\n"
@@ -62,7 +62,7 @@ public class CCCedictParserTest {
         File resFile = new File("testDict/test_1.u8");
         resFile.createNewFile();
         FileWriter fw = new FileWriter(resFile.getPath());
-        fw.write(new String(content.getBytes(StandardCharsets.UTF_8)));
+        fw.write(new String(content.getBytes(StandardCharsets.UTF_16)));
         fw.close();
         return resFile;
     }
@@ -72,12 +72,14 @@ public class CCCedictParserTest {
         setUpDB();
         File file = setUpFile();
         files.add(file);
+        instance = new CCCedictParser(con);
+        instance.doParsing(files);
     }
 
     @org.junit.jupiter.api.AfterAll
     public static void tearDownClass() throws Exception {
         con.close();
-        File dbFile = new File("testDict/dbtest.db");
+        File dbFile = new File("testDict/dbtestCCCedict.db");
         dbFile.delete();
         files.forEach(file -> {
             file.delete();
@@ -91,15 +93,32 @@ public class CCCedictParserTest {
     public void testDoParsingYieldsCorrectAmount() {
         try {
             System.out.println("doParsing");
-            instance.doParsing(files);
             int expectedAmount = 9;
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELCT COUNT(*) as total FROM Word");
+            ResultSet rs = stm.executeQuery("SELECT COUNT(*) as total FROM Word");
             int actualAmount = rs.getInt("total");
             assertEquals(actualAmount, expectedAmount);
-        } catch (IOException | SQLException | UnsupportedOperationException ex) {
+        } catch (SQLException ex) {
             fail("Exception thrown: " + ex.getMessage());
         }
     }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectTraditional() {
+        try {
+            System.out.println("doParsing");
+            String expected = "完縣";
+            Statement stm = con.createStatement();
+            //System.out.println();
+            String sql = "SELECT w.traditional FROM Word w where w.simplified = \'完县\'";
+            ResultSet rs = stm.executeQuery(sql);
+            String actual = rs.getString("traditional");
+            assertEquals(actual, expected);
+        } catch (SQLException ex) {
+            fail("Exception thrown: " + ex.getMessage());
+        }
+    }
+    
+
 
 }
