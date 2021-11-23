@@ -92,7 +92,6 @@ public class CCCedictParserTest {
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAmount() {
         try {
-            System.out.println("doParsing");
             int expectedAmount = 9;
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT COUNT(*) as total FROM Word");
@@ -106,7 +105,6 @@ public class CCCedictParserTest {
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectTraditional() {
         try {
-            System.out.println("doParsing");
             String expected = "完縣";
             Statement stm = con.createStatement();
             //System.out.println();
@@ -118,7 +116,42 @@ public class CCCedictParserTest {
             fail("Exception thrown: " + ex.getMessage());
         }
     }
-    
 
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectDefinitions() {
+        try {
+            var expected = new ArrayList<String>();
+            expected.add("undefiled (girl)");
+            expected.add("virgin");
+            expected.add("(of computer system) clean");
+            expected.add("uncorrupted");
+            Statement stm = con.createStatement();
+            //System.out.println();
+            String sql = "SELECT d.definition FROM Word w join Definition "
+                    + "d on w.word_id == d.word_id where w.simplified = \'完璧之身\'";
+            ResultSet rs = stm.executeQuery(sql);
+            var actual = new ArrayList<String>();
+            while (rs.next()) {
+                actual.add(rs.getString("definition"));
+            }
+            assertEquals(actual, expected);
+        } catch (SQLException ex) {
+            fail("Exception thrown: " + ex.getMessage());
+        }
+    }
 
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectPinyin() {
+        try {
+            var expected = "sheng1 guan3";
+            Statement stm = con.createStatement();
+            //System.out.println();
+            String sql = "SELECT w.reading FROM Word w where w.traditional= \'笙管\'";
+            ResultSet rs = stm.executeQuery(sql);
+            var actual = rs.getString("reading");
+            assertEquals(actual, expected);
+        } catch (SQLException ex) {
+            fail("Exception thrown: " + ex.getMessage());
+        }
+    }
 }

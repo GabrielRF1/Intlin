@@ -55,11 +55,12 @@ public class CCCedictParser implements DictParser {
                 Scanner defSc = new Scanner(definitions);
                 defSc.useDelimiter("/");
                 while (defSc.hasNext()) {
-                    stmDefinition.setString(1, defSc.next());
+                    String def = defSc.next();
+                    stmDefinition.setString(1, def);
                     stmDefinition.setInt(2, bufferedCount + 1);
+                    stmDefinition.addBatch();
                 }
                 stmWord.addBatch();
-                stmDefinition.addBatch();
                 bufferedCount++;
                 if (bufferedCount % 1000 == 0) {
                     stmWord.executeBatch();

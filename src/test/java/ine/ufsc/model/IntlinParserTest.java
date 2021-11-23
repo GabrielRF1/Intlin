@@ -328,7 +328,7 @@ public class IntlinParserTest {
                 .prepareStatement("SELECT d.def AS definition "
                         + "FROM Word w INNER JOIN "
                         + "Definition d on d.word_id = w.word_id "
-                        + "where w.word_id = ?");
+                    + "where w.word_id = ?");
         stm.setInt(1, wordId);
         PreparedStatement stmSize = con
                 .prepareStatement("SELECT COUNT(d.def) AS size "
