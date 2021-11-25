@@ -6,8 +6,12 @@
 package ine.ufsc.model.dictionaries;
 
 import ine.ufsc.model.dictionaries.parsers.IntlinParser;
+import java.io.File;
+import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -16,9 +20,12 @@ import java.util.ArrayList;
  */
 public class IntlinDictionary extends Dictionary {
 
-    public IntlinDictionary(String dbFileName) throws ClassNotFoundException, SQLException {
-        super(dbFileName);
+    public IntlinDictionary(String dbFileName, String filesPath) throws ClassNotFoundException, SQLException, IOException {
+        super(dbFileName, filesPath);
         parser = new IntlinParser(con);
+        if (!bdExists()) {
+            build();
+        }
     }
 
     @Override
@@ -46,14 +53,22 @@ public class IntlinDictionary extends Dictionary {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    protected void build() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void build() throws IOException, SQLException {
+        File files = new File(filesPath);
+        var filesAr = new ArrayList<File>();
+        for (File file : files.listFiles()) {
+            if (file.isFile() && file.getName().contains(".json")
+                    && file.getName().contains(dbFileName)) {
+                filesAr.add(file);
+            }
+        }
+        parser.doParsing(filesAr);
     }
 
-    @Override
-    protected boolean bdExists() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean bdExists() throws SQLException {
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery("select count(word) as size from Word");
+        return rs.getInt("size") > 0;
     }
-    
+
 }

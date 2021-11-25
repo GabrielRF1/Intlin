@@ -6,6 +6,7 @@
 package ine.ufsc.model.dictionaries;
 
 import ine.ufsc.model.dictionaries.parsers.DictParser;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -17,18 +18,20 @@ import java.util.ArrayList;
  * @author Gabriel
  */
 public abstract class Dictionary {
-    private final String dbFileName;
+    protected final String dbFileName;
+    protected final String filesPath;
     protected Connection con;
     protected DictParser parser;
 
-    public Dictionary(String dbFileName) throws ClassNotFoundException, SQLException {
+    public Dictionary(String dbFileName, String filesPath) throws ClassNotFoundException, SQLException {
         this.dbFileName = dbFileName;
+        this.filesPath = filesPath;
         connect();
     }
     
     private void connect() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        con = DriverManager.getConnection("jdbc:sqlite:dicts/"+dbFileName+".db");
+        con = DriverManager.getConnection("jdbc:sqlite:"+filesPath+"/"+dbFileName+".db");
     }
     
     public abstract ResultSet searchDefinition(String word);
@@ -40,8 +43,4 @@ public abstract class Dictionary {
     public abstract boolean addDefinition(ArrayList<String> contents);
     
     public abstract boolean removeDefinition(int definitionId);
-    
-    protected abstract void build();
-    
-    protected abstract boolean bdExists();
 }

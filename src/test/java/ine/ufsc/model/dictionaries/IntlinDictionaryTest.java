@@ -15,7 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class IntlinDictionaryTest {
     
-    static String dbFileName = "es_enDict";
+    static String dbFileName = "intilinTest";
+    static String dbFilePath = "intilinTest";
     
     public IntlinDictionaryTest() {
     }
