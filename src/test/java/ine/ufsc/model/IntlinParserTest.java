@@ -29,20 +29,6 @@ public class IntlinParserTest {
     static IntlinParser instance;
     static Connection con;
     static ArrayList<File> files;
-    static String json1 = "["
-            + "{\"word\": \"estampido\", \"gender\": \"m\", \"defs\": [{\"_def\": \"crack, bang (noise)\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"directamente\", \"defs\": [{\"_def\": \"directly, firsthand\"}, {\"_def\": \"outright\"}], \"word_class\": \"Adverb\"},\n"
-            + "{\"word\": \"crisálida\", \"gender\": \"f\", \"defs\": [{\"_def\": \"chrysalis\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"abono\", \"gender\": \"m\", \"defs\": [{\"_def\": \"compost, fertilizer, manure\", \"_synonyms\": [\"fertilizante\"], \"extras\": [\"2002, Clara Inés Ríos Katto, Guía para el cultivo y aprovechamiento del botón de oro: Tithoni diversifolia (Hemsl.) Gray, Concenio Andrés Bello, page 22.\", \"En menor medida se utiliza abono de vaca, vermicompost, mantillo, abono de caballo[,] restos de cultivos, restos de cocina.To a lesser extent, cow manure, vermicompost, humus, horse manure, crop residues, and kitchen scraps are used.\", \"En campos de cultivos de arroz por inundación, los agricultores cosechan el botón de oro[. L]o incorporan al suelo como abono verde y mejorador de suelos.In rice paddies watered by flooding, farmers harvest buttercups. They incorporate it into the soil as a green fertilizer and soil improver.\", \"2009, Alfredo Tolón Becerra &amp; Xavier B. Lastra Bravo (eds.), Actas del III Seminario Internacional de Cooperación y Desarrollo en Espacios Rurales Iberoamericanos, Editorial Universidad de  Almería, page 205.\"]}, {\"_def\": \"subscription; season ticket\", \"extras\": [\"2006 December 6,  “La emisora británica TV Channel 4 permitirá descargar sus programas a través de Internet”, in  La Vanguardia:BT Vision, como se llama el nuevo servicio, ofrece también cuarenta canales de TV gratuitos sin que el cliente tenga que pagar abono mensual alguno.BT Vision, as the new service is called, also offers forty free TV channels without the customer having to pay any monthly subscription.\"]}, {\"_def\": \"payment, installment\", \"_synonyms\": [\"pago\"], \"extras\": [\"1982, Brígida von Mentz, Los Pioneros del imperialismo alemán en México, CIESAS, page 490\", \"Uhink cumple con sus obligaciones, cancelándose finalmente la escritura por entero en 1875, catorce años más tarde de la última fecha estipulada originalmente para el último abono.Uhink fulfills his obligations, finally paying himself off completely in writing in 1875, fourteen years after the originally stipulated final date for the last installment.\"]}, {\"_def\": \"guarantee, security\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"abono\", \"defs\": [{\"_def\": \"First-person singular   (yo)  present indicative  form of abonar.\"}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"allí\", \"defs\": [{\"_def\": \"there (away from the speaker and the listener)\", \"_synonyms\": [\"ahí\", \"allá\"], \"antonyms\": [\"aquí\", \"acá\"]}], \"word_class\": \"Adverb\"},\n"
-            + "]";
-    static String json2 = "["
-            + "{\"word\": \"albóndigas\", \"gender\": \"f pl\", \"defs\": [{\"_def\": \"plural of albóndiga\"}, {\"_def\": \"A soup made with albóndigas (meatballs)\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"enfilar\", \"defs\": [{\"_def\": \"(transitive) to line up\"}, {\"_def\": \"(transitive) to thread (a needle)\"}, {\"_def\": \"(transitive) to string (pearls, beads, etc.)\", \"_synonyms\": [\"ensartar\"]}, {\"_def\": \"(intransitive) to go straight down (a path)\"}, {\"_def\": \"(intransitive) to head for\", \"_synonyms\": [\"dirigirse a\"]}], \"word_class\": \"Verb\"},\n"
-            + "{\"word\": \"elfo\", \"gender\": \"m\", \"defs\": [{\"_def\": \"elf\"}], \"word_class\": \"Noun\"},\n"
-            + "{\"word\": \"ahuevonado\", \"alt\": [\"ahueonao, aweonado, aweonao (eye dialect)\", \"ahueonado (eye dialect, rare)\"], \"defs\": [{\"_def\": \"(Chile) dazed\"}, {\"_def\": \"(Chile, vulgar) stupid\"}], \"word_class\": \"Adjective\"}"
-            + "]";
 
     public IntlinParserTest() {
     }
@@ -103,16 +89,8 @@ public class IntlinParserTest {
     }
 
     private static ArrayList<File> setUpFiles() throws IOException {
-        File f1 = new File("testDict/test_1.json");
-        f1.createNewFile();
-        FileWriter fw = new FileWriter(f1.getPath());
-        fw.write(new String(json1.getBytes(StandardCharsets.UTF_8)));
-        fw.close();
-        File f2 = new File("testDict/test_2.json");
-        f2.createNewFile();
-        FileWriter fw2 = new FileWriter(f2.getPath());
-        fw2.write(new String(json2.getBytes(StandardCharsets.UTF_8)));
-        fw2.close();
+        File f1 = new File("testDict/intlinTest/intlinTest1.json");
+        File f2 = new File("testDict/intlinTest/intlinTest2.json");
         files = new ArrayList<>();
         files.add(f1);
         files.add(f2);
@@ -132,9 +110,6 @@ public class IntlinParserTest {
         con.close();
         File dbFile = new File("testDict/dbtest.db");
         dbFile.delete();
-        for (int i = 0; i < files.size(); i++) {
-            files.get(i).delete();
-        }
     }
 
     /**

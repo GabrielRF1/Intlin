@@ -37,15 +37,16 @@ public class CCCedictParser implements DictParser {
 
     @Override
     public void doParsing(ArrayList<File> files) throws IOException, SQLException {
+        con.setAutoCommit(false);
         for (File file : files) {
-            String content = new String(Files.readAllBytes(Paths.get(file.getPath())),
-                    StandardCharsets.UTF_16);
-            //System.out.println(content);
+            String content = new String(Files.readAllBytes(Paths.get(file.getPath())), StandardCharsets.UTF_8);
             Scanner sc = new Scanner(content);
             sc.useDelimiter(" ");
             while (sc.hasNext()) {
-                stmWord.setString(1, sc.next().strip());
-                stmWord.setString(2, sc.next().strip());
+                String trad = sc.next().strip();
+                String simp = sc.next().strip();
+                stmWord.setString(1, trad);
+                stmWord.setString(2, simp);
 
                 sc.useDelimiter("]");
                 stmWord.setString(3, sc.next().substring(2));
@@ -55,21 +56,26 @@ public class CCCedictParser implements DictParser {
                 Scanner defSc = new Scanner(definitions);
                 defSc.useDelimiter("/");
                 while (defSc.hasNext()) {
-                    String def = defSc.next();
-                    stmDefinition.setString(1, def);
-                    stmDefinition.setInt(2, bufferedCount + 1);
-                    stmDefinition.addBatch();
+                    String def = defSc.next().stripTrailing().stripLeading();
+                    if (def.length() != 0) {
+                        //System.out.println(def.length());
+                        stmDefinition.setString(1, def);
+                        stmDefinition.setInt(2, bufferedCount + 1);
+                        stmDefinition.addBatch();
+                    }
                 }
                 stmWord.addBatch();
                 bufferedCount++;
-                if (bufferedCount % 1000 == 0) {
+                if (bufferedCount % 10000 == 0) {
                     stmWord.executeBatch();
                     stmDefinition.executeBatch();
+                    con.commit();
                 }
                 sc.useDelimiter(" ");
             }
             stmWord.executeBatch();
             stmDefinition.executeBatch();
+            con.commit();
         }
     }
 
