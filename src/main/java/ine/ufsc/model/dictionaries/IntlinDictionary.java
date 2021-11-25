@@ -5,6 +5,7 @@
  */
 package ine.ufsc.model.dictionaries;
 
+import ine.ufsc.model.dictionaries.parsers.IntlinParser;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,10 +14,11 @@ import java.util.ArrayList;
  *
  * @author Gabriel
  */
-public class IntlinDictionary extends Dictionary{
+public class IntlinDictionary extends Dictionary {
 
     public IntlinDictionary(String dbFileName) throws ClassNotFoundException, SQLException {
         super(dbFileName);
+        parser = new IntlinParser(con);
     }
 
     @Override

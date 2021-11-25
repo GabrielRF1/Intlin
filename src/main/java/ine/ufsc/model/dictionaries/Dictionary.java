@@ -5,6 +5,7 @@
  */
 package ine.ufsc.model.dictionaries;
 
+import ine.ufsc.model.dictionaries.parsers.DictParser;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,8 +17,9 @@ import java.util.ArrayList;
  * @author Gabriel
  */
 public abstract class Dictionary {
-    private Connection con;
-    private String dbFileName;
+    private final String dbFileName;
+    protected Connection con;
+    protected DictParser parser;
 
     public Dictionary(String dbFileName) throws ClassNotFoundException, SQLException {
         this.dbFileName = dbFileName;
@@ -26,7 +28,7 @@ public abstract class Dictionary {
     
     private void connect() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtest.db");
+        con = DriverManager.getConnection("jdbc:sqlite:dicts/"+dbFileName+".db");
     }
     
     public abstract ResultSet searchDefinition(String word);
