@@ -6,7 +6,6 @@
 package ine.ufsc.model.dictionaries;
 
 import ine.ufsc.model.dictionaries.parsers.DictParser;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -34,11 +33,11 @@ public abstract class Dictionary {
         con = DriverManager.getConnection("jdbc:sqlite:"+filesPath+"/"+dbFileName+".db");
     }
     
-    public abstract ResultSet searchDefinition(String word);
+    public abstract ResultSet searchDefinition(String word) throws SQLException;
     
-    public abstract ResultSet searchAlternativeForm(String word);
+    public abstract ResultSet searchAlternativeForm(String word) throws SQLException;
     
-    public abstract ResultSet searchExtra(String extraOf);
+    public abstract ResultSet searchExtra(String extraOf) throws SQLException;
     
     public abstract boolean addDefinition(ArrayList<String> contents);
     
