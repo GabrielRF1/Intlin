@@ -1,0 +1,6 @@
+[
+{"word": "albóndigas", "gender": "f pl", "defs": [{"_def": "plural of albóndiga"}, {"_def": "A soup made with albóndigas (meatballs)"}], "word_class": "Noun"},
+{"word": "enfilar", "defs": [{"_def": "(transitive) to line up"}, {"_def": "(transitive) to thread (a needle)"}, {"_def": "(transitive) to string (pearls, beads, etc.)", "_synonyms": ["ensartar"]}, {"_def": "(intransitive) to go straight down (a path)"}, {"_def": "(intransitive) to head for", "_synonyms": ["dirigirse a"]}], "word_class": "Verb"},
+{"word": "elfo", "gender": "m", "defs": [{"_def": "elf"}], "word_class": "Noun"},
+{"word": "ahuevonado", "alt": ["ahueonao, aweonado, aweonao (eye dialect)", "ahueonado (eye dialect, rare)"], "defs": [{"_def": "(Chile) dazed"}, {"_def": "(Chile, vulgar) stupid"}], "word_class": "Adjective"},
+]
