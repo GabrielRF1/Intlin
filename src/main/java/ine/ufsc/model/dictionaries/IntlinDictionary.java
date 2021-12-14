@@ -36,7 +36,6 @@ public class IntlinDictionary extends Dictionary {
     public IntlinDictionary(String dbFileName, String filesPath) throws ClassNotFoundException, SQLException, IOException {
         super(dbFileName, filesPath);
         if (!bdExists()) {
-            parser = new IntlinParser(con);
             build();
         }
     }
@@ -89,13 +88,13 @@ public class IntlinDictionary extends Dictionary {
 
         int defId = con.prepareStatement("select last_insert_rowid() as id;")
                 .executeQuery().getInt("id");
-        
+
         if (info.syns != null) {
             PreparedStatement stmInsertSyn = con
-                .prepareStatement("INSERT INTO Definition(def, word_id)"
-                        + "VALUES(?, ?)");
-        stmInsertSyn.setString(1, info.def);
-        stmInsertSyn.setInt(2, wordId);
+                    .prepareStatement("INSERT INTO Definition(def, word_id)"
+                            + "VALUES(?, ?)");
+            stmInsertSyn.setString(1, info.def);
+            stmInsertSyn.setInt(2, wordId);
         }
 
         return stmInsertDef.execute();
@@ -116,6 +115,7 @@ public class IntlinDictionary extends Dictionary {
                 filesAr.add(file);
             }
         }
+        parser = new IntlinParser(con);
         parser.doParsing(filesAr);
     }
 
@@ -173,13 +173,11 @@ public class IntlinDictionary extends Dictionary {
     }
 
     private boolean bdExists() {
-        try {
-            Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select count(word) as size from Word");
-            return rs.getInt("size") > 0;
-        } catch (SQLException ex) {
-            return false;
+        File file = new File(filesPath+"/"+dbFileName+".db");
+        if (file.length() > 0) {
+            return true;
         }
+        return false;
     }
 
 }
