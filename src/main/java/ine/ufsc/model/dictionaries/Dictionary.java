@@ -32,6 +32,10 @@ public abstract class Dictionary {
         con = DriverManager.getConnection("jdbc:sqlite:"+filesPath+"/"+dbFileName+".db");
     }
     
+    public void closeConnection() throws SQLException {
+        con.close();
+    }
+    
     public abstract ResultSet searchDefinition(String word) throws SQLException;
     
     public abstract ResultSet searchAlternativeForm(String word) throws SQLException;

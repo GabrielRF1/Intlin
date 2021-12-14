@@ -26,10 +26,10 @@ public class IntlinDictionary extends Dictionary {
         public String gender;
         public String wordClass;
         public String def;
-        public ArrayList<String> alts;
-        public ArrayList<String> syns;
-        public ArrayList<String> ants;
-        public ArrayList<String> extras;
+        public ArrayList<String> alts = new ArrayList<>();
+        public ArrayList<String> syns = new ArrayList<>();
+        public ArrayList<String> ants = new ArrayList<>();
+        public ArrayList<String> extras = new ArrayList<>();
 
     }
 
@@ -43,7 +43,7 @@ public class IntlinDictionary extends Dictionary {
     @Override
     public ResultSet searchDefinition(String word) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT w.gender, w.word_class, d.def AS definition "
+                .prepareStatement("SELECT w.word_id, w.gender, w.word_class, d.def AS definition "
                         + "FROM Word w INNER JOIN "
                         + "Definition d on d.word_id = w.word_id "
                         + "where w.word = ?");
@@ -75,8 +75,10 @@ public class IntlinDictionary extends Dictionary {
 
     @Override
     public boolean addDefinition(Object contents) throws SQLException {
+        boolean success = true;
         IntlinInfo info = (IntlinInfo) contents;
-        PreparedStatement wordStm = con.prepareStatement("SELECT word_id FROM Word WHERE word_id=?");
+        con.setAutoCommit(false);
+        PreparedStatement wordStm = con.prepareStatement("SELECT word_id FROM Word WHERE word=?");
         wordStm.setString(1, info.word);
         int wordId = wordStm.executeQuery().getInt("word_id");
 
@@ -86,18 +88,44 @@ public class IntlinDictionary extends Dictionary {
         stmInsertDef.setString(1, info.def);
         stmInsertDef.setInt(2, wordId);
 
-        int defId = con.prepareStatement("select last_insert_rowid() as id;")
+        success &= !stmInsertDef.execute();
+
+        int defId = con.prepareStatement("SELECT last_insert_rowid() AS id;")
                 .executeQuery().getInt("id");
 
-        if (info.syns != null) {
-            PreparedStatement stmInsertSyn = con
-                    .prepareStatement("INSERT INTO Definition(def, word_id)"
-                            + "VALUES(?, ?)");
-            stmInsertSyn.setString(1, info.def);
-            stmInsertSyn.setInt(2, wordId);
+        if (!info.syns.isEmpty()) {
+            for (String syn : info.syns) {
+                PreparedStatement stmInsertSyn = con
+                        .prepareStatement("INSERT INTO Synonym(def_id, syn)"
+                                + "VALUES(?, ?)");
+                stmInsertSyn.setInt(1, defId);
+                stmInsertSyn.setString(2, syn);
+                success &= !stmInsertSyn.execute();
+            }
         }
-
-        return stmInsertDef.execute();
+        if (!info.ants.isEmpty()) {
+            for (String ant : info.ants) {
+                PreparedStatement stmInsertAnt = con
+                        .prepareStatement("INSERT INTO Antonym(def_id, ant)"
+                                + "VALUES(?, ?)");
+                stmInsertAnt.setInt(1, defId);
+                stmInsertAnt.setString(2, ant);
+                success &= !stmInsertAnt.execute();
+            }
+        }
+        if (!info.extras.isEmpty()) {
+            for (String extra : info.extras) {
+                PreparedStatement stmInsertExtra = con
+                        .prepareStatement("INSERT INTO Extra(def_id, extra)"
+                                + "VALUES(?, ?)");
+                stmInsertExtra.setInt(1, defId);
+                stmInsertExtra.setString(2, extra);
+                success &= !stmInsertExtra.execute();
+            }
+        }
+        con.commit();
+        con.setAutoCommit(true);
+        return success;
     }
 
     @Override

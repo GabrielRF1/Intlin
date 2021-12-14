@@ -6,6 +6,8 @@
 package ine.ufsc.model.dictionaries;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,16 +23,23 @@ public class IntlinDictionaryTest {
 
     static String dbFileName = "intlinTest";
     static String dbFilePath = "testDict/IntlinTest";
+    static IntlinDictionary instance;
 
     public IntlinDictionaryTest() {
     }
 
     @org.junit.jupiter.api.BeforeAll
-    public static void setUpClass() {
+    public static void setUpClass() throws ClassNotFoundException, SQLException, IOException {
+        instance = new IntlinDictionary(dbFileName, dbFilePath);
     }
 
     @org.junit.jupiter.api.AfterAll
-    public static void tearDownClass() {
+    public static void tearDownClass() throws ClassNotFoundException, SQLException, IOException {
+        instance.closeConnection();
+        Class.forName("org.sqlite.JDBC");
+        Connection con = DriverManager.getConnection("jdbc:sqlite:testDict/IntlinTest/intlinTest.db");
+        con.prepareStatement("DELETE FROM Definition WHERE def_id >= 21").execute();
+        con.close();
     }
 
     /**
@@ -44,23 +53,25 @@ public class IntlinDictionaryTest {
             ArrayList<String> expected = new ArrayList<>();
             String expectedGender = "f pl";
             String expectedWordClass = "Noun";
+            String expectedId = "7";
             ArrayList<String> expectedDefinitions = new ArrayList<>();
             expectedDefinitions.add("plural of albóndiga");
             expectedDefinitions.add("A soup made with albóndigas (meatballs)");
+            expected.add(expectedId);
             expected.add(expectedGender);
             expected.add(expectedWordClass);
             expected.addAll(expectedDefinitions);
 
-            IntlinDictionary instance = new IntlinDictionary(dbFileName, dbFilePath);
             ArrayList<String> actual = new ArrayList<>();
             ResultSet result = instance.searchDefinition(word);
+            actual.add(result.getString("word_id"));
             actual.add(result.getString("gender"));
             actual.add(result.getString("word_class"));
             while (result.next()) {
                 actual.add(result.getString("definition"));
             }
             assertEquals(expected, actual);
-        } catch (ClassNotFoundException | SQLException | IOException ex) {
+        } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
@@ -72,7 +83,6 @@ public class IntlinDictionaryTest {
     public void testSearchAlternativeForm() {
         try {
             String word = "ahuevonado";
-            IntlinDictionary instance = new IntlinDictionary(dbFileName, dbFilePath);
             Set<String> expResult = new HashSet<>();
             expResult.add("ahueonao, aweonado, aweonao (eye dialect)");
             expResult.add("ahueonado (eye dialect, rare)");
@@ -84,7 +94,7 @@ public class IntlinDictionaryTest {
                 actual.add(nextAlt);
             }
             assertEquals(expResult, actual);
-        } catch (ClassNotFoundException | SQLException | IOException ex) {
+        } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
@@ -97,7 +107,6 @@ public class IntlinDictionaryTest {
         try {
             
             String extraOfDefiniton = "compost, fertilizer, manure";
-            IntlinDictionary instance = new IntlinDictionary(dbFileName, dbFilePath);
             Set<String> expResult = new HashSet<>();
             expResult.add("2002, Clara Inés Ríos Katto, Guía para el cultivo y aprovechamiento del botón de oro: Tithoni diversifolia (Hemsl.) Gray, Concenio Andrés Bello, page 22.");
             expResult.add("En menor medida se utiliza abono de vaca, vermicompost, mantillo, abono de caballo[,] restos de cultivos, restos de cocina.To a lesser extent, cow manure, vermicompost, humus, horse manure, crop residues, and kitchen scraps are used.");
@@ -111,7 +120,7 @@ public class IntlinDictionaryTest {
                 actual.add(nextAlt);
             }
             assertEquals(expResult, actual);
-        } catch (ClassNotFoundException | SQLException | IOException ex) {
+        } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
@@ -125,15 +134,12 @@ public class IntlinDictionaryTest {
             IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
             contents.word = "estampido";
             contents.def = "shot";
-            contents.syns = new ArrayList<>();
             contents.syns.add("disparo");
             contents.syns.add("tiro");
             
-            IntlinDictionary instance = new IntlinDictionary(dbFileName, dbFilePath);
-            boolean expResult = true;
             boolean result = instance.addDefinition(contents);
-            assertEquals(expResult, result);
-        } catch (ClassNotFoundException | SQLException | IOException ex) {
+            assertTrue(result);
+        } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
