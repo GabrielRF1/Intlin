@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  *
@@ -39,7 +38,7 @@ public abstract class Dictionary {
     
     public abstract ResultSet searchExtra(String extraOf) throws SQLException;
     
-    public abstract boolean addDefinition(ArrayList<String> contents);
+    public abstract boolean addDefinition(Object contents) throws SQLException;
     
-    public abstract boolean removeDefinition(int definitionId);
+    public abstract boolean removeDefinition(int definitionId) throws SQLException;
 }

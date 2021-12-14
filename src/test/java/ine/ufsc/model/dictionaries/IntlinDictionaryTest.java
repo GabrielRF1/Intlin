@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -58,57 +60,84 @@ public class IntlinDictionaryTest {
                 actual.add(result.getString("definition"));
             }
             assertEquals(expected, actual);
-            // TODO review the generated test code and remove the default call to fail.
         } catch (ClassNotFoundException | SQLException | IOException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
 
-//    /**
-//     * Test of searchAlternativeForm method, of class IntlinDictionary.
-//     */
-//    @org.junit.jupiter.api.Test
-//    public void testSearchAlternativeForm() {
-//        System.out.println("searchAlternativeForm");
-//        String word = "";
-//        IntlinDictionary instance = null;
-//        ResultSet expResult = null;
-//        ResultSet result = instance.searchAlternativeForm(word);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of searchExtra method, of class IntlinDictionary.
-//     */
-//    @org.junit.jupiter.api.Test
-//    public void testSearchExtra() {
-//        System.out.println("searchExtra");
-//        String extraOf = "";
-//        IntlinDictionary instance = null;
-//        ResultSet expResult = null;
-//        ResultSet result = instance.searchExtra(extraOf);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of addDefinition method, of class IntlinDictionary.
-//     */
-//    @org.junit.jupiter.api.Test
-//    public void testAddDefinition() {
-//        System.out.println("addDefinition");
-//        ArrayList<String> contents = null;
-//        IntlinDictionary instance = null;
-//        boolean expResult = false;
-//        boolean result = instance.addDefinition(contents);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
+    /**
+     * Test of searchAlternativeForm method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testSearchAlternativeForm() {
+        try {
+            String word = "ahuevonado";
+            IntlinDictionary instance = new IntlinDictionary(dbFileName, dbFilePath);
+            Set<String> expResult = new HashSet<>();
+            expResult.add("ahueonao, aweonado, aweonao (eye dialect)");
+            expResult.add("ahueonado (eye dialect, rare)");
+            
+            Set<String> actual = new HashSet<>();
+            ResultSet result = instance.searchAlternativeForm(word);
+            while (result.next()) {
+                String nextAlt = result.getString("alternative");     
+                actual.add(nextAlt);
+            }
+            assertEquals(expResult, actual);
+        } catch (ClassNotFoundException | SQLException | IOException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+
+    /**
+     * Test of searchExtra method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testSearchExtra() {
+        try {
+            
+            String extraOfDefiniton = "compost, fertilizer, manure";
+            IntlinDictionary instance = new IntlinDictionary(dbFileName, dbFilePath);
+            Set<String> expResult = new HashSet<>();
+            expResult.add("2002, Clara Inés Ríos Katto, Guía para el cultivo y aprovechamiento del botón de oro: Tithoni diversifolia (Hemsl.) Gray, Concenio Andrés Bello, page 22.");
+            expResult.add("En menor medida se utiliza abono de vaca, vermicompost, mantillo, abono de caballo[,] restos de cultivos, restos de cocina.To a lesser extent, cow manure, vermicompost, humus, horse manure, crop residues, and kitchen scraps are used.");
+            expResult.add("En campos de cultivos de arroz por inundación, los agricultores cosechan el botón de oro[. L]o incorporan al suelo como abono verde y mejorador de suelos.In rice paddies watered by flooding, farmers harvest buttercups. They incorporate it into the soil as a green fertilizer and soil improver.");
+            expResult.add("2009, Alfredo Tolón Becerra &amp; Xavier B. Lastra Bravo (eds.), Actas del III Seminario Internacional de Cooperación y Desarrollo en Espacios Rurales Iberoamericanos, Editorial Universidad de  Almería, page 205.");
+            
+            Set<String> actual = new HashSet<>();
+            ResultSet result = instance.searchExtra(extraOfDefiniton);
+            while (result.next()) {
+                String nextAlt = result.getString("extra");     
+                actual.add(nextAlt);
+            }
+            assertEquals(expResult, actual);
+        } catch (ClassNotFoundException | SQLException | IOException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+
+    /**
+     * Test of addDefinition method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testAddDefinition() {
+        try {
+            IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
+            contents.word = "estampido";
+            contents.def = "shot";
+            contents.syns = new ArrayList<>();
+            contents.syns.add("disparo");
+            contents.syns.add("tiro");
+            
+            IntlinDictionary instance = new IntlinDictionary(dbFileName, dbFilePath);
+            boolean expResult = true;
+            boolean result = instance.addDefinition(contents);
+            assertEquals(expResult, result);
+        } catch (ClassNotFoundException | SQLException | IOException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+
 //    /**
 //     * Test of removeDefinition method, of class IntlinDictionary.
 //     */

@@ -20,6 +20,19 @@ import java.util.ArrayList;
  */
 public class IntlinDictionary extends Dictionary {
 
+    public static class IntlinInfo {
+
+        public String word;
+        public String gender;
+        public String wordClass;
+        public String def;
+        public ArrayList<String> alts;
+        public ArrayList<String> syns;
+        public ArrayList<String> ants;
+        public ArrayList<String> extras;
+
+    }
+
     public IntlinDictionary(String dbFileName, String filesPath) throws ClassNotFoundException, SQLException, IOException {
         super(dbFileName, filesPath);
         if (!bdExists()) {
@@ -31,7 +44,7 @@ public class IntlinDictionary extends Dictionary {
     @Override
     public ResultSet searchDefinition(String word) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT w.gender, w.word_class, d.def AS definition, "
+                .prepareStatement("SELECT w.gender, w.word_class, d.def AS definition "
                         + "FROM Word w INNER JOIN "
                         + "Definition d on d.word_id = w.word_id "
                         + "where w.word = ?");
@@ -40,18 +53,52 @@ public class IntlinDictionary extends Dictionary {
     }
 
     @Override
-    public ResultSet searchAlternativeForm(String word) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ResultSet searchAlternativeForm(String word) throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT a.extension AS alternative "
+                        + "FROM Word w INNER JOIN "
+                        + "Alternative a on a.word_id = w.word_id "
+                        + "where w.word = ?");
+        stm.setString(1, word);
+        return stm.executeQuery();
     }
 
     @Override
-    public ResultSet searchExtra(String extraOf) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ResultSet searchExtra(String extraOfDefinition) throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT e.extension AS extra "
+                        + "FROM Definition d INNER JOIN "
+                        + "Extra e on d.def_id = e.def_id "
+                        + "where d.def = ?");
+        stm.setString(1, extraOfDefinition);
+        return stm.executeQuery();
     }
 
     @Override
-    public boolean addDefinition(ArrayList<String> contents) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean addDefinition(Object contents) throws SQLException {
+        IntlinInfo info = (IntlinInfo) contents;
+        PreparedStatement wordStm = con.prepareStatement("SELECT word_id FROM Word WHERE word_id=?");
+        wordStm.setString(1, info.word);
+        int wordId = wordStm.executeQuery().getInt("word_id");
+
+        PreparedStatement stmInsertDef = con
+                .prepareStatement("INSERT INTO Definition(def, word_id)"
+                        + "VALUES(?, ?)");
+        stmInsertDef.setString(1, info.def);
+        stmInsertDef.setInt(2, wordId);
+
+        int defId = con.prepareStatement("select last_insert_rowid() as id;")
+                .executeQuery().getInt("id");
+        
+        if (info.syns != null) {
+            PreparedStatement stmInsertSyn = con
+                .prepareStatement("INSERT INTO Definition(def, word_id)"
+                        + "VALUES(?, ?)");
+        stmInsertSyn.setString(1, info.def);
+        stmInsertSyn.setInt(2, wordId);
+        }
+
+        return stmInsertDef.execute();
     }
 
     @Override
