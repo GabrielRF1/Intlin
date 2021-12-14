@@ -54,7 +54,7 @@ public class IntlinDictionary extends Dictionary {
     @Override
     public ResultSet searchAlternativeForm(String word) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT a.extension AS alternative "
+                .prepareStatement("SELECT a.alt AS alternative "
                         + "FROM Word w INNER JOIN "
                         + "Alternative a on a.word_id = w.word_id "
                         + "where w.word = ?");
@@ -65,7 +65,7 @@ public class IntlinDictionary extends Dictionary {
     @Override
     public ResultSet searchExtra(String extraOfDefinition) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT e.extension AS extra "
+                .prepareStatement("SELECT e.extra "
                         + "FROM Definition d INNER JOIN "
                         + "Extra e on d.def_id = e.def_id "
                         + "where d.def = ?");
@@ -121,10 +121,6 @@ public class IntlinDictionary extends Dictionary {
 
     private void createTables() throws SQLException {
         Statement stm = con.createStatement();
-        // Extension table
-        stm.execute("CREATE TABLE IF NOT EXISTS Extension("
-                + "extension TEXT NOT NULL PRIMARY KEY)");
-        stm = con.createStatement();
         // Word table 
         stm.execute("CREATE TABLE IF NOT EXISTS Word("
                 + "word_id INTEGER PRIMARY KEY,"
@@ -141,39 +137,36 @@ public class IntlinDictionary extends Dictionary {
         stm = con.createStatement();
         // Alternative table 
         stm.execute("CREATE TABLE IF NOT EXISTS Alternative("
+                + "alt_id INTEGER PRIMARY KEY,"
                 + "word_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(word_id) REFERENCES Word(word_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(word_id, extension))");
+                + "alt TEXT NOT NULL,"
+                + "FOREIGN KEY(word_id) REFERENCES Word(word_id))"
+        /*+ "PRIMARY KEY(word_id, alt))"*/);
         stm = con.createStatement();
         // Synonym table 
         stm.execute("CREATE TABLE IF NOT EXISTS Synonym("
+                + "syn_id INTEGER PRIMARY KEY,"
                 + "def_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(def_id, extension));");
+                + "syn TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id))");
         stm = con.createStatement();
         // Antonym table 
         stm.execute("CREATE TABLE IF NOT EXISTS Antonym("
+                + "ant_id INTEGER PRIMARY KEY,"
                 + "def_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(def_id, extension));");
+                + "ant TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id))");
         stm = con.createStatement();
         // Extra table 
         stm.execute("CREATE TABLE IF NOT EXISTS Extra("
+                + "extra_id INTEGER PRIMARY KEY,"
                 + "def_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(def_id, extension));");
+                + "extra TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id))");
     }
 
     private boolean bdExists() {
-        File file = new File(filesPath+"/"+dbFileName+".db");
+        File file = new File(filesPath + "/" + dbFileName + ".db");
         if (file.length() > 0) {
             return true;
         }

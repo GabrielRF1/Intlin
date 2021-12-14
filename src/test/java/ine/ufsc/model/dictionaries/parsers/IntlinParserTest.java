@@ -35,10 +35,6 @@ public class IntlinParserTest {
         Class.forName("org.sqlite.JDBC");
         con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtest.db");
         Statement stm = con.createStatement();
-        // Extension table
-        stm.execute("CREATE TABLE IF NOT EXISTS Extension("
-                + "extension TEXT NOT NULL PRIMARY KEY)");
-        stm = con.createStatement();
         // Word table 
         stm.execute("CREATE TABLE IF NOT EXISTS Word("
                 + "word_id INTEGER PRIMARY KEY,"
@@ -55,35 +51,32 @@ public class IntlinParserTest {
         stm = con.createStatement();
         // Alternative table 
         stm.execute("CREATE TABLE IF NOT EXISTS Alternative("
+                + "alt_id INTEGER PRIMARY KEY,"
                 + "word_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(word_id) REFERENCES Word(word_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(word_id, extension))");
+                + "alt TEXT NOT NULL,"
+                + "FOREIGN KEY(word_id) REFERENCES Word(word_id))"
+                /*+ "PRIMARY KEY(word_id, alt))"*/);
         stm = con.createStatement();
         // Synonym table 
         stm.execute("CREATE TABLE IF NOT EXISTS Synonym("
+                + "syn_id INTEGER PRIMARY KEY,"
                 + "def_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(def_id, extension));");
+                + "syn TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id))");
         stm = con.createStatement();
         // Antonym table 
         stm.execute("CREATE TABLE IF NOT EXISTS Antonym("
+                + "ant_id INTEGER PRIMARY KEY,"
                 + "def_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(def_id, extension));");
+                + "ant TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id))");
         stm = con.createStatement();
         // Extra table 
         stm.execute("CREATE TABLE IF NOT EXISTS Extra("
+                + "extra_id INTEGER PRIMARY KEY,"
                 + "def_id INTEGER NOT NULL,"
-                + "extension TEXT NOT NULL,"
-                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
-                + "FOREIGN KEY(extension) REFERENCES Extension(extension),"
-                + "PRIMARY KEY(def_id, extension));");
+                + "extra TEXT NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id))");
     }
 
     private static ArrayList<File> setUpFiles() throws IOException {
@@ -259,13 +252,13 @@ public class IntlinParserTest {
 
     private static boolean verifyAlternatives(ArrayList<String> expected, int wordId) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT alt.extension AS alternative "
+                .prepareStatement("SELECT alt.alt AS alternative "
                         + "FROM Word w INNER JOIN "
                         + "Alternative alt on alt.word_id = w.word_id "
                         + "where w.word_id = ?");
         stm.setInt(1, wordId);
         PreparedStatement stmSize = con
-                .prepareStatement("SELECT COUNT(alt.extension) AS size "
+                .prepareStatement("SELECT COUNT(alt.alt) AS size "
                         + "FROM Word w INNER JOIN "
                         + "Alternative alt on alt.word_id = w.word_id "
                         + "where w.word_id = ?");
@@ -301,7 +294,7 @@ public class IntlinParserTest {
                 .prepareStatement("SELECT d.def AS definition "
                         + "FROM Word w INNER JOIN "
                         + "Definition d on d.word_id = w.word_id "
-                    + "where w.word_id = ?");
+                        + "where w.word_id = ?");
         stm.setInt(1, wordId);
         PreparedStatement stmSize = con
                 .prepareStatement("SELECT COUNT(d.def) AS size "
@@ -327,11 +320,14 @@ public class IntlinParserTest {
 
     private boolean verifyCorrectAsset(ArrayList<String> expected, String def_text, String asset)
             throws SQLException {
+        String field = asset.equals("Extra") ? "extra" 
+                :  asset.equals("Antonym") ? "ant"  
+                :  "syn";
         PreparedStatement stm = con
-                .prepareStatement(String.format("SELECT s.extension AS %s "
+                .prepareStatement(String.format("SELECT s.%s AS %s "
                         + "FROM Definition d INNER JOIN "
                         + "%s s on d.def_id = s.def_id "
-                        + "where d.def = ?", asset, asset));
+                        + "where d.def = ?", field ,asset, asset));
         stm.setString(1, def_text);
         PreparedStatement stmSize = con
                 .prepareStatement(String.format("SELECT count(*) AS size "

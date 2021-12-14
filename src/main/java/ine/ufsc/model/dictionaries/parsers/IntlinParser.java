@@ -28,7 +28,6 @@ public class IntlinParser implements DictParser {
     private int curDefId = 0;
     private final Connection con;
     private final PreparedStatement stmWord;
-    private final PreparedStatement stmExtension;
     private final PreparedStatement stmAlt;
     private final PreparedStatement stmDef;
     private final PreparedStatement stmSyn;
@@ -40,15 +39,16 @@ public class IntlinParser implements DictParser {
         stmWord = con.prepareStatement("INSERT OR "
                 + "IGNORE INTO Word(word, word_class, gender) "
                 + "VALUES(?, ?, ?)");
-        stmExtension = con.prepareStatement("INSERT OR IGNORE INTO Extension "
-                + "VALUES (?)");
-        stmAlt = con.prepareStatement("INSERT OR IGNORE INTO Alternative "
+        stmAlt = con.prepareStatement("INSERT OR IGNORE INTO Alternative(word_id, alt) "
                 + "VALUES (?, ?)");
         stmDef = con.prepareStatement("INSERT OR IGNORE INTO "
                 + "Definition(def, word_id) VALUES (?, ?)");
-        stmSyn = con.prepareStatement("INSERT OR IGNORE INTO Synonym VALUES (?, ?)");
-        stmAnt = con.prepareStatement("INSERT OR IGNORE INTO Antonym VALUES (?, ?)");
-        stmExt = con.prepareStatement("INSERT OR IGNORE INTO Extra VALUES (?, ?)");
+        stmSyn = con.prepareStatement("INSERT OR IGNORE INTO Synonym(def_id, syn) "
+                + "VALUES (?, ?)");
+        stmAnt = con.prepareStatement("INSERT OR IGNORE INTO Antonym(def_id, ant) "
+                + "VALUES (?, ?)");
+        stmExt = con.prepareStatement("INSERT OR IGNORE INTO Extra(def_id, extra) "
+                + "VALUES (?, ?)");
     }
 
     @Override
@@ -59,6 +59,7 @@ public class IntlinParser implements DictParser {
             JSONArray json = new JSONArray(content);
             con.setAutoCommit(false);
             for (int i = 0; i < json.length(); i++) {
+                System.out.println("loading: " + (i + 1) + "/" + json.length());
                 parseLine(json, i);
                 curId++;
                 if (i % 1000 == 0) {
@@ -71,7 +72,6 @@ public class IntlinParser implements DictParser {
 
     private void execBatches() throws SQLException {
         stmWord.executeBatch();
-        stmExtension.executeBatch();
         stmAlt.executeBatch();
         stmDef.executeBatch();
         stmSyn.executeBatch();
@@ -112,8 +112,6 @@ public class IntlinParser implements DictParser {
 
     private void parseAlternatives(JSONArray alternatives, int wordId) throws SQLException {
         for (Object alternative : alternatives) {
-            stmExtension.setString(1, (String) alternative);
-            stmExtension.addBatch();
             stmAlt.setInt(1, wordId);
             stmAlt.setString(2, (String) alternative);
             stmAlt.addBatch();
@@ -162,8 +160,6 @@ public class IntlinParser implements DictParser {
     private void parseInterest(JSONArray interest, int defId,
             int interestCode) throws SQLException {
         for (Object in : interest) {
-            stmExtension.setString(1, (String) in);
-            stmExtension.addBatch();
             switch (interestCode) {
                 case 0:
                     stmSyn.setInt(1, defId);
