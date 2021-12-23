@@ -39,6 +39,9 @@ public class IntlinDictionaryTest {
         Class.forName("org.sqlite.JDBC");
         Connection con = DriverManager.getConnection("jdbc:sqlite:testDict/IntlinTest/intlinTest.db");
         con.prepareStatement("DELETE FROM Definition WHERE def_id >= 21").execute();
+        con.prepareStatement("DELETE FROM Synonym WHERE def_id >= 21").execute();
+        con.prepareStatement("DELETE FROM Antonym WHERE def_id >= 21").execute();
+        con.prepareStatement("DELETE FROM Extra WHERE def_id >= 21").execute();
         con.close();
     }
 
@@ -129,7 +132,7 @@ public class IntlinDictionaryTest {
      * Test of addDefinition method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
-    public void testAddDefinition() {
+    public void testAddDefinitionWSyn() {
         try {
             IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
             contents.word = "estampido";
@@ -143,15 +146,72 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
+    
+    /**
+     * Test of addDefinition method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testAddDefinitionWAnt() {
+        try {
+            IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
+            contents.word = "estampido";
+            contents.def = "shot2";
+            contents.ants.add("Nondisparo");
+            contents.ants.add("Nontiro");
+            
+            boolean result = instance.addDefinition(contents);
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of addDefinition method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testAddDefinitionWExtra() {
+        try {
+            IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
+            contents.word = "estampido";
+            contents.def = "shot3";
+            contents.extras.add("disparó y murrió");
+            
+            boolean result = instance.addDefinition(contents);
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of addDefinition method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testAddFullDefinition() {
+        try {
+            IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
+            contents.word = "estampido";
+            contents.def = "shot4";
+            contents.syns.add("disparo");
+            contents.syns.add("tiro");
+            contents.ants.add("Nondisparo");
+            contents.ants.add("Nontiro");
+            contents.extras.add("disparó y murrió");
+            
+            boolean result = instance.addDefinition(contents);
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
 
 //    /**
 //     * Test of removeDefinition method, of class IntlinDictionary.
 //     */
 //    @org.junit.jupiter.api.Test
 //    public void testRemoveDefinition() {
-//        System.out.println("removeDefinition");
 //        int definitionId = 0;
-//        IntlinDictionary instance = null;
 //        boolean expResult = false;
 //        boolean result = instance.removeDefinition(definitionId);
 //        assertEquals(expResult, result);
