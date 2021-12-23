@@ -33,7 +33,7 @@ public class IntlinParserTest {
 
     private static void setUpDB() throws SQLException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
-        con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtest.db");
+        con = DriverManager.getConnection("jdbc:sqlite:testDict"+File.separator+"dbtest.db");
         Statement stm = con.createStatement();
         // Word table 
         stm.execute("CREATE TABLE IF NOT EXISTS Word("
@@ -80,8 +80,8 @@ public class IntlinParserTest {
     }
 
     private static ArrayList<File> setUpFiles() throws IOException {
-        File f1 = new File("testDict/intlinTest/intlinTest1.json");
-        File f2 = new File("testDict/intlinTest/intlinTest2.json");
+        File f1 = new File("testDict"+File.separator+"intlinTest"+File.separator+"intlinTest1.json");
+        File f2 = new File("testDict"+File.separator+"intlinTest"+File.separator+"intlinTest2.json");
         files = new ArrayList<>();
         files.add(f1);
         files.add(f2);
@@ -99,7 +99,7 @@ public class IntlinParserTest {
     @org.junit.jupiter.api.AfterAll
     public static void tearDownClass() throws Exception {
         con.close();
-        File dbFile = new File("testDict/dbtest.db");
+        File dbFile = new File("testDict"+File.separator+"dbtest.db");
         dbFile.delete();
     }
 

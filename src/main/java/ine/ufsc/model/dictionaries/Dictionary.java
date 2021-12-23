@@ -6,6 +6,7 @@
 package ine.ufsc.model.dictionaries;
 
 import ine.ufsc.model.dictionaries.parsers.DictParser;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -29,7 +30,7 @@ public abstract class Dictionary {
     
     private void connect() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        con = DriverManager.getConnection("jdbc:sqlite:"+filesPath+"/"+dbFileName+".db");
+        con = DriverManager.getConnection("jdbc:sqlite:"+filesPath+File.separator+dbFileName+".db");
     }
     
     public void closeConnection() throws SQLException {

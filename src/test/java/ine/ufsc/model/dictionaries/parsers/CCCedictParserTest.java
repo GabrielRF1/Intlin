@@ -30,7 +30,7 @@ public class CCCedictParserTest {
 
     private static void setUpDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        con = DriverManager.getConnection("jdbc:sqlite:testDict/dbtestCCCedict.db");
+        con = DriverManager.getConnection("jdbc:sqlite:testDict"+File.separator+"dbtestCCCedict.db");
         Statement stm = con.createStatement();
         // Word table 
         stm.execute("CREATE TABLE IF NOT EXISTS Word("
@@ -48,7 +48,7 @@ public class CCCedictParserTest {
     }
 
     private static File setUpFile() throws IOException {
-        File resFile = new File("testDict/CCCedictTest/test_1.u8");
+        File resFile = new File("testDict"+File.separator+"CCCedictTest"+File.separator+"test_1.u8");
         return resFile;
     }
 
@@ -64,7 +64,7 @@ public class CCCedictParserTest {
     @org.junit.jupiter.api.AfterAll
     public static void tearDownClass() throws Exception {
         con.close();
-        File dbFile = new File("testDict/dbtestCCCedict.db");
+        File dbFile = new File("testDict"+File.separator+"dbtestCCCedict.db");
         dbFile.delete();
     }
 

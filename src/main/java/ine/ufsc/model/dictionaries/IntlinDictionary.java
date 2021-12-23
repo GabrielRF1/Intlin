@@ -63,13 +63,13 @@ public class IntlinDictionary extends Dictionary {
     }
 
     @Override
-    public ResultSet searchExtra(String extraOfDefinition) throws SQLException {
+    public ResultSet searchExtra(String definition) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT e.extra "
                         + "FROM Definition d INNER JOIN "
                         + "Extra e on d.def_id = e.def_id "
                         + "where d.def = ?");
-        stm.setString(1, extraOfDefinition);
+        stm.setString(1, definition);
         return stm.executeQuery();
     }
 
@@ -175,7 +175,7 @@ public class IntlinDictionary extends Dictionary {
     }
 
     private boolean bdExists() {
-        File file = new File(filesPath + "/" + dbFileName + ".db");
+        File file = new File(filesPath + File.separator + dbFileName + ".db");
         if (file.length() > 0) {
             return true;
         }
