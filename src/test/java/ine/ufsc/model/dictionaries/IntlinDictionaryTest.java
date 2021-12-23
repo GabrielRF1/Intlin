@@ -5,9 +5,14 @@
  */
 package ine.ufsc.model.dictionaries;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,7 +27,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class IntlinDictionaryTest {
 
     static String dbFileName = "intlinTest";
-    static String dbFilePath = "testDict/IntlinTest";
+    static String dbFilePath = "testDict" + File.separator + "IntlinTest";
+    static Path srcPath;
+    static Path dstPath;
     static IntlinDictionary instance;
 
     public IntlinDictionaryTest() {
@@ -30,19 +37,21 @@ public class IntlinDictionaryTest {
 
     @org.junit.jupiter.api.BeforeAll
     public static void setUpClass() throws ClassNotFoundException, SQLException, IOException {
+        File srcFile = new File(dbFilePath + File.separator + dbFileName + ".db");
+        if (srcFile.isFile()) {
+            srcPath = srcFile.toPath();
+            dstPath = new File(dbFilePath + File.separator + dbFileName + "(1).db").toPath();
+            Files.copy(srcPath, dstPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+
         instance = new IntlinDictionary(dbFileName, dbFilePath);
     }
 
     @org.junit.jupiter.api.AfterAll
     public static void tearDownClass() throws ClassNotFoundException, SQLException, IOException {
         instance.closeConnection();
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection("jdbc:sqlite:testDict/IntlinTest/intlinTest.db");
-        con.prepareStatement("DELETE FROM Definition WHERE def_id >= 21").execute();
-        con.prepareStatement("DELETE FROM Synonym WHERE def_id >= 21").execute();
-        con.prepareStatement("DELETE FROM Antonym WHERE def_id >= 21").execute();
-        con.prepareStatement("DELETE FROM Extra WHERE def_id >= 21").execute();
-        con.close();
+        Files.delete(srcPath);
+        dstPath.toFile().renameTo(new File(dbFilePath + File.separator + dbFileName + ".db"));
     }
 
     /**
@@ -89,11 +98,11 @@ public class IntlinDictionaryTest {
             Set<String> expResult = new HashSet<>();
             expResult.add("ahueonao, aweonado, aweonao (eye dialect)");
             expResult.add("ahueonado (eye dialect, rare)");
-            
+
             Set<String> actual = new HashSet<>();
             ResultSet result = instance.searchAlternativeForm(word);
             while (result.next()) {
-                String nextAlt = result.getString("alternative");     
+                String nextAlt = result.getString("alternative");
                 actual.add(nextAlt);
             }
             assertEquals(expResult, actual);
@@ -108,18 +117,18 @@ public class IntlinDictionaryTest {
     @org.junit.jupiter.api.Test
     public void testSearchExtra() {
         try {
-            
+
             String extraOfDefiniton = "compost, fertilizer, manure";
             Set<String> expResult = new HashSet<>();
             expResult.add("2002, Clara Inés Ríos Katto, Guía para el cultivo y aprovechamiento del botón de oro: Tithoni diversifolia (Hemsl.) Gray, Concenio Andrés Bello, page 22.");
             expResult.add("En menor medida se utiliza abono de vaca, vermicompost, mantillo, abono de caballo[,] restos de cultivos, restos de cocina.To a lesser extent, cow manure, vermicompost, humus, horse manure, crop residues, and kitchen scraps are used.");
             expResult.add("En campos de cultivos de arroz por inundación, los agricultores cosechan el botón de oro[. L]o incorporan al suelo como abono verde y mejorador de suelos.In rice paddies watered by flooding, farmers harvest buttercups. They incorporate it into the soil as a green fertilizer and soil improver.");
             expResult.add("2009, Alfredo Tolón Becerra &amp; Xavier B. Lastra Bravo (eds.), Actas del III Seminario Internacional de Cooperación y Desarrollo en Espacios Rurales Iberoamericanos, Editorial Universidad de  Almería, page 205.");
-            
+
             Set<String> actual = new HashSet<>();
             ResultSet result = instance.searchExtra(extraOfDefiniton);
             while (result.next()) {
-                String nextAlt = result.getString("extra");     
+                String nextAlt = result.getString("extra");
                 actual.add(nextAlt);
             }
             assertEquals(expResult, actual);
@@ -139,14 +148,14 @@ public class IntlinDictionaryTest {
             contents.def = "shot";
             contents.syns.add("disparo");
             contents.syns.add("tiro");
-            
+
             boolean result = instance.addDefinition(contents);
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of addDefinition method, of class IntlinDictionary.
      */
@@ -158,14 +167,14 @@ public class IntlinDictionaryTest {
             contents.def = "shot2";
             contents.ants.add("Nondisparo");
             contents.ants.add("Nontiro");
-            
+
             boolean result = instance.addDefinition(contents);
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of addDefinition method, of class IntlinDictionary.
      */
@@ -176,14 +185,14 @@ public class IntlinDictionaryTest {
             contents.word = "estampido";
             contents.def = "shot3";
             contents.extras.add("disparó y murrió");
-            
+
             boolean result = instance.addDefinition(contents);
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of addDefinition method, of class IntlinDictionary.
      */
@@ -198,7 +207,7 @@ public class IntlinDictionaryTest {
             contents.ants.add("Nondisparo");
             contents.ants.add("Nontiro");
             contents.extras.add("disparó y murrió");
-            
+
             boolean result = instance.addDefinition(contents);
             assertTrue(result);
         } catch (SQLException ex) {
@@ -206,14 +215,18 @@ public class IntlinDictionaryTest {
         }
     }
 
-//    /**
-//     * Test of removeDefinition method, of class IntlinDictionary.
-//     */
-//    @org.junit.jupiter.api.Test
-//    public void testRemoveDefinition() {
-//        int definitionId = 3;
-//        boolean expResult = false;
-//        boolean result = instance.removeDefinition(definitionId);
-//        assertEquals(expResult, result);
-//    }
+    /**
+     * Test of removeDefinition method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testRemoveDefinition() {
+        try {
+            int definitionId = 20;
+            boolean expResult = false;
+            boolean result = instance.removeDefinition(definitionId);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
 }
