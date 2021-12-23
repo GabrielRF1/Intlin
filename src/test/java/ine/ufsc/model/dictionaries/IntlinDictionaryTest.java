@@ -37,14 +37,10 @@ public class IntlinDictionaryTest {
 
     @org.junit.jupiter.api.BeforeAll
     public static void setUpClass() throws ClassNotFoundException, SQLException, IOException {
-        File srcFile = new File(dbFilePath + File.separator + dbFileName + ".db");
-        if (srcFile.isFile()) {
-            srcPath = srcFile.toPath();
-            dstPath = new File(dbFilePath + File.separator + dbFileName + "(1).db").toPath();
-            Files.copy(srcPath, dstPath, StandardCopyOption.REPLACE_EXISTING);
-        }
-
         instance = new IntlinDictionary(dbFileName, dbFilePath);
+        srcPath = new File(dbFilePath + File.separator + dbFileName + ".db").toPath();
+        dstPath = new File(dbFilePath + File.separator + dbFileName + "(1).db").toPath();
+        Files.copy(srcPath, dstPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @org.junit.jupiter.api.AfterAll
@@ -219,10 +215,10 @@ public class IntlinDictionaryTest {
      * Test of removeDefinition method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
-    public void testRemoveDefinition() {
+    public void testRemoveBasicDefinition() {
         try {
             int definitionId = 20;
-            boolean expResult = false;
+            boolean expResult = true;
             boolean result = instance.removeDefinition(definitionId);
             assertEquals(expResult, result);
         } catch (SQLException ex) {

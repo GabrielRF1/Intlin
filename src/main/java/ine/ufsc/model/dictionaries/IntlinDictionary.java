@@ -108,8 +108,10 @@ public class IntlinDictionary extends Dictionary {
     }
 
     @Override
-    public boolean removeDefinition(int definitionId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean removeDefinition(int definitionId) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("DELETE FROM Definition WHERE def_id=?");
+        stm.setInt(1, definitionId);
+        return !stm.execute();
     }
 
     private void build() throws IOException, SQLException {
