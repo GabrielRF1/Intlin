@@ -211,11 +211,9 @@ public class IntlinDictionaryTest {
 //     */
 //    @org.junit.jupiter.api.Test
 //    public void testRemoveDefinition() {
-//        int definitionId = 0;
+//        int definitionId = 3;
 //        boolean expResult = false;
 //        boolean result = instance.removeDefinition(definitionId);
 //        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
 //    }
 }

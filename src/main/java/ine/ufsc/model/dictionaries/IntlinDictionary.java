@@ -94,34 +94,13 @@ public class IntlinDictionary extends Dictionary {
                 .executeQuery().getInt("id");
 
         if (!info.syns.isEmpty()) {
-            for (String syn : info.syns) {
-                PreparedStatement stmInsertSyn = con
-                        .prepareStatement("INSERT INTO Synonym(def_id, syn)"
-                                + "VALUES(?, ?)");
-                stmInsertSyn.setInt(1, defId);
-                stmInsertSyn.setString(2, syn);
-                success &= !stmInsertSyn.execute();
-            }
+            insertSynAntExt("Synonym", info.syns, defId);
         }
         if (!info.ants.isEmpty()) {
-            for (String ant : info.ants) {
-                PreparedStatement stmInsertAnt = con
-                        .prepareStatement("INSERT INTO Antonym(def_id, ant)"
-                                + "VALUES(?, ?)");
-                stmInsertAnt.setInt(1, defId);
-                stmInsertAnt.setString(2, ant);
-                success &= !stmInsertAnt.execute();
-            }
+            insertSynAntExt("Antonym", info.ants, defId);
         }
         if (!info.extras.isEmpty()) {
-            for (String extra : info.extras) {
-                PreparedStatement stmInsertExtra = con
-                        .prepareStatement("INSERT INTO Extra(def_id, extra)"
-                                + "VALUES(?, ?)");
-                stmInsertExtra.setInt(1, defId);
-                stmInsertExtra.setString(2, extra);
-                success &= !stmInsertExtra.execute();
-            }
+            insertSynAntExt("Extra", info.extras, defId);
         }
         con.commit();
         con.setAutoCommit(true);
@@ -201,4 +180,19 @@ public class IntlinDictionary extends Dictionary {
         return false;
     }
 
+    private boolean insertSynAntExt(String table, ArrayList<String> values, int defId) throws SQLException {
+        boolean success = true;
+        String column = table.equals("Extra") ? "extra"
+                : table.equals("Synonym") ? "syn"
+                : "ant";
+        for (String value : values) {
+            PreparedStatement stmInsertExtra = con
+                    .prepareStatement(String.format("INSERT INTO %s(def_id, %s)"
+                            + "VALUES(?, ?)", table, column));
+            stmInsertExtra.setInt(1, defId);
+            stmInsertExtra.setString(2, value);
+            success &= !stmInsertExtra.execute();
+        }
+        return success;
+    }
 }
