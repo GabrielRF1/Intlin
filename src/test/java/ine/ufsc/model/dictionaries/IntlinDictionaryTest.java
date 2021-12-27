@@ -121,8 +121,8 @@ public class IntlinDictionaryTest {
             Set<String> actual = new HashSet<>();
             ResultSet result = instance.searchExtra(extraOfDefiniton);
             while (result.next()) {
-                String nextAlt = result.getString("extra");
-                actual.add(nextAlt);
+                String nextExt = result.getString("extra");
+                actual.add(nextExt);
             }
             assertEquals(expResult, actual);
         } catch (SQLException ex) {
@@ -222,6 +222,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
+
     /**
      * Test of removeDefinition method, of class IntlinDictionary.
      */
@@ -236,7 +237,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of searchAntonym method, of class IntlinDictionary.
      */
@@ -244,14 +245,22 @@ public class IntlinDictionaryTest {
     public void testSearchAntonym() {
         try {
             String definition = "there (away from the speaker and the listener)";
-            ResultSet expResult = null;
+            Set<String> expResult = new HashSet<>();
+            expResult.add("aquí");
+            expResult.add("acá");
+            Set<String> actual = new HashSet<>();
+
             ResultSet result = instance.searchAntonym(definition);
-            assertEquals(expResult, result);
+            while (result.next()) {
+                String nextAnt = result.getString("ant");
+                actual.add(nextAnt);
+            }
+            assertEquals(expResult, actual);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of searchSynonym method, of class IntlinDictionary.
      */
@@ -259,9 +268,17 @@ public class IntlinDictionaryTest {
     public void testSearchSynonym() {
         try {
             String definition = "there (away from the speaker and the listener)";
-            ResultSet expResult = null;
+            Set<String> expResult = new HashSet<>();
+            expResult.add("ahí");
+            expResult.add("allá");
+            Set<String> actual = new HashSet<>();
+
             ResultSet result = instance.searchSynonym(definition);
-            assertEquals(expResult, result);
+            while (result.next()) {
+                String nextSyn = result.getString("syn");
+                actual.add(nextSyn);
+            }
+            assertEquals(expResult, actual);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
