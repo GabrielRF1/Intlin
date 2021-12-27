@@ -144,6 +144,11 @@ public class IntlinDictionary extends Dictionary {
     }
 
     @Override
+    public boolean removeWord(int wordId) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     protected boolean addWord(Object contents) throws SQLException {
         IntlinInfo info = (IntlinInfo) contents;
         PreparedStatement stmInsertWord = con
@@ -234,7 +239,7 @@ public class IntlinDictionary extends Dictionary {
     }
 
     private boolean insertDefChildren(int defId, IntlinInfo info) throws SQLException {
-        boolean success = true; 
+        boolean success = true;
         if (!info.syns.isEmpty()) {
             success &= insertSynAntExt("Synonym", info.syns, defId);
         }
@@ -244,10 +249,10 @@ public class IntlinDictionary extends Dictionary {
         if (!info.extras.isEmpty()) {
             success &= insertSynAntExt("Extra", info.extras, defId);
         }
-        
+
         return success;
     }
-    
+
     private boolean insertSynAntExt(String table, ArrayList<String> values, int defId) throws SQLException {
         boolean success = true;
         String column = table.equals("Extra") ? "extra"

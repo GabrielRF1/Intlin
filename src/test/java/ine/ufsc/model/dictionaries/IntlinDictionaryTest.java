@@ -260,7 +260,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
-
+    
     /**
      * Test of searchAntonym method, of class IntlinDictionary.
      */
@@ -301,6 +301,36 @@ public class IntlinDictionaryTest {
                 actual.add(nextSyn);
             }
             assertEquals(expResult, actual);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of removeWord method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testRemoveSimpleWord() {
+        try {
+            int wordId = 9;
+            boolean expResult = true;
+            boolean result = instance.removeWord(wordId);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of removeWord method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testRemoveComplexWord() {
+        try {
+            int wordId = 8;
+            boolean expResult = true;
+            boolean result = instance.removeWord(wordId);
+            assertEquals(expResult, result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
