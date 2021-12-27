@@ -74,12 +74,23 @@ public class IntlinDictionary extends Dictionary {
     }
 
     public ResultSet searchAntonym(String definition) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); 
-
+        PreparedStatement stm = con
+                .prepareStatement("SELECT a.ant "
+                        + "FROM Definition d INNER JOIN "
+                        + "Antonym a on d.def_id = a.def_id "
+                        + "where d.def = ?");
+        stm.setString(1, definition);
+        return stm.executeQuery();
     }
 
     public ResultSet searchSynonym(String definition) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        PreparedStatement stm = con
+                .prepareStatement("SELECT s.syn "
+                        + "FROM Definition d INNER JOIN "
+                        + "Synonym s on d.def_id = s.def_id "
+                        + "where d.def = ?");
+        stm.setString(1, definition);
+        return stm.executeQuery();
     }
 
     @Override

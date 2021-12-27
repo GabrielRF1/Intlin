@@ -229,7 +229,7 @@ public class IntlinDictionaryTest {
     @org.junit.jupiter.api.Test
     public void testRemoveDefinitionWSynAntExt() {
         try {
-            int definitionId = 10;
+            int definitionId = 7;
             boolean expResult = true;
             boolean result = instance.removeDefinition(definitionId);
             assertEquals(expResult, result);
@@ -267,10 +267,9 @@ public class IntlinDictionaryTest {
     @org.junit.jupiter.api.Test
     public void testSearchSynonym() {
         try {
-            String definition = "there (away from the speaker and the listener)";
+            String definition = "compost, fertilizer, manure";
             Set<String> expResult = new HashSet<>();
-            expResult.add("ahí");
-            expResult.add("allá");
+            expResult.add("fertilizante");
             Set<String> actual = new HashSet<>();
 
             ResultSet result = instance.searchSynonym(definition);
