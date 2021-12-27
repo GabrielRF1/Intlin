@@ -109,9 +109,23 @@ public class IntlinDictionary extends Dictionary {
 
     @Override
     public boolean removeDefinition(int definitionId) throws SQLException {
+        boolean success = true;
+        PreparedStatement stmSyn = con.prepareStatement("DELETE FROM Synonym WHERE def_id=?");
+        stmSyn.setInt(1, definitionId);
+        success &= !stmSyn.execute();
+
+        PreparedStatement stmAnt = con.prepareStatement("DELETE FROM Antonym WHERE def_id=?");
+        stmAnt.setInt(1, definitionId);
+        success &= !stmAnt.execute();
+        
+        PreparedStatement stmExtra = con.prepareStatement("DELETE FROM Extra WHERE def_id=?");
+        stmExtra.setInt(1, definitionId);
+        success &= !stmExtra.execute();
+
         PreparedStatement stm = con.prepareStatement("DELETE FROM Definition WHERE def_id=?");
         stm.setInt(1, definitionId);
-        return !stm.execute();
+        success &= !stm.execute();
+        return success;
     }
 
     private void build() throws IOException, SQLException {

@@ -222,4 +222,18 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
+    /**
+     * Test of removeDefinition method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testRemoveDefinitionWSynAntExt() {
+        try {
+            int definitionId = 10;
+            boolean expResult = true;
+            boolean result = instance.removeDefinition(definitionId);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
 }
