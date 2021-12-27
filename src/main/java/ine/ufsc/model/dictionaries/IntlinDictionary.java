@@ -92,7 +92,13 @@ public class IntlinDictionary extends Dictionary {
         stm.setString(1, definition);
         return stm.executeQuery();
     }
-
+    
+    public boolean addSynonym(int defId, String syn) throws SQLException {
+        ArrayList<String> values = new ArrayList<>();
+        values.add(syn);
+        return insertSynAntExt("Synonym", values, defId);
+    }
+    
     @Override
     public boolean addDefinition(Object contents) throws SQLException {
         boolean success = true;
