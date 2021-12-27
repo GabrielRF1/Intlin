@@ -99,15 +99,15 @@ public class IntlinDictionary extends Dictionary {
         return insertSynAntExt("Synonym", values, defId);
     }
     
-    public boolean addAntonym(int defId, String syn) throws SQLException {
+    public boolean addAntonym(int defId, String ant) throws SQLException {
         ArrayList<String> values = new ArrayList<>();
-        values.add(syn);
+        values.add(ant);
         return insertSynAntExt("Antonym", values, defId);
     }
     
-    public boolean addExtra(int defId, String syn) throws SQLException {
+    public boolean addExtra(int defId, String extra) throws SQLException {
         ArrayList<String> values = new ArrayList<>();
-        values.add(syn);
+        values.add(extra);
         return insertSynAntExt("Extra", values, defId);
     }
     
