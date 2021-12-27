@@ -238,9 +238,8 @@ public class IntlinDictionaryTest {
     public void testRemoveBasicDefinition() {
         try {
             int definitionId = 20;
-            boolean expResult = true;
             boolean result = instance.removeDefinition(definitionId);
-            assertEquals(expResult, result);
+            assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -253,9 +252,8 @@ public class IntlinDictionaryTest {
     public void testRemoveDefinitionWSynAntExt() {
         try {
             int definitionId = 7;
-            boolean expResult = true;
             boolean result = instance.removeDefinition(definitionId);
-            assertEquals(expResult, result);
+            assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -313,9 +311,8 @@ public class IntlinDictionaryTest {
     public void testRemoveSimpleWord() {
         try {
             int wordId = 9;
-            boolean expResult = true;
             boolean result = instance.removeWord(wordId);
-            assertEquals(expResult, result);
+            assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -328,9 +325,8 @@ public class IntlinDictionaryTest {
     public void testRemoveComplexWord() {
         try {
             int wordId = 8;
-            boolean expResult = true;
             boolean result = instance.removeWord(wordId);
-            assertEquals(expResult, result);
+            assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -343,9 +339,8 @@ public class IntlinDictionaryTest {
     public void testAddSynonym() {
         try {
             int defId = 4;
-            boolean expResult = true;
             boolean result = instance.addSynonym(defId, "crisálide");
-            assertEquals(expResult, result);
+            assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
