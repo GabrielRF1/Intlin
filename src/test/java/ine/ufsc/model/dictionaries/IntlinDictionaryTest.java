@@ -143,6 +143,18 @@ public class IntlinDictionaryTest {
             contents.syns.add("tiro");
 
             boolean result = instance.addDefinition(contents);
+
+            ResultSet defs = instance.searchDefinition("estampido");
+            boolean foundDef = false;
+            while (defs.next()) {
+                if (defs.getString("definition").equals("shot")) {
+                    foundDef = true;
+                    break;
+                }
+            }
+            result &= foundDef;
+            result &= wasSynonymProperlyAdded(contents.syns, "shot");
+
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
@@ -162,6 +174,18 @@ public class IntlinDictionaryTest {
             contents.ants.add("Nontiro");
 
             boolean result = instance.addDefinition(contents);
+
+            ResultSet defs = instance.searchDefinition("estampido");
+            boolean foundDef = false;
+            while (defs.next()) {
+                if (defs.getString("definition").equals("shot2")) {
+                    foundDef = true;
+                    break;
+                }
+            }
+            result &= foundDef;
+            result &= wasAntonymProperlyAdded(contents.ants, "shot2");
+
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
@@ -180,6 +204,18 @@ public class IntlinDictionaryTest {
             contents.extras.add("disparó y murrió");
 
             boolean result = instance.addDefinition(contents);
+
+            ResultSet defs = instance.searchDefinition("estampido");
+            boolean foundDef = false;
+            while (defs.next()) {
+                if (defs.getString("definition").equals("shot3")) {
+                    foundDef = true;
+                    break;
+                }
+            }
+            result &= foundDef;
+            result &= wasExtraProperlyAdded(contents.extras, "shot3");
+
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
@@ -203,6 +239,20 @@ public class IntlinDictionaryTest {
             contents.syns.add("refrigerador");
 
             boolean result = instance.addDefinition(contents);
+            
+            ResultSet defs = instance.searchDefinition("nevera");
+            boolean foundDef = false;
+            while (defs.next()) {
+                if (defs.getString("definition").equals("refrigerator")
+                        && defs.getString("word_class").equals("Noun")
+                        && defs.getString("gender").equals("f")) {
+                    foundDef = true;
+                    break;
+                }
+            }
+            result &= foundDef;
+            result &= wasSynonymProperlyAdded(contents.syns, "refrigerator");
+            
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
@@ -225,6 +275,19 @@ public class IntlinDictionaryTest {
             contents.extras.add("disparó y murrió");
 
             boolean result = instance.addDefinition(contents);
+            
+            ResultSet defs = instance.searchDefinition("estampido");
+            boolean foundDef = false;
+            while (defs.next()) {
+                if (defs.getString("definition").equals("shot4")) {
+                    foundDef = true;
+                    break;
+                }
+            }
+            result &= foundDef;
+            result &= wasSynonymProperlyAdded(contents.syns, "shot4");
+            result &= wasAntonymProperlyAdded(contents.ants, "shot4");
+            result &= wasExtraProperlyAdded(contents.extras, "shot4");
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
@@ -338,39 +401,72 @@ public class IntlinDictionaryTest {
     @org.junit.jupiter.api.Test
     public void testAddSynonym() {
         try {
+            String syn = "crisálide";
             int defId = 4;
-            boolean result = instance.addSynonym(defId, "crisálide");
-            assertTrue(result);
+            boolean result = instance.addSynonym(defId, syn);
+            ArrayList<String> syns = new ArrayList<>();
+            assertTrue(result && wasSynonymProperlyAdded(syns, syn));
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of addAntonym method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
     public void testAddAntonym() {
         try {
+            String ant = "Noncrisálide";
             int defId = 4;
-            boolean result = instance.addAntonym(defId, "Noncrisálide");
-            assertTrue(result);
+            boolean result = instance.addAntonym(defId, ant);
+            ArrayList<String> ants = new ArrayList<>();
+            assertTrue(result && wasAntonymProperlyAdded(ants, ant));
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of addExtra method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
     public void testAddExtra() {
         try {
+            String extra = "Doce días en la crisálida y estás destinado a ser lo que realmente eres.";
             int defId = 4;
-            boolean result = instance.addExtra(defId, "Doce días en la crisálida y estás destinado a ser lo que realmente eres.");
-            assertTrue(result);
+            boolean result = instance.addExtra(defId, extra);
+            ArrayList<String> extras = new ArrayList<>();
+            assertTrue(result && wasExtraProperlyAdded(extras, extra));
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
+    }
+
+    private boolean wasSynonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
+        ResultSet syns = instance.searchSynonym(def);
+        ArrayList<String> synsStrings = new ArrayList<>();
+        while (syns.next()) {
+            synsStrings.add(syns.getString("syn"));
+        }
+        return synsStrings.containsAll(colection);
+    }
+    
+    private boolean wasAntonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
+        ResultSet ants = instance.searchAntonym(def);
+        ArrayList<String> antsStrings = new ArrayList<>();
+        while (ants.next()) {
+            antsStrings.add(ants.getString("ant"));
+        }
+        return antsStrings.containsAll(colection);
+    }
+    
+    private boolean wasExtraProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
+        ResultSet extras = instance.searchExtra(def);
+        ArrayList<String> extrasStrings = new ArrayList<>();
+        while (extras.next()) {
+            extrasStrings.add(extras.getString("extra"));
+        }
+        return extrasStrings.containsAll(colection);
     }
 }
