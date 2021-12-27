@@ -110,26 +110,13 @@ public class IntlinDictionary extends Dictionary {
             wordId = WordIdRS.getInt("word_id");
         }
 
-        PreparedStatement stmInsertDef = con
-                .prepareStatement("INSERT INTO Definition(def, word_id)"
-                        + "VALUES(?, ?)");
-        stmInsertDef.setString(1, info.def);
-        stmInsertDef.setInt(2, wordId);
-
-        success &= !stmInsertDef.execute();
+        success &= insertDef(wordId, info);
 
         int defId = con.prepareStatement("SELECT last_insert_rowid() AS id;")
                 .executeQuery().getInt("id");
 
-        if (!info.syns.isEmpty()) {
-            insertSynAntExt("Synonym", info.syns, defId);
-        }
-        if (!info.ants.isEmpty()) {
-            insertSynAntExt("Antonym", info.ants, defId);
-        }
-        if (!info.extras.isEmpty()) {
-            insertSynAntExt("Extra", info.extras, defId);
-        }
+        success &= insertDefChildren(defId, info);
+
         con.commit();
         con.setAutoCommit(true);
         return success;
@@ -165,7 +152,7 @@ public class IntlinDictionary extends Dictionary {
         stmInsertWord.setString(1, info.word);
         stmInsertWord.setString(2, info.wordClass);
         stmInsertWord.setString(3, info.gender);
-        
+
         return !stmInsertWord.execute();
     }
 
@@ -237,6 +224,30 @@ public class IntlinDictionary extends Dictionary {
         return false;
     }
 
+    private boolean insertDef(int wordId, IntlinInfo info) throws SQLException {
+        PreparedStatement stmInsertDef = con
+                .prepareStatement("INSERT INTO Definition(def, word_id)"
+                        + "VALUES(?, ?)");
+        stmInsertDef.setString(1, info.def);
+        stmInsertDef.setInt(2, wordId);
+        return !stmInsertDef.execute();
+    }
+
+    private boolean insertDefChildren(int defId, IntlinInfo info) throws SQLException {
+        boolean success = true; 
+        if (!info.syns.isEmpty()) {
+            success &= insertSynAntExt("Synonym", info.syns, defId);
+        }
+        if (!info.ants.isEmpty()) {
+            success &= insertSynAntExt("Antonym", info.ants, defId);
+        }
+        if (!info.extras.isEmpty()) {
+            success &= insertSynAntExt("Extra", info.extras, defId);
+        }
+        
+        return success;
+    }
+    
     private boolean insertSynAntExt(String table, ArrayList<String> values, int defId) throws SQLException {
         boolean success = true;
         String column = table.equals("Extra") ? "extra"
