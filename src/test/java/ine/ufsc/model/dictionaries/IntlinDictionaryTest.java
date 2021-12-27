@@ -236,4 +236,34 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
+    
+    /**
+     * Test of searchAntonym method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testSearchAntonym() {
+        try {
+            String definition = "there (away from the speaker and the listener)";
+            ResultSet expResult = null;
+            ResultSet result = instance.searchAntonym(definition);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of searchSynonym method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testSearchSynonym() {
+        try {
+            String definition = "there (away from the speaker and the listener)";
+            ResultSet expResult = null;
+            ResultSet result = instance.searchSynonym(definition);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
 }

@@ -73,6 +73,15 @@ public class IntlinDictionary extends Dictionary {
         return stm.executeQuery();
     }
 
+    public ResultSet searchAntonym(String definition) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); 
+
+    }
+
+    public ResultSet searchSynonym(String definition) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public boolean addDefinition(Object contents) throws SQLException {
         boolean success = true;
@@ -117,7 +126,7 @@ public class IntlinDictionary extends Dictionary {
         PreparedStatement stmAnt = con.prepareStatement("DELETE FROM Antonym WHERE def_id=?");
         stmAnt.setInt(1, definitionId);
         success &= !stmAnt.execute();
-        
+
         PreparedStatement stmExtra = con.prepareStatement("DELETE FROM Extra WHERE def_id=?");
         stmExtra.setInt(1, definitionId);
         success &= !stmExtra.execute();
