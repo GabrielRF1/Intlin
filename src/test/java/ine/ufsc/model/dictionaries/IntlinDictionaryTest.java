@@ -194,6 +194,8 @@ public class IntlinDictionaryTest {
         try {
             IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
             contents.word = "nevera";
+            contents.wordClass = "Noun";
+            contents.gender = "f";
             contents.def = "refrigerator";
             contents.syns.add("frigorífico");
             contents.syns.add("refri");

@@ -100,7 +100,15 @@ public class IntlinDictionary extends Dictionary {
         con.setAutoCommit(false);
         PreparedStatement wordStm = con.prepareStatement("SELECT word_id FROM Word WHERE word=?");
         wordStm.setString(1, info.word);
-        int wordId = wordStm.executeQuery().getInt("word_id");
+        ResultSet WordIdRS = wordStm.executeQuery();
+        int wordId;
+        if (WordIdRS.isClosed()) {
+            success &= addWord(contents);
+            wordId = con.prepareStatement("SELECT last_insert_rowid() AS id;")
+                    .executeQuery().getInt("id");
+        } else {
+            wordId = WordIdRS.getInt("word_id");
+        }
 
         PreparedStatement stmInsertDef = con
                 .prepareStatement("INSERT INTO Definition(def, word_id)"
@@ -150,7 +158,15 @@ public class IntlinDictionary extends Dictionary {
 
     @Override
     protected boolean addWord(Object contents) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        IntlinInfo info = (IntlinInfo) contents;
+        PreparedStatement stmInsertWord = con
+                .prepareStatement("INSERT INTO Word(word, word_class, gender) "
+                        + "VALUES(?, ?, ?)");
+        stmInsertWord.setString(1, info.word);
+        stmInsertWord.setString(2, info.wordClass);
+        stmInsertWord.setString(3, info.gender);
+        
+        return !stmInsertWord.execute();
     }
 
     private void build() throws IOException, SQLException {
