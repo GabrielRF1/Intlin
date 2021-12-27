@@ -99,6 +99,18 @@ public class IntlinDictionary extends Dictionary {
         return insertSynAntExt("Synonym", values, defId);
     }
     
+    public boolean addAntonym(int defId, String syn) throws SQLException {
+        ArrayList<String> values = new ArrayList<>();
+        values.add(syn);
+        return insertSynAntExt("Antonym", values, defId);
+    }
+    
+    public boolean addExtra(int defId, String syn) throws SQLException {
+        ArrayList<String> values = new ArrayList<>();
+        values.add(syn);
+        return insertSynAntExt("Extra", values, defId);
+    }
+    
     @Override
     public boolean addDefinition(Object contents) throws SQLException {
         boolean success = true;

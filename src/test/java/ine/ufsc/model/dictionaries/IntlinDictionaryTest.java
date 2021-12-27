@@ -345,4 +345,32 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
+    
+    /**
+     * Test of addAntonym method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testAddAntonym() {
+        try {
+            int defId = 4;
+            boolean result = instance.addAntonym(defId, "Noncrisálide");
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of addExtra method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testAddExtra() {
+        try {
+            int defId = 4;
+            boolean result = instance.addExtra(defId, "Doce días en la crisálida y estás destinado a ser lo que realmente eres.");
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
 }
