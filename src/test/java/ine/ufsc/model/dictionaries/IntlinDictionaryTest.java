@@ -190,6 +190,27 @@ public class IntlinDictionaryTest {
      * Test of addDefinition method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
+    public void testAddDefinitionToNewWord() {
+        try {
+            IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();
+            contents.word = "nevera";
+            contents.def = "refrigerator";
+            contents.syns.add("frigorífico");
+            contents.syns.add("refri");
+            contents.syns.add("refrigeradora");
+            contents.syns.add("refrigerador");
+
+            boolean result = instance.addDefinition(contents);
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+
+    /**
+     * Test of addDefinition method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
     public void testAddFullDefinition() {
         try {
             IntlinDictionary.IntlinInfo contents = new IntlinDictionary.IntlinInfo();

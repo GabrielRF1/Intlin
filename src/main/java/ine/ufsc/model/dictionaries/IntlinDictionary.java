@@ -148,6 +148,11 @@ public class IntlinDictionary extends Dictionary {
         return success;
     }
 
+    @Override
+    protected boolean addWord(Object contents) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     private void build() throws IOException, SQLException {
         createTables();
         File files = new File(filesPath);
