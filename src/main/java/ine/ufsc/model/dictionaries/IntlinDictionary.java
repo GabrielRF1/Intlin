@@ -145,7 +145,22 @@ public class IntlinDictionary extends Dictionary {
 
     @Override
     public boolean removeWord(int wordId) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean success = true;
+        PreparedStatement defsStm = con.prepareStatement("SELECT def_id FROM Definition WHERE word_id=?");
+        defsStm.setInt(1, wordId);
+        ResultSet defs = defsStm.executeQuery();     
+        if (defs.isClosed()) {
+            return false;
+        } else {
+            while(defs.next()){
+                success &= removeDefinition(defs.getInt("def_id"));
+            }
+        }  
+        PreparedStatement delStm = con.prepareStatement("DELETE FROM Word WHERE word_id=?");
+        delStm.setInt(1, wordId);
+        success &= !delStm.execute();
+        
+        return success;
     }
 
     @Override
