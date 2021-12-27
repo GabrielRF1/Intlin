@@ -40,9 +40,7 @@ public abstract class Dictionary {
     public abstract ResultSet searchDefinition(String word) throws SQLException;
     
     public abstract ResultSet searchAlternativeForm(String word) throws SQLException;
-    
-    public abstract ResultSet searchExtra(String extraOf) throws SQLException;
-    
+        
     public abstract boolean addDefinition(Object contents) throws SQLException;
     
     public abstract boolean removeDefinition(int definitionId) throws SQLException;

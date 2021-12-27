@@ -62,7 +62,6 @@ public class IntlinDictionary extends Dictionary {
         return stm.executeQuery();
     }
 
-    @Override
     public ResultSet searchExtra(String definition) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT e.extra "
