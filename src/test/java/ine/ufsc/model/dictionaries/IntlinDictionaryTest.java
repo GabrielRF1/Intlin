@@ -53,7 +53,6 @@ public class IntlinDictionaryTest {
     @org.junit.jupiter.api.Test
     public void testSearchDefinition() {
         try {
-            System.out.println("searchDefinition");
             String word = "albóndigas";
             ArrayList<String> expected = new ArrayList<>();
             String expectedGender = "f pl";
@@ -105,10 +104,10 @@ public class IntlinDictionaryTest {
     }
 
     /**
-     * Test of searchExtra method, of class IntlinDictionary.
+     * Test of searchExtras method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
-    public void testSearchExtra() {
+    public void testSearchExtras() {
         try {
 
             String extraOfDefiniton = "compost, fertilizer, manure";
@@ -119,7 +118,7 @@ public class IntlinDictionaryTest {
             expResult.add("2009, Alfredo Tolón Becerra &amp; Xavier B. Lastra Bravo (eds.), Actas del III Seminario Internacional de Cooperación y Desarrollo en Espacios Rurales Iberoamericanos, Editorial Universidad de  Almería, page 205.");
 
             Set<String> actual = new HashSet<>();
-            ResultSet result = instance.searchExtra(extraOfDefiniton);
+            ResultSet result = instance.searchExtras(extraOfDefiniton);
             while (result.next()) {
                 String nextExt = result.getString("extra");
                 actual.add(nextExt);
@@ -323,10 +322,10 @@ public class IntlinDictionaryTest {
     }
 
     /**
-     * Test of searchAntonym method, of class IntlinDictionary.
+     * Test of searchAntonyms method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
-    public void testSearchAntonym() {
+    public void testSearchAntonyms() {
         try {
             String definition = "there (away from the speaker and the listener)";
             Set<String> expResult = new HashSet<>();
@@ -334,7 +333,7 @@ public class IntlinDictionaryTest {
             expResult.add("acá");
             Set<String> actual = new HashSet<>();
 
-            ResultSet result = instance.searchAntonym(definition);
+            ResultSet result = instance.searchAntonyms(definition);
             while (result.next()) {
                 String nextAnt = result.getString("ant");
                 actual.add(nextAnt);
@@ -346,17 +345,17 @@ public class IntlinDictionaryTest {
     }
 
     /**
-     * Test of searchSynonym method, of class IntlinDictionary.
+     * Test of searchSynonyms method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
-    public void testSearchSynonym() {
+    public void testSearchSynonyms() {
         try {
             String definition = "compost, fertilizer, manure";
             Set<String> expResult = new HashSet<>();
             expResult.add("fertilizante");
             Set<String> actual = new HashSet<>();
 
-            ResultSet result = instance.searchSynonym(definition);
+            ResultSet result = instance.searchSynonyms(definition);
             while (result.next()) {
                 String nextSyn = result.getString("syn");
                 actual.add(nextSyn);
@@ -444,7 +443,7 @@ public class IntlinDictionaryTest {
     }
 
     private boolean wasSynonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
-        ResultSet syns = instance.searchSynonym(def);
+        ResultSet syns = instance.searchSynonyms(def);
         ArrayList<String> synsStrings = new ArrayList<>();
         while (syns.next()) {
             synsStrings.add(syns.getString("syn"));
@@ -453,7 +452,7 @@ public class IntlinDictionaryTest {
     }
     
     private boolean wasAntonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
-        ResultSet ants = instance.searchAntonym(def);
+        ResultSet ants = instance.searchAntonyms(def);
         ArrayList<String> antsStrings = new ArrayList<>();
         while (ants.next()) {
             antsStrings.add(ants.getString("ant"));
@@ -462,7 +461,7 @@ public class IntlinDictionaryTest {
     }
     
     private boolean wasExtraProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
-        ResultSet extras = instance.searchExtra(def);
+        ResultSet extras = instance.searchExtras(def);
         ArrayList<String> extrasStrings = new ArrayList<>();
         while (extras.next()) {
             extrasStrings.add(extras.getString("extra"));

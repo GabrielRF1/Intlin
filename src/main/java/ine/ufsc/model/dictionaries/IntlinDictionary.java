@@ -62,7 +62,7 @@ public class IntlinDictionary extends Dictionary {
         return stm.executeQuery();
     }
 
-    public ResultSet searchExtra(String definition) throws SQLException {
+    public ResultSet searchExtras(String definition) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT e.extra "
                         + "FROM Definition d INNER JOIN "
@@ -72,7 +72,7 @@ public class IntlinDictionary extends Dictionary {
         return stm.executeQuery();
     }
 
-    public ResultSet searchAntonym(String definition) throws SQLException {
+    public ResultSet searchAntonyms(String definition) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT a.ant "
                         + "FROM Definition d INNER JOIN "
@@ -82,7 +82,7 @@ public class IntlinDictionary extends Dictionary {
         return stm.executeQuery();
     }
 
-    public ResultSet searchSynonym(String definition) throws SQLException {
+    public ResultSet searchSynonyms(String definition) throws SQLException {
         PreparedStatement stm = con
                 .prepareStatement("SELECT s.syn "
                         + "FROM Definition d INNER JOIN "
