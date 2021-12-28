@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -301,7 +302,10 @@ public class IntlinDictionaryTest {
         try {
             int definitionId = 20;
             boolean result = instance.removeDefinition(definitionId);
-            assertTrue(result);
+            PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Definition WHERE def_id = ?");
+            stm.setInt(1, definitionId);
+            ResultSet RS = stm.executeQuery();
+            assertTrue(result && RS.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -315,7 +319,24 @@ public class IntlinDictionaryTest {
         try {
             int definitionId = 7;
             boolean result = instance.removeDefinition(definitionId);
-            assertTrue(result);
+            PreparedStatement stmDef = instance.con.prepareStatement("SELECT * FROM Definition WHERE def_id = ?");
+            stmDef.setInt(1, definitionId);
+            ResultSet RSdef = stmDef.executeQuery();
+            
+            PreparedStatement stmSyn = instance.con.prepareStatement("SELECT * FROM Synonym WHERE def_id = ?");
+            stmSyn.setInt(1, definitionId);
+            ResultSet RSsyn = stmSyn.executeQuery();
+            
+            PreparedStatement stmAnt = instance.con.prepareStatement("SELECT * FROM Antonym WHERE def_id = ?");
+            stmAnt.setInt(1, definitionId);
+            ResultSet RSant = stmAnt.executeQuery();
+            
+            PreparedStatement stmExtra = instance.con.prepareStatement("SELECT * FROM Extra WHERE def_id = ?");
+            stmExtra.setInt(1, definitionId);
+            ResultSet RSextra = stmExtra.executeQuery();
+            
+            assertTrue(result && RSdef.isClosed() && RSsyn.isClosed()
+            && RSant.isClosed() && RSextra.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -374,7 +395,10 @@ public class IntlinDictionaryTest {
         try {
             int wordId = 9;
             boolean result = instance.removeWord(wordId);
-            assertTrue(result);
+            PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Word WHERE word_id = ?");
+            stm.setInt(1, wordId);
+            ResultSet RS = stm.executeQuery();
+            assertTrue(result && RS.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -388,7 +412,14 @@ public class IntlinDictionaryTest {
         try {
             int wordId = 8;
             boolean result = instance.removeWord(wordId);
-            assertTrue(result);
+            PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Word WHERE word_id = ?");
+            stm.setInt(1, wordId);
+            ResultSet RS = stm.executeQuery();
+            
+            PreparedStatement stmDef = instance.con.prepareStatement("SELECT * FROM Definition WHERE word_id = ?");
+            stmDef.setInt(1, wordId);
+            ResultSet RSdef = stmDef.executeQuery();
+            assertTrue(result && RS.isClosed() && RSdef.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
