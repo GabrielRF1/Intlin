@@ -127,7 +127,6 @@ public class CCCedictParserTest {
         try {
             var expected = "sheng1 guan3";
             Statement stm = con.createStatement();
-            //System.out.println();
             String sql = "SELECT w.reading FROM Word w where w.traditional= \'笙管\'";
             ResultSet rs = stm.executeQuery(sql);
             var actual = rs.getString("reading");

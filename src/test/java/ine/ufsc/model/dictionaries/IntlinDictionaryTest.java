@@ -472,6 +472,52 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
+    
+    /**
+     * Test of updateWord method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateWord() {
+        try {
+            String newText = "directamenteee";
+            int wordId = 2;
+            boolean result = instance.updateWord(wordId, newText);
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of updateAlt method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateAlt() {
+        try {
+            String newAltText = "ahueonao, aweonado, aweonao";
+            int id = 1;
+            boolean result = instance.updateAlt(id, newAltText);
+            instance.updateAlt(id, "ahueonao, aweonado, aweonao (eye dialect)"); //back to normal, so we don't mess up testSearchAlternativeForm
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of updateAlt method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateDef() {
+        try {
+            String newText = "crack, bang";
+            int defId = 1;
+            boolean result = instance.updateAlt(defId, newText);
+            assertTrue(result);
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
 
     private boolean wasSynonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
         ResultSet syns = instance.searchSynonyms(def);
