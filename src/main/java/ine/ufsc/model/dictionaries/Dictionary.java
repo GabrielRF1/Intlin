@@ -43,6 +43,8 @@ public abstract class Dictionary {
         
     public abstract boolean addDefinition(Object contents) throws SQLException;
     
+    public abstract boolean addAlternative(int wordId, String alt) throws SQLException;
+    
     public abstract boolean removeDefinition(int definitionId) throws SQLException;
     
     public abstract boolean removeWord(int wordId) throws SQLException;

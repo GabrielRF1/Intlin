@@ -435,7 +435,8 @@ public class IntlinDictionaryTest {
             int defId = 4;
             boolean result = instance.addSynonym(defId, syn);
             ArrayList<String> syns = new ArrayList<>();
-            assertTrue(result && wasSynonymProperlyAdded(syns, syn));
+            syns.add(syn);
+            assertTrue(result && wasSynonymProperlyAdded(syns, "chrysalis"));
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -451,7 +452,8 @@ public class IntlinDictionaryTest {
             int defId = 4;
             boolean result = instance.addAntonym(defId, ant);
             ArrayList<String> ants = new ArrayList<>();
-            assertTrue(result && wasAntonymProperlyAdded(ants, ant));
+            ants.add(ant);
+            assertTrue(result && wasAntonymProperlyAdded(ants, "chrysalis"));
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -467,7 +469,29 @@ public class IntlinDictionaryTest {
             int defId = 4;
             boolean result = instance.addExtra(defId, extra);
             ArrayList<String> extras = new ArrayList<>();
-            assertTrue(result && wasExtraProperlyAdded(extras, extra));
+            extras.add(extra);
+            assertTrue(result && wasExtraProperlyAdded(extras, "chrysalis"));
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+
+    /**
+     * Test of addAlternativ method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testAddAlternative() {
+        try {
+            String alternative = "eztampido";
+            String main = "estampido";
+            int wordId = 1;
+            boolean result = instance.addAlternative(wordId, alternative);
+            ResultSet alts = instance.searchAlternativeForm(main);
+            ArrayList<String> altsStrings = new ArrayList<>();
+            while (alts.next()) {
+                altsStrings.add(alts.getString("alternative"));
+            }
+            assertTrue(result && altsStrings.contains(alternative));
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -578,7 +602,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of updateWordClass method, of class IntlinDictionary.
      */
@@ -605,7 +629,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of updateSynonym method, of class IntlinDictionary.
      */
@@ -632,7 +656,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of updateAntonym method, of class IntlinDictionary.
      */
@@ -687,7 +711,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     private boolean wasSynonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
         ResultSet syns = instance.searchSynonyms(def);
         ArrayList<String> synsStrings = new ArrayList<>();

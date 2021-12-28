@@ -140,6 +140,16 @@ public class IntlinDictionary extends Dictionary {
     }
 
     @Override
+    public boolean addAlternative(int wordId, String alt) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("INSERT INTO Alternative(word_id, alt) values(?,?)");
+        stm.setInt(1, wordId);
+        stm.setString(2, alt);
+        int res = stm.executeUpdate();
+        System.out.println("res: "+res);
+        return res != 0;
+    }
+
+    @Override
     public boolean removeDefinition(int definitionId) throws SQLException {
         boolean success = true;
         PreparedStatement stmSyn = con.prepareStatement("DELETE FROM Synonym WHERE def_id=?");
@@ -210,28 +220,28 @@ public class IntlinDictionary extends Dictionary {
         int res = stm.executeUpdate();
         return res != 0;
     }
-    
+
     public boolean updateWordClass(int wordId, String newClass) throws SQLException {
         PreparedStatement stm = con.prepareStatement(String.format("UPDATE Word SET word_class = \'%s\' WHERE word_id=?", newClass));
         stm.setInt(1, wordId);
         int res = stm.executeUpdate();
         return res != 0;
     }
-    
+
     public boolean updateSynonym(int synId, String newSyn) throws SQLException {
         PreparedStatement stm = con.prepareStatement(String.format("UPDATE Synonym SET syn = \'%s\' WHERE syn_id=?", newSyn));
         stm.setInt(1, synId);
         int res = stm.executeUpdate();
         return res != 0;
     }
-    
+
     public boolean updateAntonym(int antId, String newAnt) throws SQLException {
         PreparedStatement stm = con.prepareStatement(String.format("UPDATE Antonym SET ant = \'%s\' WHERE ant_id=?", newAnt));
         stm.setInt(1, antId);
         int res = stm.executeUpdate();
         return res != 0;
     }
-    
+
     public boolean updateExtra(int extraId, String newExtra) throws SQLException {
         PreparedStatement stm = con.prepareStatement(String.format("UPDATE Extra SET extra = \'%s\' WHERE extra_id=?", newExtra));
         stm.setInt(1, extraId);
