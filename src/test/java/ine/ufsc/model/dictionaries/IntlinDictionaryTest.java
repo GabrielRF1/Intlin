@@ -520,7 +520,7 @@ public class IntlinDictionaryTest {
             ResultSet RS2 = wStm2.executeQuery();
 
             instance.updateAlt(id, "ahueonao, aweonado, aweonao (eye dialect)"); //back to normal, so we don't mess up testSearchAlternativeForm
-            assertTrue(result && !RS1.isClosed()/* && RS2.isClosed()*/);
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
