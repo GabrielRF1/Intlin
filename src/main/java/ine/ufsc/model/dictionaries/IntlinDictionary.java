@@ -77,7 +77,7 @@ public class IntlinDictionary extends Dictionary {
                 .prepareStatement("SELECT a.ant_id, a.ant "
                         + "FROM Definition d INNER JOIN "
                         + "Antonym a on d.def_id = a.def_id "
-                        + "where d.def = ?");
+                        + "WHERE d.def = ?");
         stm.setString(1, definition);
         return stm.executeQuery();
     }
@@ -168,6 +168,18 @@ public class IntlinDictionary extends Dictionary {
         stm.setInt(1, definitionId);
         success &= (stm.executeUpdate() != 0);
         return success;
+    }
+
+    public boolean removeSynonym(int SynId) throws SQLException {
+        throw new UnsupportedOperationException("WIP");
+    }
+
+    public boolean removeAntonym(int antId) throws SQLException {
+        throw new UnsupportedOperationException("WIP");
+    }
+
+    public boolean removeExtra(int extraId) throws SQLException {
+        throw new UnsupportedOperationException("WIP");
     }
 
     @Override

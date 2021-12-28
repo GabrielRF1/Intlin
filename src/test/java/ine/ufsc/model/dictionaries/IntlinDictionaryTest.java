@@ -425,6 +425,59 @@ public class IntlinDictionaryTest {
         }
     }
 
+     /**
+     * Test of removeSynonym method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testRemoveSynonym() {
+        try {
+            int synId = 6;
+            boolean result = instance.removeSynonym(synId);
+            PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Synonym WHERE syn_id = ?");
+            stm.setInt(1, synId);
+            ResultSet RS = stm.executeQuery();
+            assertTrue(result && RS.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of removeAntonym method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testRemoveAntonym() {
+        try {
+            instance.addAntonym(20, "inteligente"); // add a antonym to ahuevonado as there are only 2 in the database and are used in other tests
+            int antid = 3;
+            boolean result = instance.removeAntonym(antid);
+            PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Antonym WHERE ant_id = ?");
+            stm.setInt(1, antid);
+            ResultSet RS = stm.executeQuery();
+            assertTrue(result && RS.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of removeExtra method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testRemoveExtra() {
+        try {
+            int extraid = 5;
+            boolean result = instance.removeExtra(extraid);
+            PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Extra WHERE extra_id = ?");
+            stm.setInt(1, extraid);
+            ResultSet RS = stm.executeQuery();
+            assertTrue(result && RS.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+
+    
     /**
      * Test of addSynonym method, of class IntlinDictionary.
      */
@@ -477,7 +530,7 @@ public class IntlinDictionaryTest {
     }
 
     /**
-     * Test of addAlternativ method, of class IntlinDictionary.
+     * Test of addAlternative method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
     public void testAddAlternative() {
