@@ -431,7 +431,8 @@ public class IntlinDictionaryTest {
     @org.junit.jupiter.api.Test
     public void testRemoveSynonym() {
         try {
-            int synId = 6;
+            int synId = 7;
+            instance.addSynonym(20, "estúpido");
             boolean result = instance.removeSynonym(synId);
             PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Synonym WHERE syn_id = ?");
             stm.setInt(1, synId);

@@ -152,17 +152,32 @@ public class IntlinDictionary extends Dictionary {
     @Override
     public boolean removeDefinition(int definitionId) throws SQLException {
         boolean success = true;
-        PreparedStatement stmSyn = con.prepareStatement("DELETE FROM Synonym WHERE def_id=?");
+        PreparedStatement stmSyn = con.prepareStatement("SELECT syn_id FROM Synonym WHERE def_id=?");
         stmSyn.setInt(1, definitionId);
-        success &= (stmSyn.executeUpdate() != 0);
+        ResultSet synS = stmSyn.executeQuery();
+        if (!synS.isClosed()) {
+            while (synS.next()) {
+                success &= removeSynonym(synS.getInt("syn_id"));
+            }
+        }
 
-        PreparedStatement stmAnt = con.prepareStatement("DELETE FROM Antonym WHERE def_id=?");
+        PreparedStatement stmAnt = con.prepareStatement("SELECT ant_id FROM Antonym WHERE def_id=?");
         stmAnt.setInt(1, definitionId);
-        success &= (stmAnt.executeUpdate() != 0);
+        ResultSet antS = stmAnt.executeQuery();
+        if (!antS.isClosed()) {
+            while (antS.next()) {
+                success &= removeAntonym(antS.getInt("ant_id"));
+            }
+        }
 
-        PreparedStatement stmExtra = con.prepareStatement("DELETE FROM Extra WHERE def_id=?");
+        PreparedStatement stmExtra = con.prepareStatement("SELECT extra_id FROM Extra WHERE def_id=?");
         stmExtra.setInt(1, definitionId);
-        success &= (stmExtra.executeUpdate() != 0);
+        ResultSet extraS = stmExtra.executeQuery();
+        if (!extraS.isClosed()) {
+            while (extraS.next()) {
+                success &= removeExtra(extraS.getInt("extra_id"));
+            }
+        }
 
         PreparedStatement stm = con.prepareStatement("DELETE FROM Definition WHERE def_id=?");
         stm.setInt(1, definitionId);
@@ -171,15 +186,21 @@ public class IntlinDictionary extends Dictionary {
     }
 
     public boolean removeSynonym(int SynId) throws SQLException {
-        throw new UnsupportedOperationException("WIP");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM Synonym WHERE syn_id=?");
+        stm.setInt(1, SynId);
+        return (stm.executeUpdate() != 0);
     }
 
     public boolean removeAntonym(int antId) throws SQLException {
-        throw new UnsupportedOperationException("WIP");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM Antonym WHERE ant_id=?");
+        stm.setInt(1, antId);
+        return (stm.executeUpdate() != 0);
     }
 
     public boolean removeExtra(int extraId) throws SQLException {
-        throw new UnsupportedOperationException("WIP");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM Extra WHERE extra_id=?");
+        stm.setInt(1, extraId);
+        return (stm.executeUpdate() != 0);
     }
 
     @Override
