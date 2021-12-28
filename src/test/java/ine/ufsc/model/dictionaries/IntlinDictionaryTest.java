@@ -506,7 +506,7 @@ public class IntlinDictionaryTest {
             String newAltText = "ahueonao, aweonado, aweonao";
             int id = 1;
             boolean result = instance.updateAlt(id, newAltText);
-            
+
             PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Alternative WHERE alt=?");
             wStm.setString(1, newAltText);
             ResultSet RS1 = wStm.executeQuery();
@@ -523,7 +523,7 @@ public class IntlinDictionaryTest {
     }
 
     /**
-     * Test of updateAlt method, of class IntlinDictionary.
+     * Test of updateDef method, of class IntlinDictionary.
      */
     @org.junit.jupiter.api.Test
     public void testUpdateDef() {
@@ -531,7 +531,7 @@ public class IntlinDictionaryTest {
             String newText = "crack, bang";
             int defId = 1;
             boolean result = instance.updateDef(defId, newText);
-            
+
             PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Definition WHERE def=?");
             wStm.setString(1, newText);
             ResultSet RS1 = wStm.executeQuery();
@@ -539,13 +539,149 @@ public class IntlinDictionaryTest {
             PreparedStatement wStm2 = instance.con.prepareStatement("SELECT * FROM Definition WHERE def=?");
             wStm2.setString(1, "crack, bang (noise)");
             ResultSet RS2 = wStm2.executeQuery();
-            
+
             assertTrue(result && !RS1.isClosed() && RS2.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
 
+    /**
+     * Test of updateGender method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateGender() {
+        try {
+            String newGender = "m sg";
+            int wordId = 4;
+            boolean result = instance.updateGender(wordId, newGender);
+
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT gender FROM Word WHERE gender=? AND word_id=?");
+            wStm.setString(1, newGender);
+            wStm.setInt(2, wordId);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT gender FROM Word WHERE gender=? AND word_id=?");
+            wStm2.setString(1, "m");
+            wStm2.setInt(2, wordId);
+
+            ResultSet RS2 = wStm2.executeQuery();
+
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of updateWordClass method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateWordClass() {
+        try {
+            String newClass = "Verbo";
+            int wordId = 5;
+            boolean result = instance.updateWordClass(wordId, newClass);
+
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT word_class FROM Word WHERE word_class=? AND word_id=?");
+            wStm.setString(1, newClass);
+            wStm.setInt(2, wordId);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT word_class FROM Word WHERE word_class=? AND word_id=?");
+            wStm2.setString(1, "verb");
+            wStm2.setInt(2, wordId);
+
+            ResultSet RS2 = wStm2.executeQuery();
+
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of updateSynonym method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateSynonym() {
+        try {
+            String newSyn = "fertilizanteee";
+            int synId = 1;
+            boolean result = instance.updateSynonym(synId, newSyn);
+
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Synonym WHERE syn=? AND syn_id=?");
+            wStm.setString(1, newSyn);
+            wStm.setInt(2, synId);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT * FROM Synonym WHERE syn=? AND syn_id=?");
+            wStm2.setString(1, "fertilizante");
+            wStm2.setInt(2, synId);
+            ResultSet RS2 = wStm2.executeQuery();
+
+            instance.updateSynonym(synId, "fertilizante"); // undo, so we don't run the risk of disturbing some other test
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
+    /**
+     * Test of updateAntonym method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateAntonym() {
+        try {
+            String newAnt = "aquíi";
+            int antId = 1;
+            boolean result = instance.updateAntonym(antId, newAnt);
+
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Antonym WHERE ant=? AND ant_id=?");
+            wStm.setString(1, newAnt);
+            wStm.setInt(2, antId);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT * FROM Antonym WHERE ant=? AND ant_id=?");
+            wStm2.setString(1, "fertilizante");
+            wStm2.setInt(2, antId);
+            ResultSet RS2 = wStm2.executeQuery();
+
+            instance.updateAntonym(antId, "aquí"); // undo, so we don't run the risk of disturbing some other test
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+
+    /**
+     * Test of updateExtra method, of class IntlinDictionary.
+     */
+    @org.junit.jupiter.api.Test
+    public void testUpdateExtra() {
+        try {
+            String newExtra = "too long, bro";
+            String oldExtra = "2002, Clara Inés Ríos Katto, Guía para el cultivo y aprovechamiento del botón de oro: Tithoni diversifolia (Hemsl.) Gray, Concenio Andrés Bello, page 22.";
+            int extraId = 1;
+            boolean result = instance.updateExtra(extraId, newExtra);
+
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Extra WHERE extra=? AND extra_id=?");
+            wStm.setString(1, newExtra);
+            wStm.setInt(2, extraId);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT * FROM Extra WHERE extra=? AND extra_id=?");
+            wStm2.setString(1, oldExtra);
+            wStm2.setInt(2, extraId);
+            ResultSet RS2 = wStm2.executeQuery();
+
+            instance.updateExtra(extraId, oldExtra); // undo, so we don't run the risk of disturbing some other test
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
+        } catch (SQLException ex) {
+            fail("\nException thrown: " + ex.toString());
+        }
+    }
+    
     private boolean wasSynonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
         ResultSet syns = instance.searchSynonyms(def);
         ArrayList<String> synsStrings = new ArrayList<>();
