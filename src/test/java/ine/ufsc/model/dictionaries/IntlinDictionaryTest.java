@@ -479,6 +479,7 @@ public class IntlinDictionaryTest {
     @org.junit.jupiter.api.Test
     public void testUpdateWord() {
         try {
+            //String newText = "directamenteee\' WHERE 1==1; DROP TABLE Word; --"; // Does not work, fortunately
             String newText = "directamenteee";
             int wordId = 2;
             boolean result = instance.updateWord(wordId, newText);

@@ -182,17 +182,26 @@ public class IntlinDictionary extends Dictionary {
 
     @Override
     public boolean updateWord(int wordId, String newText) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement stm = con.prepareStatement(String.format("UPDATE Word SET word = \'%s\' WHERE word_id=?",newText));
+        stm.setInt(1, wordId);
+        int res = stm.executeUpdate();
+        return res != 0;
     }
 
     @Override
-    public boolean updateAlt(int wordId, String newAltText) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean updateAlt(int id, String newAltText) throws SQLException {
+        PreparedStatement stm = con.prepareStatement(String.format("UPDATE Alternative SET alt = \'%s\' WHERE alt_id=?",newAltText));
+        stm.setInt(1, id);
+        int res = stm.executeUpdate();
+        return res != 0;
     }
 
     @Override
     public boolean updateDef(int defId, String newText) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement stm = con.prepareStatement(String.format("UPDATE Definition SET def = \'%s\' WHERE def_id=?",newText));
+        stm.setInt(1, defId);
+        int res = stm.executeUpdate();
+        return res != 0;
     }
 
     @Override
