@@ -145,7 +145,7 @@ public class IntlinDictionary extends Dictionary {
         stm.setInt(1, wordId);
         stm.setString(2, alt);
         int res = stm.executeUpdate();
-        System.out.println("res: "+res);
+        System.out.println("res: " + res);
         return res != 0;
     }
 
@@ -154,19 +154,19 @@ public class IntlinDictionary extends Dictionary {
         boolean success = true;
         PreparedStatement stmSyn = con.prepareStatement("DELETE FROM Synonym WHERE def_id=?");
         stmSyn.setInt(1, definitionId);
-        success &= !stmSyn.execute();
+        success &= (stmSyn.executeUpdate() != 0);
 
         PreparedStatement stmAnt = con.prepareStatement("DELETE FROM Antonym WHERE def_id=?");
         stmAnt.setInt(1, definitionId);
-        success &= !stmAnt.execute();
+        success &= (stmAnt.executeUpdate() != 0);
 
         PreparedStatement stmExtra = con.prepareStatement("DELETE FROM Extra WHERE def_id=?");
         stmExtra.setInt(1, definitionId);
-        success &= !stmExtra.execute();
+        success &= (stmExtra.executeUpdate() != 0);
 
         PreparedStatement stm = con.prepareStatement("DELETE FROM Definition WHERE def_id=?");
         stm.setInt(1, definitionId);
-        success &= !stm.execute();
+        success &= (stm.executeUpdate() != 0);
         return success;
     }
 
@@ -185,7 +185,7 @@ public class IntlinDictionary extends Dictionary {
         }
         PreparedStatement delStm = con.prepareStatement("DELETE FROM Word WHERE word_id=?");
         delStm.setInt(1, wordId);
-        success &= !delStm.execute();
+        success &= (delStm.executeUpdate() != 0);
 
         return success;
     }
@@ -259,7 +259,7 @@ public class IntlinDictionary extends Dictionary {
         stmInsertWord.setString(2, info.wordClass);
         stmInsertWord.setString(3, info.gender);
 
-        return !stmInsertWord.execute();
+        return (stmInsertWord.executeUpdate() != 0);
     }
 
     private void build() throws IOException, SQLException {
@@ -336,7 +336,7 @@ public class IntlinDictionary extends Dictionary {
                         + "VALUES(?, ?)");
         stmInsertDef.setString(1, info.def);
         stmInsertDef.setInt(2, wordId);
-        return !stmInsertDef.execute();
+        return (stmInsertDef.executeUpdate() != 0);
     }
 
     private boolean insertDefChildren(int defId, IntlinInfo info) throws SQLException {
@@ -365,7 +365,7 @@ public class IntlinDictionary extends Dictionary {
                             + "VALUES(?, ?)", table, column));
             stmInsertExtra.setInt(1, defId);
             stmInsertExtra.setString(2, value);
-            success &= !stmInsertExtra.execute();
+            success &= (stmInsertExtra.executeUpdate() != 0);
         }
         return success;
     }
