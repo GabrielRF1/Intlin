@@ -239,7 +239,7 @@ public class IntlinDictionaryTest {
             contents.syns.add("refrigerador");
 
             boolean result = instance.addDefinition(contents);
-            
+
             ResultSet defs = instance.searchDefinition("nevera");
             boolean foundDef = false;
             while (defs.next()) {
@@ -252,7 +252,7 @@ public class IntlinDictionaryTest {
             }
             result &= foundDef;
             result &= wasSynonymProperlyAdded(contents.syns, "refrigerator");
-            
+
             assertTrue(result);
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
@@ -275,7 +275,7 @@ public class IntlinDictionaryTest {
             contents.extras.add("disparó y murrió");
 
             boolean result = instance.addDefinition(contents);
-            
+
             ResultSet defs = instance.searchDefinition("estampido");
             boolean foundDef = false;
             while (defs.next()) {
@@ -322,21 +322,21 @@ public class IntlinDictionaryTest {
             PreparedStatement stmDef = instance.con.prepareStatement("SELECT * FROM Definition WHERE def_id = ?");
             stmDef.setInt(1, definitionId);
             ResultSet RSdef = stmDef.executeQuery();
-            
+
             PreparedStatement stmSyn = instance.con.prepareStatement("SELECT * FROM Synonym WHERE def_id = ?");
             stmSyn.setInt(1, definitionId);
             ResultSet RSsyn = stmSyn.executeQuery();
-            
+
             PreparedStatement stmAnt = instance.con.prepareStatement("SELECT * FROM Antonym WHERE def_id = ?");
             stmAnt.setInt(1, definitionId);
             ResultSet RSant = stmAnt.executeQuery();
-            
+
             PreparedStatement stmExtra = instance.con.prepareStatement("SELECT * FROM Extra WHERE def_id = ?");
             stmExtra.setInt(1, definitionId);
             ResultSet RSextra = stmExtra.executeQuery();
-            
+
             assertTrue(result && RSdef.isClosed() && RSsyn.isClosed()
-            && RSant.isClosed() && RSextra.isClosed());
+                    && RSant.isClosed() && RSextra.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -415,7 +415,7 @@ public class IntlinDictionaryTest {
             PreparedStatement stm = instance.con.prepareStatement("SELECT * FROM Word WHERE word_id = ?");
             stm.setInt(1, wordId);
             ResultSet RS = stm.executeQuery();
-            
+
             PreparedStatement stmDef = instance.con.prepareStatement("SELECT * FROM Definition WHERE word_id = ?");
             stmDef.setInt(1, wordId);
             ResultSet RSdef = stmDef.executeQuery();
@@ -472,7 +472,7 @@ public class IntlinDictionaryTest {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of updateWord method, of class IntlinDictionary.
      */
@@ -483,12 +483,20 @@ public class IntlinDictionaryTest {
             String newText = "directamenteee";
             int wordId = 2;
             boolean result = instance.updateWord(wordId, newText);
-            assertTrue(result);
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Word WHERE word=?");
+            wStm.setString(1, newText);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT * FROM Word WHERE word=?");
+            wStm2.setString(1, "directamente");
+            ResultSet RS2 = wStm2.executeQuery();
+
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of updateAlt method, of class IntlinDictionary.
      */
@@ -498,13 +506,22 @@ public class IntlinDictionaryTest {
             String newAltText = "ahueonao, aweonado, aweonao";
             int id = 1;
             boolean result = instance.updateAlt(id, newAltText);
+            
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Alternative WHERE alt=?");
+            wStm.setString(1, newAltText);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT * FROM Alternative WHERE alt=?");
+            wStm2.setString(1, "ahueonao, aweonado, aweonao (eye dialect)");
+            ResultSet RS2 = wStm2.executeQuery();
+
             instance.updateAlt(id, "ahueonao, aweonado, aweonao (eye dialect)"); //back to normal, so we don't mess up testSearchAlternativeForm
-            assertTrue(result);
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
     }
-    
+
     /**
      * Test of updateAlt method, of class IntlinDictionary.
      */
@@ -513,8 +530,17 @@ public class IntlinDictionaryTest {
         try {
             String newText = "crack, bang";
             int defId = 1;
-            boolean result = instance.updateAlt(defId, newText);
-            assertTrue(result);
+            boolean result = instance.updateDef(defId, newText);
+            
+            PreparedStatement wStm = instance.con.prepareStatement("SELECT * FROM Definition WHERE def=?");
+            wStm.setString(1, newText);
+            ResultSet RS1 = wStm.executeQuery();
+
+            PreparedStatement wStm2 = instance.con.prepareStatement("SELECT * FROM Definition WHERE def=?");
+            wStm2.setString(1, "crack, bang (noise)");
+            ResultSet RS2 = wStm2.executeQuery();
+            
+            assertTrue(result && !RS1.isClosed() && RS2.isClosed());
         } catch (SQLException ex) {
             fail("\nException thrown: " + ex.toString());
         }
@@ -528,7 +554,7 @@ public class IntlinDictionaryTest {
         }
         return synsStrings.containsAll(colection);
     }
-    
+
     private boolean wasAntonymProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
         ResultSet ants = instance.searchAntonyms(def);
         ArrayList<String> antsStrings = new ArrayList<>();
@@ -537,7 +563,7 @@ public class IntlinDictionaryTest {
         }
         return antsStrings.containsAll(colection);
     }
-    
+
     private boolean wasExtraProperlyAdded(ArrayList<String> colection, String def) throws SQLException {
         ResultSet extras = instance.searchExtras(def);
         ArrayList<String> extrasStrings = new ArrayList<>();
