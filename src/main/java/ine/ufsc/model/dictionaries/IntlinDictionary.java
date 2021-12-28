@@ -54,7 +54,7 @@ public class IntlinDictionary extends Dictionary {
     @Override
     public ResultSet searchAlternativeForm(String word) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT a.alt AS alternative "
+                .prepareStatement("SELECT a.alt_id, a.alt AS alternative "
                         + "FROM Word w INNER JOIN "
                         + "Alternative a on a.word_id = w.word_id "
                         + "where w.word = ?");
@@ -64,7 +64,7 @@ public class IntlinDictionary extends Dictionary {
 
     public ResultSet searchExtras(String definition) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT e.extra "
+                .prepareStatement("SELECT e.extra_id, e.extra "
                         + "FROM Definition d INNER JOIN "
                         + "Extra e on d.def_id = e.def_id "
                         + "where d.def = ?");
@@ -74,7 +74,7 @@ public class IntlinDictionary extends Dictionary {
 
     public ResultSet searchAntonyms(String definition) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT a.ant "
+                .prepareStatement("SELECT a.ant_id, a.ant "
                         + "FROM Definition d INNER JOIN "
                         + "Antonym a on d.def_id = a.def_id "
                         + "where d.def = ?");
@@ -84,7 +84,7 @@ public class IntlinDictionary extends Dictionary {
 
     public ResultSet searchSynonyms(String definition) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT s.syn "
+                .prepareStatement("SELECT s.syn_id, s.syn "
                         + "FROM Definition d INNER JOIN "
                         + "Synonym s on d.def_id = s.def_id "
                         + "where d.def = ?");
