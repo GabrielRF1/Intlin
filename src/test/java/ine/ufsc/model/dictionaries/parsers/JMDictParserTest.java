@@ -21,24 +21,24 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Gabriel
  */
-public class YomichanParserTest {
+public class JMDictParserTest {
 
-    static YomichanParser instance;
+    static JMDictParser instance;
     static Connection con;
     static ArrayList<File> files;
 
-    public YomichanParserTest() {
+    public JMDictParserTest() {
     }
 
     private static void setUpDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        con = DriverManager.getConnection("jdbc:sqlite:testDict"+File.separator+"dbYomichanTest.db");
+        con = DriverManager.getConnection("jdbc:sqlite:testDict"+File.separator+"dbJMDictTest.db");
         Statement stm = con.createStatement();
         //create tables
     }
     
     private static File setUpFile() throws IOException {
-        File resFile = new File("testDict"+File.separator+"dbYomichanTest"+File.separator+"yomichanTest.json");
+        File resFile = new File("testDict"+File.separator+"dbJMDictTest"+File.separator+"dbJMDictTest.json");
         return resFile;
     }
     
@@ -47,25 +47,23 @@ public class YomichanParserTest {
         setUpDB();
         File file = setUpFile();
         files.add(file);
-        instance = new YomichanParser(con);
+        instance = new JMDictParser(con);
         instance.doParsing(files);
     }
 
     @org.junit.jupiter.api.AfterAll
     public static void tearDownClass() throws IOException, SQLException {
         con.close();
-        File dbFile = new File("testDict"+File.separator+"dbYomichanTest.db");
+        File dbFile = new File("testDict"+File.separator+"dbJMDictTest.db");
         dbFile.delete();
     }
 
     /**
-     * Test of doParsing method, of class YomichanParser.
+     * Test of doParsing method, of class JMDictParser.
      */
     @org.junit.jupiter.api.Test
-    public void testDoParsing() throws Exception {
+    public void testDoParsingWieldsCorrectWord() throws Exception {
         System.out.println("doParsing");
-        ArrayList<File> files = null;
-        instance.doParsing(files);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

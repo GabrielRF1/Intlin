@@ -10,14 +10,17 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.*;
 
 /**
  *
  * @author Gabriel
  */
-public class YomichanParser implements DictParser {
+public class JMDictParser implements DictParser {
 
-    YomichanParser(Connection con) {
+    JMDictParser(Connection con) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
