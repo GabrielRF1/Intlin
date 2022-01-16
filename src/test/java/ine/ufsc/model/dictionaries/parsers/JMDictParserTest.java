@@ -136,7 +136,7 @@ public class JMDictParserTest {
         int expectedAmount = 9;
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT COUNT(*) as total FROM Word");
+            ResultSet rs = stm.executeQuery("SELECT COUNT(*) AS total FROM Word");
             int actualAmount = rs.getInt("total");
             assertEquals(expectedAmount, actualAmount);
         } catch (SQLException | UnsupportedOperationException ex) {

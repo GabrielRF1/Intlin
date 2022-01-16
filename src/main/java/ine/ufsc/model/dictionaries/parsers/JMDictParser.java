@@ -27,6 +27,7 @@ public class JMDictParser implements DictParser {
     private final Connection con;
     private final DocumentBuilder builder;
     private final PreparedStatement wordStm;
+    private int commitMark = 1000;
 
     JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -43,7 +44,7 @@ public class JMDictParser implements DictParser {
             try {
                 Document doc = builder.parse(file);
                 NodeList nodes = doc.getChildNodes();
-                Element JMDict = (Element) nodes.item(nodes.getLength()-1);
+                Element JMDict = (Element) nodes.item(nodes.getLength() - 1);
                 NodeList entries = JMDict.getElementsByTagName("entry");
                 for (int i = 0; i < entries.getLength(); i++) {
                     Element entry = (Element) entries.item(i);
@@ -51,13 +52,19 @@ public class JMDictParser implements DictParser {
                     int wordId = Integer.parseInt(entSeq.getTextContent());
                     this.wordStm.setInt(1, wordId);
                     this.wordStm.addBatch();
+                    if (i % commitMark == 0) {
+                        executeBatches();
+                    }
                 }
-                wordStm.executeBatch();
-                con.commit();
+                executeBatches();
             } catch (SAXException ex) {
                 throw new IOException("Could not parse file");
             }
         }
     }
 
+    private void executeBatches() throws SQLException {
+        wordStm.executeBatch();
+        con.commit();
+    }
 }
