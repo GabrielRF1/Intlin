@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class JMDictParserTest {
 
     static JMDictParser instance;
     static Connection con;
-    static ArrayList<File> files;
+    static ArrayList<File> files = new ArrayList<>();
 
     public JMDictParserTest() {
     }
@@ -107,12 +108,12 @@ public class JMDictParserTest {
     }
 
     private static File setUpFile() throws IOException {
-        File resFile = new File("testDict" + File.separator + "dbJMDictTest" + File.separator + "dbJMDictTest.json");
+        File resFile = new File("testDict" + File.separator + "dbJMDictTest" + File.separator + "JMDictTest.xml");
         return resFile;
     }
 
     @org.junit.jupiter.api.BeforeAll
-    public static void setUpClass() throws ClassNotFoundException, SQLException, IOException {
+    public static void setUpClass() throws ClassNotFoundException, SQLException, IOException, ParserConfigurationException {
         setUpDB();
         File file = setUpFile();
         files.add(file);

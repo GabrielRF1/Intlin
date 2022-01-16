@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
+import java.sql.PreparedStatement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -20,13 +24,40 @@ import java.io.*;
  */
 public class JMDictParser implements DictParser {
 
-    JMDictParser(Connection con) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private final Connection con;
+    private final DocumentBuilder builder;
+    private final PreparedStatement wordStm;
+
+    JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        this.builder = factory.newDocumentBuilder();
+        this.con = con;
+        this.wordStm = con.prepareStatement("INSERT OR IGNORE INTO Word(word_id)"
+                + "VALUES(?)");
     }
 
     @Override
     public void doParsing(ArrayList<File> files) throws IOException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        con.setAutoCommit(false);
+        for (File file : files) {
+            try {
+                Document doc = builder.parse(file);
+                NodeList nodes = doc.getChildNodes();
+                Element JMDict = (Element) nodes.item(nodes.getLength()-1);
+                NodeList entries = JMDict.getElementsByTagName("entry");
+                for (int i = 0; i < entries.getLength(); i++) {
+                    Element entry = (Element) entries.item(i);
+                    Node entSeq = entry.getElementsByTagName("ent_seq").item(0);
+                    int wordId = Integer.parseInt(entSeq.getTextContent());
+                    this.wordStm.setInt(1, wordId);
+                    this.wordStm.addBatch();
+                }
+                wordStm.executeBatch();
+                con.commit();
+            } catch (SAXException ex) {
+                throw new IOException("Could not parse file");
+            }
+        }
     }
-    
+
 }

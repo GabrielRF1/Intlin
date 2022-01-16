@@ -492,296 +492,296 @@ various information fields.
 ]>
 <!-- JMdict created: 2022-01-04 -->
 <JMdict>
-	<entry>
-		<ent_seq>1516925</ent_seq>
-		<k_ele>
-			<keb>方</keb>
-			<ke_pri>ichi1</ke_pri>
-		</k_ele>
-		<r_ele>
-			<reb>かた</reb>
-			<re_pri>ichi1</re_pri>
-		</r_ele>
-		<sense>
-			<pos>&n;</pos>
-			<s_inf>also ほう</s_inf>
-			<gloss>direction</gloss>
-			<gloss>way</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<misc>&hon;</misc>
-			<gloss>person</gloss>
-			<gloss>lady</gloss>
-			<gloss>gentleman</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<pos>&n-suf;</pos>
-			<gloss>method of</gloss>
-			<gloss>manner of</gloss>
-			<gloss>way of</gloss>
-		</sense>
-		<sense>
-			<pos>&n-suf;</pos>
-			<gloss>care of ...</gloss>
-		</sense>
-		<sense>
-			<pos>&n-suf;</pos>
-			<s_inf>also がた</s_inf>
-			<gloss>person in charge of ...</gloss>
-		</sense>
-		<sense>
-			<pos>&n-suf;</pos>
-			<s_inf>also がた</s_inf>
-			<gloss>side (e.g. "on my mother's side")</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>1516930</ent_seq>
-		<k_ele>
-			<keb>方</keb>
-			<ke_pri>ichi1</ke_pri>
-			<ke_pri>news1</ke_pri>
-			<ke_pri>nf12</ke_pri>
-		</k_ele>
-		<r_ele>
-			<reb>ほう</reb>
-			<re_pri>ichi1</re_pri>
-			<re_pri>news1</re_pri>
-			<re_pri>nf12</re_pri>
-		</r_ele>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>direction</gloss>
-			<gloss>way</gloss>
-			<gloss>side</gloss>
-			<gloss>area (in a particular direction)</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<s_inf>often 私の方, あなたの方, etc.</s_inf>
-			<gloss>side (of an argument, etc.)</gloss>
-			<gloss>one's part</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>type</gloss>
-			<gloss>category</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>field (of study, etc.)</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>indicates one side of a comparison</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>way</gloss>
-			<gloss>method</gloss>
-			<gloss>manner</gloss>
-			<gloss>means</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>length (of each side of a square)</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>1584160</ent_seq>
-		<k_ele>
-			<keb>頬</keb>
-			<ke_pri>ichi1</ke_pri>
-			<ke_pri>news2</ke_pri>
-			<ke_pri>nf32</ke_pri>
-		</k_ele>
-		<k_ele>
-			<keb>頰</keb>
-		</k_ele>
-		<r_ele>
-			<reb>ほお</reb>
-			<re_pri>ichi1</re_pri>
-			<re_pri>news2</re_pri>
-			<re_pri>nf32</re_pri>
-		</r_ele>
-		<r_ele>
-			<reb>ほほ</reb>
-			<re_pri>ichi1</re_pri>
-		</r_ele>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>cheek (of face)</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>1585020</ent_seq>
-		<k_ele>
-			<keb>来し方</keb>
-		</k_ele>
-		<r_ele>
-			<reb>きしかた</reb>
-		</r_ele>
-		<r_ele>
-			<reb>こしかた</reb>
-		</r_ele>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>the past</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>1586060</ent_seq>
-		<k_ele>
-			<keb>合言葉</keb>
-			<ke_pri>news1</ke_pri>
-			<ke_pri>nf16</ke_pri>
-		</k_ele>
-		<k_ele>
-			<keb>合い言葉</keb>
-		</k_ele>
-		<k_ele>
-			<keb>合い詞</keb>
-		</k_ele>
-		<r_ele>
-			<reb>あいことば</reb>
-			<re_pri>news1</re_pri>
-			<re_pri>nf16</re_pri>
-		</r_ele>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>password</gloss>
-			<gloss>watchword</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>motto</gloss>
-			<gloss>slogan</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>1586070</ent_seq>
-		<k_ele>
-			<keb>相性</keb>
-			<ke_pri>news1</ke_pri>
-			<ke_pri>nf15</ke_pri>
-		</k_ele>
-		<k_ele>
-			<keb>合い性</keb>
-		</k_ele>
-		<k_ele>
-			<keb>合性</keb>
-		</k_ele>
-		<k_ele>
-			<keb>相い性</keb>
-			<ke_inf>&io;</ke_inf>
-		</k_ele>
-		<r_ele>
-			<reb>あいしょう</reb>
-			<re_pri>news1</re_pri>
-			<re_pri>nf15</re_pri>
-		</r_ele>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>affinity</gloss>
-			<gloss>compatibility</gloss>
-			<gloss>chemistry (between people)</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>1472230</ent_seq>
-		<k_ele>
-			<keb>拝む</keb>
-			<ke_pri>ichi1</ke_pri>
-			<ke_pri>news2</ke_pri>
-			<ke_pri>nf42</ke_pri>
-		</k_ele>
-		<r_ele>
-			<reb>おがむ</reb>
-			<re_pri>ichi1</re_pri>
-			<re_pri>news2</re_pri>
-			<re_pri>nf42</re_pri>
-		</r_ele>
-		<sense>
-			<pos>&v5m;</pos>
-			<pos>&vt;</pos>
-			<gloss>to assume the posture of praying</gloss>
-			<gloss>to press the palms and fingers of both hands together</gloss>
-			<gloss>to do reverence (e.g. before a statue of the Buddha)</gloss>
-			<gloss>to pay one's respects</gloss>
-		</sense>
-		<sense>
-			<pos>&v5m;</pos>
-			<pos>&vt;</pos>
-			<gloss>to beg</gloss>
-			<gloss>to make a supplication</gloss>
-		</sense>
-		<sense>
-			<pos>&v5m;</pos>
-			<pos>&vt;</pos>
-			<misc>&hum;</misc>
-			<s_inf>sometimes used sarcastically in modern Japanese</s_inf>
-			<gloss>to see (something or someone of high status)</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>2569350</ent_seq>
-		<k_ele>
-			<keb>なごり雪</keb>
-		</k_ele>
-		<k_ele>
-			<keb>名残り雪</keb>
-		</k_ele>
-		<k_ele>
-			<keb>名残雪</keb>
-		</k_ele>
-		<r_ele>
-			<reb>なごりゆき</reb>
-		</r_ele>
-		<sense>
-			<pos>&n;</pos>
-			<xref>残雪</xref>
-			<gloss>lingering snow</gloss>
-		</sense>
-		<sense>
-			<pos>&n;</pos>
-			<gloss>snowfall at the end of the winter or the beginning of spring</gloss>
-		</sense>
-	</entry>
-	<entry>
-		<ent_seq>1383810</ent_seq>
-		<k_ele>
-			<keb>切りがない</keb>
-			<ke_pri>spec1</ke_pri>
-		</k_ele>
-		<k_ele>
-			<keb>切りが無い</keb>
-		</k_ele>
-		<r_ele>
-			<reb>きりがない</reb>
-			<re_pri>spec1</re_pri>
-		</r_ele>
-		<r_ele>
-			<reb>キリがない</reb>
-			<re_nokanji/>
-		</r_ele>
-		<sense>
-			<pos>&exp;</pos>
-			<pos>&adj-i;</pos>
-			<xref>切りのない</xref>
-			<misc>&uk;</misc>
-			<gloss>endless</gloss>
-			<gloss>boundless</gloss>
-			<gloss>innumerable</gloss>
-		</sense>
-		<sense>
-			<pos>&exp;</pos>
-			<pos>&adj-i;</pos>
-			<misc>&uk;</misc>
-			<gloss>endless</gloss>
-			<gloss>never-ending</gloss>
-			<gloss>going on forever</gloss>
-		</sense>
-	</entry>
+<entry>
+<ent_seq>1516925</ent_seq>
+<k_ele>
+<keb>方</keb>
+<ke_pri>ichi1</ke_pri>
+</k_ele>
+<r_ele>
+<reb>かた</reb>
+<re_pri>ichi1</re_pri>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<s_inf>also ほう</s_inf>
+<gloss>direction</gloss>
+<gloss>way</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<misc>&hon;</misc>
+<gloss>person</gloss>
+<gloss>lady</gloss>
+<gloss>gentleman</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<pos>&n-suf;</pos>
+<gloss>method of</gloss>
+<gloss>manner of</gloss>
+<gloss>way of</gloss>
+</sense>
+<sense>
+<pos>&n-suf;</pos>
+<gloss>care of ...</gloss>
+</sense>
+<sense>
+<pos>&n-suf;</pos>
+<s_inf>also がた</s_inf>
+<gloss>person in charge of ...</gloss>
+</sense>
+<sense>
+<pos>&n-suf;</pos>
+<s_inf>also がた</s_inf>
+<gloss>side (e.g. "on my mother's side")</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>1516930</ent_seq>
+<k_ele>
+<keb>方</keb>
+<ke_pri>ichi1</ke_pri>
+<ke_pri>news1</ke_pri>
+<ke_pri>nf12</ke_pri>
+</k_ele>
+<r_ele>
+<reb>ほう</reb>
+<re_pri>ichi1</re_pri>
+<re_pri>news1</re_pri>
+<re_pri>nf12</re_pri>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<gloss>direction</gloss>
+<gloss>way</gloss>
+<gloss>side</gloss>
+<gloss>area (in a particular direction)</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<s_inf>often 私の方, あなたの方, etc.</s_inf>
+<gloss>side (of an argument, etc.)</gloss>
+<gloss>one's part</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<gloss>type</gloss>
+<gloss>category</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<gloss>field (of study, etc.)</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<gloss>indicates one side of a comparison</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<gloss>way</gloss>
+<gloss>method</gloss>
+<gloss>manner</gloss>
+<gloss>means</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<gloss>length (of each side of a square)</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>1584160</ent_seq>
+<k_ele>
+<keb>頬</keb>
+<ke_pri>ichi1</ke_pri>
+<ke_pri>news2</ke_pri>
+<ke_pri>nf32</ke_pri>
+</k_ele>
+<k_ele>
+<keb>頰</keb>
+</k_ele>
+<r_ele>
+<reb>ほお</reb>
+<re_pri>ichi1</re_pri>
+<re_pri>news2</re_pri>
+<re_pri>nf32</re_pri>
+</r_ele>
+<r_ele>
+<reb>ほほ</reb>
+<re_pri>ichi1</re_pri>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<gloss>cheek (of face)</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>1585020</ent_seq>
+<k_ele>
+<keb>来し方</keb>
+</k_ele>
+<r_ele>
+<reb>きしかた</reb>
+</r_ele>
+<r_ele>
+<reb>こしかた</reb>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<gloss>the past</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>1586060</ent_seq>
+<k_ele>
+<keb>合言葉</keb>
+<ke_pri>news1</ke_pri>
+<ke_pri>nf16</ke_pri>
+</k_ele>
+<k_ele>
+<keb>合い言葉</keb>
+</k_ele>
+<k_ele>
+<keb>合い詞</keb>
+</k_ele>
+<r_ele>
+<reb>あいことば</reb>
+<re_pri>news1</re_pri>
+<re_pri>nf16</re_pri>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<gloss>password</gloss>
+<gloss>watchword</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<gloss>motto</gloss>
+<gloss>slogan</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>1586070</ent_seq>
+<k_ele>
+<keb>相性</keb>
+<ke_pri>news1</ke_pri>
+<ke_pri>nf15</ke_pri>
+</k_ele>
+<k_ele>
+<keb>合い性</keb>
+</k_ele>
+<k_ele>
+<keb>合性</keb>
+</k_ele>
+<k_ele>
+<keb>相い性</keb>
+<ke_inf>&io;</ke_inf>
+</k_ele>
+<r_ele>
+<reb>あいしょう</reb>
+<re_pri>news1</re_pri>
+<re_pri>nf15</re_pri>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<gloss>affinity</gloss>
+<gloss>compatibility</gloss>
+<gloss>chemistry (between people)</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>1472230</ent_seq>
+<k_ele>
+<keb>拝む</keb>
+<ke_pri>ichi1</ke_pri>
+<ke_pri>news2</ke_pri>
+<ke_pri>nf42</ke_pri>
+</k_ele>
+<r_ele>
+<reb>おがむ</reb>
+<re_pri>ichi1</re_pri>
+<re_pri>news2</re_pri>
+<re_pri>nf42</re_pri>
+</r_ele>
+<sense>
+<pos>&v5m;</pos>
+<pos>&vt;</pos>
+<gloss>to assume the posture of praying</gloss>
+<gloss>to press the palms and fingers of both hands together</gloss>
+<gloss>to do reverence (e.g. before a statue of the Buddha)</gloss>
+<gloss>to pay one's respects</gloss>
+</sense>
+<sense>
+<pos>&v5m;</pos>
+<pos>&vt;</pos>
+<gloss>to beg</gloss>
+<gloss>to make a supplication</gloss>
+</sense>
+<sense>
+<pos>&v5m;</pos>
+<pos>&vt;</pos>
+<misc>&hum;</misc>
+<s_inf>sometimes used sarcastically in modern Japanese</s_inf>
+<gloss>to see (something or someone of high status)</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>2569350</ent_seq>
+<k_ele>
+<keb>なごり雪</keb>
+</k_ele>
+<k_ele>
+<keb>名残り雪</keb>
+</k_ele>
+<k_ele>
+<keb>名残雪</keb>
+</k_ele>
+<r_ele>
+<reb>なごりゆき</reb>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<xref>残雪</xref>
+<gloss>lingering snow</gloss>
+</sense>
+<sense>
+<pos>&n;</pos>
+<gloss>snowfall at the end of the winter or the beginning of spring</gloss>
+</sense>
+</entry>
+<entry>
+<ent_seq>1383810</ent_seq>
+<k_ele>
+<keb>切りがない</keb>
+<ke_pri>spec1</ke_pri>
+</k_ele>
+<k_ele>
+<keb>切りが無い</keb>
+</k_ele>
+<r_ele>
+<reb>きりがない</reb>
+<re_pri>spec1</re_pri>
+</r_ele>
+<r_ele>
+<reb>キリがない</reb>
+<re_nokanji/>
+</r_ele>
+<sense>
+<pos>&exp;</pos>
+<pos>&adj-i;</pos>
+<xref>切りのない</xref>
+<misc>&uk;</misc>
+<gloss>endless</gloss>
+<gloss>boundless</gloss>
+<gloss>innumerable</gloss>
+</sense>
+<sense>
+<pos>&exp;</pos>
+<pos>&adj-i;</pos>
+<misc>&uk;</misc>
+<gloss>endless</gloss>
+<gloss>never-ending</gloss>
+<gloss>going on forever</gloss>
+</sense>
+</entry>
 </JMdict>
