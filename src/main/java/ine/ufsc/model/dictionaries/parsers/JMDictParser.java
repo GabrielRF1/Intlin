@@ -12,10 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
-import java.io.*;
 import java.sql.PreparedStatement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.xml.sax.SAXException;
 
 /**
@@ -48,10 +45,7 @@ public class JMDictParser implements DictParser {
                 NodeList entries = JMDict.getElementsByTagName("entry");
                 for (int i = 0; i < entries.getLength(); i++) {
                     Element entry = (Element) entries.item(i);
-                    Node entSeq = entry.getElementsByTagName("ent_seq").item(0);
-                    int wordId = Integer.parseInt(entSeq.getTextContent());
-                    this.wordStm.setInt(1, wordId);
-                    this.wordStm.addBatch();
+                    parseEntry(entry);
                     if (i % commitMark == 0) {
                         executeBatches();
                     }
@@ -61,6 +55,13 @@ public class JMDictParser implements DictParser {
                 throw new IOException("Could not parse file");
             }
         }
+    }
+
+    private void parseEntry(Element entry) throws SQLException {
+        Node entSeq = entry.getElementsByTagName("ent_seq").item(0);
+        int wordId = Integer.parseInt(entSeq.getTextContent());
+        this.wordStm.setInt(1, wordId);
+        this.wordStm.addBatch();
     }
 
     private void executeBatches() throws SQLException {
