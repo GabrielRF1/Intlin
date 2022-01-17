@@ -144,12 +144,25 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
-
+    
     @org.junit.jupiter.api.Test
-    public void testDoParsingWieldsCorrectWord() throws Exception {
-        System.out.println("doParsing");
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testDoParsingYieldsCorrectKElement() {
+        ArrayList<String> actual = new ArrayList<>();
+        actual.add("頬");
+        actual.add("頰");
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT kanji FROM KElement "
+                    + "WHERE word_id = 1584160");
+            ArrayList<String> expected = new ArrayList<>();
+            while(rs.next()) {
+                String kanji = rs.getString("kanji");
+                expected.add(kanji);
+            }
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
     }
-
 }
