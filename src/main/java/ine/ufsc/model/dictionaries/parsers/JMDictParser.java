@@ -24,7 +24,8 @@ public class JMDictParser implements DictParser {
     private final Connection con;
     private final DocumentBuilder builder;
     private final PreparedStatement wordStm;
-    private final PreparedStatement KElementStm;
+    private final PreparedStatement kElementStm;
+    private final PreparedStatement rElementStm;
     private final int commitMark = 1000;
 
     JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
@@ -33,8 +34,11 @@ public class JMDictParser implements DictParser {
         this.con = con;
         this.wordStm = con.prepareStatement("INSERT OR IGNORE INTO Word(word_id)"
                 + "VALUES(?)");
-        this.KElementStm = con.prepareStatement("INSERT OR IGNORE INTO KElement"
+        this.kElementStm = con.prepareStatement("INSERT OR IGNORE INTO KElement"
                 + "(priority, kanji, word_id)"
+                + "VALUES(?, ?, ?)");
+        this.rElementStm = con.prepareStatement("INSERT OR IGNORE INTO RElement"
+                + "(priority, reading, word_id)"
                 + "VALUES(?, ?, ?)");
     }
 
@@ -72,6 +76,12 @@ public class JMDictParser implements DictParser {
             Node kEle = kElements.item(i);
             parseKElement(kEle, wordId);
         }
+        
+        NodeList rElements = entry.getElementsByTagName("r_ele");
+        for (int i = 0; i < rElements.getLength(); i++) {
+            Node rEle = rElements.item(i);
+            parseRElement(rEle, wordId);
+        }
     }
 
     private void parseKElement(Node kEle, int wordId) throws SQLException {
@@ -82,20 +92,41 @@ public class JMDictParser implements DictParser {
             switch (kEleChild.getNodeName()) {
                 case "keb":
                     String keb = kEleChild.getTextContent();
-                    KElementStm.setString(2, keb);
+                    kElementStm.setString(2, keb);
                     break;
                 default:
                     continue;
             }
-            KElementStm.setInt(1, priority);
-            KElementStm.setInt(3, wordId);
-            KElementStm.addBatch();
+            kElementStm.setInt(1, priority);
+            kElementStm.setInt(3, wordId);
+            kElementStm.addBatch();
         }
     }
 
+    private void parseRElement(Node rEle, int wordId) throws SQLException {
+        NodeList rEleChildren = rEle.getChildNodes();
+        int priority = 0;
+        for (int j = 0; j < rEleChildren.getLength(); j++) {
+            Node rEleChild = rEleChildren.item(j);
+            switch (rEleChild.getNodeName()) {
+                case "reb":
+                    String reb = rEleChild.getTextContent();
+                    rElementStm.setString(2, reb);
+                    break;
+                default:
+                    continue;
+            }
+            rElementStm.setInt(1, priority);
+            rElementStm.setInt(3, wordId);
+            rElementStm.addBatch();
+        }
+    }
+    
     private void executeBatches() throws SQLException {
         wordStm.executeBatch();
-        KElementStm.executeBatch();
+        kElementStm.executeBatch();
+        rElementStm.executeBatch();
         con.commit();
     }
+
 }

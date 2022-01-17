@@ -165,4 +165,25 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectRElement() {
+        ArrayList<String> actual = new ArrayList<>();
+        actual.add("ほお");
+        actual.add("ほほ");
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT reading FROM RElement "
+                    + "WHERE word_id = 1584160");
+            ArrayList<String> expected = new ArrayList<>();
+            while(rs.next()) {
+                String reading = rs.getString("reading");
+                expected.add(reading);
+            }
+            assertEquals(actual, expected);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
 }
