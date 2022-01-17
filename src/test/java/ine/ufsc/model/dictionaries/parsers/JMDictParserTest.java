@@ -159,7 +159,7 @@ public class JMDictParserTest {
                 String kanji = rs.getString("kanji");
                 expected.add(kanji);
             }
-            assertEquals(expected, actual);
+            assertEquals(actual, expected);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());

@@ -66,26 +66,30 @@ public class JMDictParser implements DictParser {
         int wordId = Integer.parseInt(entSeq.getTextContent());
         this.wordStm.setInt(1, wordId);
         this.wordStm.addBatch();
-        
+
         NodeList kElements = entry.getElementsByTagName("k_ele");
         for (int i = 0; i < kElements.getLength(); i++) {
             Node kEle = kElements.item(i);
-            NodeList kEleChildren = kEle.getChildNodes();
-            int priority = 0;
-            for (int j = 0; j < kEleChildren.getLength(); j++) {
-                Node kEleChild = kEleChildren.item(j);
-                switch (kEleChild.getNodeName()) {
-                    case "keb":
-                        String keb = kEleChild.getTextContent();
-                        KElementStm.setString(2, keb);
-                        break;
-                    default:
-                        continue;
-                }
-                KElementStm.setInt(1, priority);
-                KElementStm.setInt(3, wordId);
-                KElementStm.addBatch();
+            parseKElement(kEle, wordId);
+        }
+    }
+
+    private void parseKElement(Node kEle, int wordId) throws SQLException {
+        NodeList kEleChildren = kEle.getChildNodes();
+        int priority = 0;
+        for (int j = 0; j < kEleChildren.getLength(); j++) {
+            Node kEleChild = kEleChildren.item(j);
+            switch (kEleChild.getNodeName()) {
+                case "keb":
+                    String keb = kEleChild.getTextContent();
+                    KElementStm.setString(2, keb);
+                    break;
+                default:
+                    continue;
             }
+            KElementStm.setInt(1, priority);
+            KElementStm.setInt(3, wordId);
+            KElementStm.addBatch();
         }
     }
 
