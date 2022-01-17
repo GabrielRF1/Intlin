@@ -24,7 +24,8 @@ public class JMDictParser implements DictParser {
     private final Connection con;
     private final DocumentBuilder builder;
     private final PreparedStatement wordStm;
-    private int commitMark = 1000;
+    private final PreparedStatement KElementStm;
+    private final int commitMark = 1000;
 
     JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -32,6 +33,9 @@ public class JMDictParser implements DictParser {
         this.con = con;
         this.wordStm = con.prepareStatement("INSERT OR IGNORE INTO Word(word_id)"
                 + "VALUES(?)");
+        this.KElementStm = con.prepareStatement("INSERT OR IGNORE INTO KElement"
+                + "(priority, kanji, word_id)"
+                + "VALUES(?, ?, ?)");
     }
 
     @Override
@@ -62,10 +66,32 @@ public class JMDictParser implements DictParser {
         int wordId = Integer.parseInt(entSeq.getTextContent());
         this.wordStm.setInt(1, wordId);
         this.wordStm.addBatch();
+        
+        NodeList kElements = entry.getElementsByTagName("k_ele");
+        for (int i = 0; i < kElements.getLength(); i++) {
+            Node kEle = kElements.item(i);
+            NodeList kEleChildren = kEle.getChildNodes();
+            int priority = 0;
+            for (int j = 0; j < kEleChildren.getLength(); j++) {
+                Node kEleChild = kEleChildren.item(j);
+                switch (kEleChild.getNodeName()) {
+                    case "keb":
+                        String keb = kEleChild.getTextContent();
+                        KElementStm.setString(2, keb);
+                        break;
+                    default:
+                        continue;
+                }
+                KElementStm.setInt(1, priority);
+                KElementStm.setInt(3, wordId);
+                KElementStm.addBatch();
+            }
+        }
     }
 
     private void executeBatches() throws SQLException {
         wordStm.executeBatch();
+        KElementStm.executeBatch();
         con.commit();
     }
 }
