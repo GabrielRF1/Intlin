@@ -57,6 +57,14 @@ public class JMDictParserTest {
                 + "word_id INTEGER NOT NULL,"
                 + "FOREIGN KEY(word_id) REFERENCES Word(word_id))");
         stm = con.createStatement();
+        stm.execute("CREATE TABLE IF NOT EXISTS ReadingInfo("
+                + "r_info_id INTEGER PRIMARY KEY,"
+                + "info STRING NOT NULL)");
+        stm = con.createStatement();
+        stm.execute("CREATE TABLE IF NOT EXISTS KanjiInfo("
+                + "k_info_id INTEGER PRIMARY KEY,"
+                + "info STRING NOT NULL)");
+        stm = con.createStatement();
         stm.execute("CREATE TABLE IF NOT EXISTS Definition("
                 + "def_id INTEGER PRIMARY KEY,"
                 + "type STRING,"
@@ -105,6 +113,20 @@ public class JMDictParserTest {
                 + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
                 + "FOREIGN KEY(dial_id) REFERENCES Dialect(dial_id),"
                 + "PRIMARY KEY(def_id, dial_id))");
+        stm = con.createStatement();
+        stm.execute("CREATE TABLE IF NOT EXISTS ReadInfo("
+                + "r_id INTEGER NOT NULL,"
+                + "r_info_id INTEGER NOT NULL,"
+                + "FOREIGN KEY(r_id) REFERENCES RElement(r_id),"
+                + "FOREIGN KEY(r_info_id) REFERENCES ReadingInfo(r_info_id),"
+                + "PRIMARY KEY(r_id, r_info_id))");
+        stm = con.createStatement();
+        stm.execute("CREATE TABLE IF NOT EXISTS KanjiInfo("
+                + "k_id INTEGER NOT NULL,"
+                + "k_info_id INTEGER NOT NULL,"
+                + "FOREIGN KEY(k_id) REFERENCES RElement(k_id),"
+                + "FOREIGN KEY(k_info_id) REFERENCES ReadingInfo(k_info_id),"
+                + "PRIMARY KEY(k_id, k_info_id))");
     }
 
     private static File setUpFile() throws IOException {
