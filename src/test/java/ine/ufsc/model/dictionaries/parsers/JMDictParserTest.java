@@ -67,7 +67,7 @@ public class JMDictParserTest {
         stm = con.createStatement();
         stm.execute("CREATE TABLE IF NOT EXISTS Definition("
                 + "def_id INTEGER PRIMARY KEY,"
-                + "type STRING,"
+                + "addtional_info STRING,"
                 + "word_id INTEGER NOT NULL,"
                 + "FOREIGN KEY(word_id) REFERENCES Word(word_id))");
         stm = con.createStatement();
@@ -78,6 +78,7 @@ public class JMDictParserTest {
         stm.execute("CREATE TABLE IF NOT EXISTS Gloss("
                 + "gloss_id INTEGER PRIMARY KEY,"
                 + "gloss STRING NOT NULL,"
+                + "type STRING,"
                 + "def_id INTEGER NOT NULL,"
                 + "FOREIGN KEY(def_id) REFERENCES Definition(def_id))");
         stm = con.createStatement();
@@ -208,4 +209,26 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectGloss() {
+        ArrayList<String> actual = new ArrayList<>();
+        actual.add("direction");
+        actual.add("way");
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT gloss FROM gloss "
+                    + "WHERE def_id = 1");
+            ArrayList<String> expected = new ArrayList<>();
+            while(rs.next()) {
+                String reading = rs.getString("gloss");
+                expected.add(reading);
+            }
+            assertEquals(actual, expected);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
+
 }
