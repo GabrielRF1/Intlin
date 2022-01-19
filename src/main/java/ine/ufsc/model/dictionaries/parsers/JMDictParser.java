@@ -101,14 +101,16 @@ public class JMDictParser implements DictParser {
             NodeList senseChildren = sense.getChildNodes();
             for (int j = 0; j < senseChildren.getLength(); j++) {
                 Node senseChild = senseChildren.item(j);
-                System.out.println("hmm: "+senseChild.getNodeName());
                 switch(senseChild.getNodeName()) {
                     case "gloss":
                         String gloss = senseChild.getTextContent();
-                        System.out.println("\thmm: "+gloss);
                         glossStm.setString(1, gloss);
                         glossStm.setInt(3, curDef);
                         glossStm.addBatch();
+                        break;
+                    case "s_inf":
+                        String info = senseChild.getTextContent();
+                        defStm.setString(1, info);
                         break;
                 }
             }
