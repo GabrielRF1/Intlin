@@ -260,5 +260,20 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
+    
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectReadingPriority() {
+        int expected = 1;
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT priority FROM RElement "
+                    + "WHERE r_id = 2");
+            int actual = rs.getInt("priority");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
 
 }

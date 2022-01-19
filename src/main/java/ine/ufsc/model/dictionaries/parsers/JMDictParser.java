@@ -143,7 +143,7 @@ public class JMDictParser implements DictParser {
 
     private void parseRElement(Node rEle, int wordId) throws SQLException {
         NodeList rEleChildren = rEle.getChildNodes();
-        int priority = 0;
+        int priority = 100000;
         for (int j = 0; j < rEleChildren.getLength(); j++) {
             Node rEleChild = rEleChildren.item(j);
             switch (rEleChild.getNodeName()) {
@@ -151,13 +151,17 @@ public class JMDictParser implements DictParser {
                     String reb = rEleChild.getTextContent();
                     rElementStm.setString(2, reb);
                     break;
-                default:
-                    continue;
+                case "re_pri":
+                    int prio = parsePriority(rEleChild.getTextContent());
+                    if (prio < priority) {
+                        priority = prio;
+                    }
+                    break;
             }
-            rElementStm.setInt(1, priority);
-            rElementStm.setInt(3, wordId);
-            rElementStm.addBatch();
         }
+        rElementStm.setInt(1, priority);
+        rElementStm.setInt(3, wordId);
+        rElementStm.addBatch();
     }
 
     private int parsePriority(String priority) {
