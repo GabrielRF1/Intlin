@@ -147,8 +147,8 @@ public class JMDictParserTest {
     @org.junit.jupiter.api.AfterAll
     public static void tearDownClass() throws IOException, SQLException {
         con.close();
-        File dbFile = new File("testDict" + File.separator + "dbJMDictTest.db");
-        dbFile.delete();
+//        File dbFile = new File("testDict" + File.separator + "dbJMDictTest.db");
+//        dbFile.delete();
     }
 
     /**
@@ -156,7 +156,7 @@ public class JMDictParserTest {
      */
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAmount() {
-        int expectedAmount = 9;
+        int expectedAmount = 10;
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT COUNT(*) AS total FROM Word");
@@ -269,6 +269,21 @@ public class JMDictParserTest {
             ResultSet rs = stm.executeQuery("SELECT priority FROM RElement "
                     + "WHERE r_id = 2");
             int actual = rs.getInt("priority");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectType() {
+        String expected = "expl";
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT type FROM Gloss "
+                    + "WHERE gloss_id = 53");
+            String actual = rs.getString("type");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);

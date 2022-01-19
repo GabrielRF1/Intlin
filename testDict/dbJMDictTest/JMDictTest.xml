@@ -784,4 +784,28 @@ various information fields.
 <gloss>going on forever</gloss>
 </sense>
 </entry>
+<entry>
+<ent_seq>1604310</ent_seq>
+<k_ele>
+<keb>漫才</keb>
+<ke_pri>news1</ke_pri>
+<ke_pri>nf18</ke_pri>
+</k_ele>
+<k_ele>
+<keb>万才</keb>
+<ke_inf>&oK;</ke_inf>
+</k_ele>
+<r_ele>
+<reb>まんざい</reb>
+<re_pri>news1</re_pri>
+<re_pri>nf18</re_pri>
+</r_ele>
+<sense>
+<pos>&n;</pos>
+<xref>万歳・まんざい</xref>
+<gloss>manzai</gloss>
+<gloss>comic dialogue</gloss>
+<gloss g_type="expl">two-person comedy act (usu. presented as a fast-paced dialogue, occ. presented as a skit)</gloss>
+</sense>
+</entry>
 </JMdict>
