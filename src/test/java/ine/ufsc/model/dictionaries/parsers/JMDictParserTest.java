@@ -167,7 +167,7 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
-    
+
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectKElement() {
         ArrayList<String> expected = new ArrayList<>();
@@ -178,7 +178,7 @@ public class JMDictParserTest {
             ResultSet rs = stm.executeQuery("SELECT kanji FROM KElement "
                     + "WHERE word_id = 1584160");
             ArrayList<String> actual = new ArrayList<>();
-            while(rs.next()) {
+            while (rs.next()) {
                 String kanji = rs.getString("kanji");
                 actual.add(kanji);
             }
@@ -199,7 +199,7 @@ public class JMDictParserTest {
             ResultSet rs = stm.executeQuery("SELECT reading FROM RElement "
                     + "WHERE word_id = 1584160");
             ArrayList<String> actual = new ArrayList<>();
-            while(rs.next()) {
+            while (rs.next()) {
                 String reading = rs.getString("reading");
                 actual.add(reading);
             }
@@ -220,7 +220,7 @@ public class JMDictParserTest {
             ResultSet rs = stm.executeQuery("SELECT gloss FROM Gloss "
                     + "WHERE def_id = 1");
             ArrayList<String> actual = new ArrayList<>();
-            while(rs.next()) {
+            while (rs.next()) {
                 String reading = rs.getString("gloss");
                 actual.add(reading);
             }
@@ -245,7 +245,7 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
-    
+
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectKanjiPriority() {
         int expected = 1;
@@ -260,7 +260,7 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
-    
+
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectReadingPriority() {
         int expected = 1;
@@ -284,6 +284,23 @@ public class JMDictParserTest {
             ResultSet rs = stm.executeQuery("SELECT type FROM Gloss "
                     + "WHERE gloss_id = 53");
             String actual = rs.getString("type");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectPartOfSpeech() {
+        String expected = "noun (common) (futsuumeishi)";
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT p.pos FROM (PartOfSpeech p"
+                    + " INNER JOIN DefPos dp ON dp.pos_id = p.pos_id) INNER JOIN"
+                    + " Definition d ON d.def_id = dp.def_id "
+                    + "WHERE def_id = 1");
+            String actual = rs.getString("pos");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
