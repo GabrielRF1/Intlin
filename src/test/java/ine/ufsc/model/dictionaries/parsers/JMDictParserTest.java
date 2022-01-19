@@ -170,19 +170,19 @@ public class JMDictParserTest {
     
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectKElement() {
-        ArrayList<String> actual = new ArrayList<>();
-        actual.add("頬");
-        actual.add("頰");
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add("頬");
+        expected.add("頰");
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT kanji FROM KElement "
                     + "WHERE word_id = 1584160");
-            ArrayList<String> expected = new ArrayList<>();
+            ArrayList<String> actual = new ArrayList<>();
             while(rs.next()) {
                 String kanji = rs.getString("kanji");
-                expected.add(kanji);
+                actual.add(kanji);
             }
-            assertEquals(actual, expected);
+            assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
@@ -191,19 +191,19 @@ public class JMDictParserTest {
 
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectRElement() {
-        ArrayList<String> actual = new ArrayList<>();
-        actual.add("ほお");
-        actual.add("ほほ");
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add("ほお");
+        expected.add("ほほ");
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT reading FROM RElement "
                     + "WHERE word_id = 1584160");
-            ArrayList<String> expected = new ArrayList<>();
+            ArrayList<String> actual = new ArrayList<>();
             while(rs.next()) {
                 String reading = rs.getString("reading");
-                expected.add(reading);
+                actual.add(reading);
             }
-            assertEquals(actual, expected);
+            assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
@@ -212,19 +212,19 @@ public class JMDictParserTest {
 
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectGloss() {
-        ArrayList<String> actual = new ArrayList<>();
-        actual.add("direction");
-        actual.add("way");
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add("direction");
+        expected.add("way");
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT gloss FROM Gloss "
                     + "WHERE def_id = 1");
-            ArrayList<String> expected = new ArrayList<>();
+            ArrayList<String> actual = new ArrayList<>();
             while(rs.next()) {
                 String reading = rs.getString("gloss");
-                expected.add(reading);
+                actual.add(reading);
             }
-            assertEquals(actual, expected);
+            assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
@@ -233,13 +233,13 @@ public class JMDictParserTest {
 
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAddInfo() {
-        String actual = "also ほう";
+        String expected = "also ほう";
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT additional_info FROM Definition "
                     + "WHERE def_id = 1");
-            String expected = rs.getString("additional_info");
-            assertEquals(actual, expected);
+            String actual = rs.getString("additional_info");
+            assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("\nException thrown: " + ex.getMessage());
