@@ -26,7 +26,11 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement wordStm;
     private final PreparedStatement kElementStm;
     private final PreparedStatement rElementStm;
+    private final PreparedStatement defStm;
+    private final PreparedStatement glossStm;
     private final int commitMark = 1000;
+    
+    private int curDef = 0;
 
     JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -39,6 +43,12 @@ public class JMDictParser implements DictParser {
                 + "VALUES(?, ?, ?)");
         this.rElementStm = con.prepareStatement("INSERT OR IGNORE INTO RElement"
                 + "(priority, reading, word_id)"
+                + "VALUES(?, ?, ?)");
+        this.defStm = con.prepareStatement("INSERT OR IGNORE INTO Definition"
+                + "(additional_info, word_id)"
+                + "VALUES(?, ?)");
+        this.glossStm = con.prepareStatement("INSERT OR IGNORE INTO Gloss"
+                + "(gloss, type, def_id)"
                 + "VALUES(?, ?, ?)");
     }
 
@@ -81,6 +91,28 @@ public class JMDictParser implements DictParser {
         for (int i = 0; i < rElements.getLength(); i++) {
             Node rEle = rElements.item(i);
             parseRElement(rEle, wordId);
+        }
+        
+        NodeList senseElements = entry.getElementsByTagName("sense");
+        for (int i = 0; i < senseElements.getLength(); i++) {
+            defStm.setInt(2, wordId);
+            curDef++;
+            Node sense = senseElements.item(i);
+            NodeList senseChildren = sense.getChildNodes();
+            for (int j = 0; j < senseChildren.getLength(); j++) {
+                Node senseChild = senseChildren.item(j);
+                System.out.println("hmm: "+senseChild.getNodeName());
+                switch(senseChild.getNodeName()) {
+                    case "gloss":
+                        String gloss = senseChild.getTextContent();
+                        System.out.println("\thmm: "+gloss);
+                        glossStm.setString(1, gloss);
+                        glossStm.setInt(3, curDef);
+                        glossStm.addBatch();
+                        break;
+                }
+            }
+            defStm.addBatch();
         }
     }
 
@@ -126,6 +158,8 @@ public class JMDictParser implements DictParser {
         wordStm.executeBatch();
         kElementStm.executeBatch();
         rElementStm.executeBatch();
+        defStm.executeBatch();
+        glossStm.executeBatch();
         con.commit();
     }
 

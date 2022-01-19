@@ -67,7 +67,7 @@ public class JMDictParserTest {
         stm = con.createStatement();
         stm.execute("CREATE TABLE IF NOT EXISTS Definition("
                 + "def_id INTEGER PRIMARY KEY,"
-                + "addtional_info STRING,"
+                + "additional_info STRING,"
                 + "word_id INTEGER NOT NULL,"
                 + "FOREIGN KEY(word_id) REFERENCES Word(word_id))");
         stm = con.createStatement();
@@ -217,7 +217,7 @@ public class JMDictParserTest {
         actual.add("way");
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT gloss FROM gloss "
+            ResultSet rs = stm.executeQuery("SELECT gloss FROM Gloss "
                     + "WHERE def_id = 1");
             ArrayList<String> expected = new ArrayList<>();
             while(rs.next()) {
