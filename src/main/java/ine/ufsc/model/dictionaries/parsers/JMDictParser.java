@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.sql.PreparedStatement;
+import java.util.HashMap;
+import java.util.Map;
 import org.xml.sax.SAXException;
 
 /**
@@ -28,9 +30,14 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement rElementStm;
     private final PreparedStatement defStm;
     private final PreparedStatement glossStm;
+    private final PreparedStatement posStm;
+    private final PreparedStatement defPosStm;
     private final int commitMark = 1000;
 
     private int curDef = 0;
+    private int latestPosId = 0;
+    
+    private final Map<String, Integer> posSet = new HashMap<>();
 
     JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -50,6 +57,11 @@ public class JMDictParser implements DictParser {
         this.glossStm = con.prepareStatement("INSERT OR IGNORE INTO Gloss"
                 + "(gloss, type, def_id)"
                 + "VALUES(?, ?, ?)");
+        this.posStm = con.prepareStatement("INSERT OR IGNORE INTO PartOfSpeech(pos)"
+                + "VALUES(?)");
+        this.defPosStm = con.prepareStatement("INSERT OR IGNORE INTO DefPos"
+                + "(def_id, pos_id)"
+                + "VALUES(?, ?)");
     }
 
     @Override
@@ -188,6 +200,18 @@ public class JMDictParser implements DictParser {
                     String info = senseChild.getTextContent();
                     defStm.setString(1, info);
                     break;
+                case "pos":
+                    String pos = senseChild.getTextContent();
+                    if(!posSet.containsKey(pos)){
+                        latestPosId++;
+                        posSet.put(pos, latestPosId);
+                        posStm.setString(1, pos);
+                    }
+                    defPosStm.setInt(1, curDef);
+                    defPosStm.setInt(2, posSet.get(pos));
+                    posStm.addBatch();
+                    defPosStm.addBatch();
+                    break;
             }
         }
 
@@ -212,6 +236,8 @@ public class JMDictParser implements DictParser {
         rElementStm.executeBatch();
         defStm.executeBatch();
         glossStm.executeBatch();
+        posStm.executeBatch();
+        defPosStm.executeBatch();
         con.commit();
     }
 

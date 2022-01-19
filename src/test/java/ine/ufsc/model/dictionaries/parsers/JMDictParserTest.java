@@ -299,7 +299,7 @@ public class JMDictParserTest {
             ResultSet rs = stm.executeQuery("SELECT p.pos FROM (PartOfSpeech p"
                     + " INNER JOIN DefPos dp ON dp.pos_id = p.pos_id) INNER JOIN"
                     + " Definition d ON d.def_id = dp.def_id "
-                    + "WHERE def_id = 1");
+                    + "WHERE d.def_id = 1");
             String actual = rs.getString("pos");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
