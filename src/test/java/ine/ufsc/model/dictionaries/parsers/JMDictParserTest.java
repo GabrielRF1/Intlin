@@ -231,4 +231,18 @@ public class JMDictParserTest {
         }
     }
 
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectAddInfo() {
+        String actual = "also ほう";
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT additional_info FROM Definition "
+                    + "WHERE def_id = 1");
+            String expected = rs.getString("additional_info");
+            assertEquals(actual, expected);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
 }
