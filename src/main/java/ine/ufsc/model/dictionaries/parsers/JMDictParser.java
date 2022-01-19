@@ -104,6 +104,12 @@ public class JMDictParser implements DictParser {
                 switch (senseChild.getNodeName()) {
                     case "gloss":
                         String gloss = senseChild.getTextContent();
+                        if (senseChild.hasAttributes()
+                                && senseChild.getAttributes().getNamedItem("g_type") != null) {
+                            NamedNodeMap attrs = senseChild.getAttributes();
+                            String type = attrs.getNamedItem("g_type").getTextContent();
+                            glossStm.setString(2, type);
+                        }
                         glossStm.setString(1, gloss);
                         glossStm.setInt(3, curDef);
                         glossStm.addBatch();
