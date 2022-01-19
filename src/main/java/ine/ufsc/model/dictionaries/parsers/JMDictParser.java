@@ -98,28 +98,7 @@ public class JMDictParser implements DictParser {
             defStm.setInt(2, wordId);
             curDef++;
             Node sense = senseElements.item(i);
-            NodeList senseChildren = sense.getChildNodes();
-            for (int j = 0; j < senseChildren.getLength(); j++) {
-                Node senseChild = senseChildren.item(j);
-                switch (senseChild.getNodeName()) {
-                    case "gloss":
-                        String gloss = senseChild.getTextContent();
-                        if (senseChild.hasAttributes()
-                                && senseChild.getAttributes().getNamedItem("g_type") != null) {
-                            NamedNodeMap attrs = senseChild.getAttributes();
-                            String type = attrs.getNamedItem("g_type").getTextContent();
-                            glossStm.setString(2, type);
-                        }
-                        glossStm.setString(1, gloss);
-                        glossStm.setInt(3, curDef);
-                        glossStm.addBatch();
-                        break;
-                    case "s_inf":
-                        String info = senseChild.getTextContent();
-                        defStm.setString(1, info);
-                        break;
-                }
-            }
+            parseSense(sense);
             defStm.addBatch();
         }
     }
@@ -195,6 +174,36 @@ public class JMDictParser implements DictParser {
                     return 3;
                 }
         }
+    }
+
+    private void parseSense(Node sense) throws SQLException {
+        NodeList senseChildren = sense.getChildNodes();
+        for (int j = 0; j < senseChildren.getLength(); j++) {
+            Node senseChild = senseChildren.item(j);
+            switch (senseChild.getNodeName()) {
+                case "gloss":
+                    parseGloss(senseChild);
+                    break;
+                case "s_inf":
+                    String info = senseChild.getTextContent();
+                    defStm.setString(1, info);
+                    break;
+            }
+        }
+
+    }
+
+    private void parseGloss(Node glossNode) throws SQLException {
+        String gloss = glossNode.getTextContent();
+        if (glossNode.hasAttributes()
+                && glossNode.getAttributes().getNamedItem("g_type") != null) {
+            NamedNodeMap attrs = glossNode.getAttributes();
+            String type = attrs.getNamedItem("g_type").getTextContent();
+            glossStm.setString(2, type);
+        }
+        glossStm.setString(1, gloss);
+        glossStm.setInt(3, curDef);
+        glossStm.addBatch();
     }
 
     private void executeBatches() throws SQLException {
