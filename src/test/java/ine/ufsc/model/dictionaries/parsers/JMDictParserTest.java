@@ -147,8 +147,8 @@ public class JMDictParserTest {
     @org.junit.jupiter.api.AfterAll
     public static void tearDownClass() throws IOException, SQLException {
         con.close();
-//        File dbFile = new File("testDict" + File.separator + "dbJMDictTest.db");
-//        dbFile.delete();
+        File dbFile = new File("testDict" + File.separator + "dbJMDictTest.db");
+        dbFile.delete();
     }
 
     /**
