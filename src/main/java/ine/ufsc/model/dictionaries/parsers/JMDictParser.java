@@ -29,7 +29,7 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement defStm;
     private final PreparedStatement glossStm;
     private final int commitMark = 1000;
-    
+
     private int curDef = 0;
 
     JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
@@ -86,13 +86,13 @@ public class JMDictParser implements DictParser {
             Node kEle = kElements.item(i);
             parseKElement(kEle, wordId);
         }
-        
+
         NodeList rElements = entry.getElementsByTagName("r_ele");
         for (int i = 0; i < rElements.getLength(); i++) {
             Node rEle = rElements.item(i);
             parseRElement(rEle, wordId);
         }
-        
+
         NodeList senseElements = entry.getElementsByTagName("sense");
         for (int i = 0; i < senseElements.getLength(); i++) {
             defStm.setInt(2, wordId);
@@ -101,7 +101,7 @@ public class JMDictParser implements DictParser {
             NodeList senseChildren = sense.getChildNodes();
             for (int j = 0; j < senseChildren.getLength(); j++) {
                 Node senseChild = senseChildren.item(j);
-                switch(senseChild.getNodeName()) {
+                switch (senseChild.getNodeName()) {
                     case "gloss":
                         String gloss = senseChild.getTextContent();
                         glossStm.setString(1, gloss);
@@ -120,7 +120,7 @@ public class JMDictParser implements DictParser {
 
     private void parseKElement(Node kEle, int wordId) throws SQLException {
         NodeList kEleChildren = kEle.getChildNodes();
-        int priority = 0;
+        int priority = 100000;
         for (int j = 0; j < kEleChildren.getLength(); j++) {
             Node kEleChild = kEleChildren.item(j);
             switch (kEleChild.getNodeName()) {
@@ -128,13 +128,17 @@ public class JMDictParser implements DictParser {
                     String keb = kEleChild.getTextContent();
                     kElementStm.setString(2, keb);
                     break;
-                default:
-                    continue;
+                case "ke_pri":
+                    int prio = parsePriority(kEleChild.getTextContent());
+                    if (prio < priority) {
+                        priority = prio;
+                    }
+                    break;
             }
-            kElementStm.setInt(1, priority);
-            kElementStm.setInt(3, wordId);
-            kElementStm.addBatch();
         }
+        kElementStm.setInt(1, priority);
+        kElementStm.setInt(3, wordId);
+        kElementStm.addBatch();
     }
 
     private void parseRElement(Node rEle, int wordId) throws SQLException {
@@ -155,7 +159,34 @@ public class JMDictParser implements DictParser {
             rElementStm.addBatch();
         }
     }
-    
+
+    private int parsePriority(String priority) {
+        switch (priority) {
+            case "news1":
+            case "ichi1":
+            case "spec1":
+            case "gai1":
+                return 1;
+            case "news2":
+            case "ichi2":
+            case "spec2":
+            case "gai2":
+                return 2;
+            default:
+                String nf = priority.substring(0, 1);
+                if (nf.equals("nf")) {
+                    int prio = Integer.parseInt(priority.substring(2));
+                    if (prio <= 24) {
+                        return 1;
+                    } else {
+                        return 2;
+                    }
+                } else {
+                    return 3;
+                }
+        }
+    }
+
     private void executeBatches() throws SQLException {
         wordStm.executeBatch();
         kElementStm.executeBatch();

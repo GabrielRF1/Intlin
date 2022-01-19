@@ -252,8 +252,8 @@ public class JMDictParserTest {
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT priority FROM KElement "
-                    + "WHERE def_id = 2");
-            String actual = rs.getString("priority");
+                    + "WHERE k_id = 2");
+            int actual = rs.getInt("priority");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
