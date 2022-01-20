@@ -5,7 +5,6 @@
  */
 package ine.ufsc.model.dictionaries.parsers;
 
-import static ine.ufsc.model.dictionaries.parsers.CCCedictParserTest.con;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -17,9 +16,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -115,14 +111,14 @@ public class JMDictParserTest {
                 + "FOREIGN KEY(dial_id) REFERENCES Dialect(dial_id),"
                 + "PRIMARY KEY(def_id, dial_id))");
         stm = con.createStatement();
-        stm.execute("CREATE TABLE IF NOT EXISTS ReadInfo("
+        stm.execute("CREATE TABLE IF NOT EXISTS RelementInfo("
                 + "r_id INTEGER NOT NULL,"
                 + "r_info_id INTEGER NOT NULL,"
                 + "FOREIGN KEY(r_id) REFERENCES RElement(r_id),"
                 + "FOREIGN KEY(r_info_id) REFERENCES ReadingInfo(r_info_id),"
                 + "PRIMARY KEY(r_id, r_info_id))");
         stm = con.createStatement();
-        stm.execute("CREATE TABLE IF NOT EXISTS KanjiInfo("
+        stm.execute("CREATE TABLE IF NOT EXISTS KElementInfo("
                 + "k_id INTEGER NOT NULL,"
                 + "k_info_id INTEGER NOT NULL,"
                 + "FOREIGN KEY(k_id) REFERENCES RElement(k_id),"
@@ -297,10 +293,25 @@ public class JMDictParserTest {
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT p.pos FROM (PartOfSpeech p"
-                    + " INNER JOIN DefPos dp ON dp.pos_id = p.pos_id) INNER JOIN"
-                    + " Definition d ON d.def_id = dp.def_id "
-                    + "WHERE d.def_id = 1");
+                    + " INNER JOIN DefPos dp ON dp.pos_id = p.pos_id) "
+                    + "WHERE dp.def_id = 1");
             String actual = rs.getString("pos");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
+    
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectKanjiInfo() {
+        String expected = "irregular okurigana usage";
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT ki.info FROM (KanjiInfo ki"
+                    + " INNER JOIN KElementInfo ke ON ke.k_info_id = ki.k_info_id) "
+                    + "WHERE ke.k_id = 10");
+            String actual = rs.getString("info");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
