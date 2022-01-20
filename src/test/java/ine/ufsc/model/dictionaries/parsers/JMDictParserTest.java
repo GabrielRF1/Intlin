@@ -310,7 +310,7 @@ public class JMDictParserTest {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT ki.info FROM (KanjiInfo ki"
                     + " INNER JOIN KElementInfo ke ON ke.k_info_id = ki.k_info_id) "
-                    + "WHERE ke.k_id = 10");
+                    + "WHERE ke.k_id = 12");
             String actual = rs.getString("info");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {

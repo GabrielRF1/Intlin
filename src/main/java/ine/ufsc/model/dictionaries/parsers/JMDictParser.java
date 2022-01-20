@@ -32,12 +32,17 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement glossStm;
     private final PreparedStatement posStm;
     private final PreparedStatement defPosStm;
+    private final PreparedStatement kInfStm;
+    private final PreparedStatement kInfKeleStm;
     private final int commitMark = 1000;
 
     private int curDef = 0;
+    private int curKele = 0;
     private int latestPosId = 0;
+    private int latestKIndId = 0;
     
     private final Map<String, Integer> posSet = new HashMap<>();
+    private final Map<String, Integer> kInfSet = new HashMap<>();
 
     JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -61,6 +66,11 @@ public class JMDictParser implements DictParser {
                 + "VALUES(?)");
         this.defPosStm = con.prepareStatement("INSERT OR IGNORE INTO DefPos"
                 + "(def_id, pos_id)"
+                + "VALUES(?, ?)");
+        this.kInfStm = con.prepareStatement("INSERT OR IGNORE INTO KanjiInfo(info)"
+                + "VALUES(?)");
+        this.kInfKeleStm = con.prepareStatement("INSERT OR IGNORE INTO KElementInfo"
+                + "(k_id, k_info_id)"
                 + "VALUES(?, ?)");
     }
 
@@ -95,6 +105,7 @@ public class JMDictParser implements DictParser {
 
         NodeList kElements = entry.getElementsByTagName("k_ele");
         for (int i = 0; i < kElements.getLength(); i++) {
+            curKele++;
             Node kEle = kElements.item(i);
             parseKElement(kEle, wordId);
         }
@@ -131,6 +142,17 @@ public class JMDictParser implements DictParser {
                         priority = prio;
                     }
                     break;
+                case "ke_inf":
+                    String inf = kEleChild.getTextContent();
+                    if(!kInfSet.containsKey(inf)){
+                        latestKIndId++;
+                        kInfSet.put(inf, latestKIndId);
+                        kInfStm.setString(1, inf);
+                        kInfStm.addBatch();
+                    }
+                    kInfKeleStm.setInt(1, curKele);
+                    kInfKeleStm.setInt(2, kInfSet.get(inf));
+                    kInfKeleStm.addBatch();
             }
         }
         kElementStm.setInt(1, priority);
@@ -206,10 +228,10 @@ public class JMDictParser implements DictParser {
                         latestPosId++;
                         posSet.put(pos, latestPosId);
                         posStm.setString(1, pos);
+                        posStm.addBatch();
                     }
                     defPosStm.setInt(1, curDef);
                     defPosStm.setInt(2, posSet.get(pos));
-                    posStm.addBatch();
                     defPosStm.addBatch();
                     break;
             }
@@ -238,6 +260,8 @@ public class JMDictParser implements DictParser {
         glossStm.executeBatch();
         posStm.executeBatch();
         defPosStm.executeBatch();
+        kInfStm.executeBatch();
+        kInfKeleStm.executeBatch();
         con.commit();
     }
 
