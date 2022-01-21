@@ -351,4 +351,21 @@ public class JMDictParserTest {
             fail("\nException thrown: " + ex.getMessage());
         }
     }
+
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectField() {
+        String expected = "computing"; 
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT f.field FROM (Field f "
+                    + " INNER JOIN DefField df ON df.field_id = d.field_id) "
+                    + "WHERE dd.def_id = 29");
+            String actual = rs.getString("field");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
+
 }
