@@ -36,6 +36,8 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement defDialStm;
     private final PreparedStatement fieldStm;
     private final PreparedStatement defFieldStm;
+    private final PreparedStatement miscStm;
+    private final PreparedStatement defMiscStm;
     private final PreparedStatement kInfStm;
     private final PreparedStatement kInfKeleStm;
     private final PreparedStatement rInfStm;
@@ -48,12 +50,14 @@ public class JMDictParser implements DictParser {
     private int latestPosId = 0;
     private int latestDialId = 0;
     private int latestFieldId = 0;
+    private int latestMiscId = 0;
     private int latestKIndId = 0;
     private int latestRIndId = 0;
     
     private final Map<String, Integer> posSet = new HashMap<>();
     private final Map<String, Integer> dialSet = new HashMap<>();
     private final Map<String, Integer> fieldSet = new HashMap<>();
+    private final Map<String, Integer> miscSet = new HashMap<>();
     private final Map<String, Integer> kInfSet = new HashMap<>();
     private final Map<String, Integer> rInfSet = new HashMap<>();
 
@@ -89,6 +93,11 @@ public class JMDictParser implements DictParser {
                 + "VALUES(?)");
         this.defFieldStm = con.prepareStatement("INSERT OR IGNORE INTO DefField"
                 + "(def_id, field_id)"
+                + "VALUES(?, ?)");
+        this.miscStm = con.prepareStatement("INSERT OR IGNORE INTO Misc(misc)"
+                + "VALUES(?)");
+        this.defMiscStm = con.prepareStatement("INSERT OR IGNORE INTO DefMisc"
+                + "(def_id, misc_id)"
                 + "VALUES(?, ?)");
         this.kInfStm = con.prepareStatement("INSERT OR IGNORE INTO KanjiInfo(info)"
                 + "VALUES(?)");
@@ -299,6 +308,18 @@ public class JMDictParser implements DictParser {
                     defFieldStm.setInt(1, curDef);
                     defFieldStm.setInt(2, fieldSet.get(field));
                     defFieldStm.addBatch();
+                    break;
+                case "misc":
+                    String misc = senseChild.getTextContent();
+                    if(!miscSet.containsKey(misc)){
+                        latestMiscId++;
+                        miscSet.put(misc, latestMiscId);
+                        miscStm.setString(1, misc);
+                        miscStm.addBatch();
+                    }
+                    defMiscStm.setInt(1, curDef);
+                    defMiscStm.setInt(2, miscSet.get(misc));
+                    defMiscStm.addBatch();
                     break;
             }
         }
