@@ -34,6 +34,8 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement defPosStm;
     private final PreparedStatement dialStm;
     private final PreparedStatement defDialStm;
+    private final PreparedStatement fieldStm;
+    private final PreparedStatement defFieldStm;
     private final PreparedStatement kInfStm;
     private final PreparedStatement kInfKeleStm;
     private final PreparedStatement rInfStm;
@@ -45,11 +47,13 @@ public class JMDictParser implements DictParser {
     private int curRele = 0;
     private int latestPosId = 0;
     private int latestDialId = 0;
+    private int latestFieldId = 0;
     private int latestKIndId = 0;
     private int latestRIndId = 0;
     
     private final Map<String, Integer> posSet = new HashMap<>();
     private final Map<String, Integer> dialSet = new HashMap<>();
+    private final Map<String, Integer> fieldSet = new HashMap<>();
     private final Map<String, Integer> kInfSet = new HashMap<>();
     private final Map<String, Integer> rInfSet = new HashMap<>();
 
@@ -80,6 +84,11 @@ public class JMDictParser implements DictParser {
                 + "VALUES(?)");
         this.defDialStm = con.prepareStatement("INSERT OR IGNORE INTO DefDial"
                 + "(def_id, dial_id)"
+                + "VALUES(?, ?)");
+        this.fieldStm = con.prepareStatement("INSERT OR IGNORE INTO Field(field)"
+                + "VALUES(?)");
+        this.defFieldStm = con.prepareStatement("INSERT OR IGNORE INTO DefField"
+                + "(def_id, field_id)"
                 + "VALUES(?, ?)");
         this.kInfStm = con.prepareStatement("INSERT OR IGNORE INTO KanjiInfo(info)"
                 + "VALUES(?)");
@@ -279,6 +288,18 @@ public class JMDictParser implements DictParser {
                     defDialStm.setInt(2, dialSet.get(dial));
                     defDialStm.addBatch();
                     break;
+                case "field":
+                    String field = senseChild.getTextContent();
+                    if(!fieldSet.containsKey(field)){
+                        latestFieldId++;
+                        fieldSet.put(field, latestFieldId);
+                        fieldStm.setString(1, field);
+                        fieldStm.addBatch();
+                    }
+                    defFieldStm.setInt(1, curDef);
+                    defFieldStm.setInt(2, fieldSet.get(field));
+                    defFieldStm.addBatch();
+                    break;
             }
         }
 
@@ -307,6 +328,8 @@ public class JMDictParser implements DictParser {
         defPosStm.executeBatch();
         dialStm.executeBatch();
         defDialStm.executeBatch();
+        fieldStm.executeBatch();
+        defFieldStm.executeBatch();
         kInfStm.executeBatch();
         kInfKeleStm.executeBatch();
         rInfStm.executeBatch();

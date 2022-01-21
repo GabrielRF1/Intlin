@@ -111,6 +111,13 @@ public class JMDictParserTest {
                 + "FOREIGN KEY(dial_id) REFERENCES Dialect(dial_id),"
                 + "PRIMARY KEY(def_id, dial_id))");
         stm = con.createStatement();
+        stm.execute("CREATE TABLE IF NOT EXISTS DefField("
+                + "def_id INTEGER NOT NULL,"
+                + "field_id INTEGER NOT NULL,"
+                + "FOREIGN KEY(def_id) REFERENCES Definition(def_id),"
+                + "FOREIGN KEY(field_id) REFERENCES Field(field_id),"
+                + "PRIMARY KEY(def_id, field_id))");
+        stm = con.createStatement();
         stm.execute("CREATE TABLE IF NOT EXISTS RelementInfo("
                 + "r_id INTEGER NOT NULL,"
                 + "r_info_id INTEGER NOT NULL,"
@@ -152,7 +159,7 @@ public class JMDictParserTest {
      */
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAmount() {
-        int expectedAmount = 12;
+        int expectedAmount = 13;
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT COUNT(*) AS total FROM Word");
@@ -358,8 +365,8 @@ public class JMDictParserTest {
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT f.field FROM (Field f "
-                    + " INNER JOIN DefField df ON df.field_id = d.field_id) "
-                    + "WHERE dd.def_id = 29");
+                    + " INNER JOIN DefField df ON df.field_id = f.field_id) "
+                    + "WHERE df.def_id = 29");
             String actual = rs.getString("field");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
