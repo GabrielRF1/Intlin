@@ -375,4 +375,19 @@ public class JMDictParserTest {
         }
     }
 
+     @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectMisc() {
+        String expected = "honorific or respectful (sonkeigo) language"; 
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT m.misc FROM (Misc m "
+                    + " INNER JOIN DefMisc dm ON dm.misc_id = m.misc_id) "
+                    + "WHERE dm.def_id = 2");
+            String actual = rs.getString("misc");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
 }
