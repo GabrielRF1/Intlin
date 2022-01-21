@@ -322,10 +322,10 @@ public class JMDictParserTest {
     
      @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectReadingInfo() {
-        String expected = "word containing irregular kana usage"; //todo
+        String expected = "word containing irregular kana usage"; 
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT ri.info FROM (ReadingInfo ki"
+            ResultSet rs = stm.executeQuery("SELECT ri.info FROM (ReadingInfo ri"
                     + " INNER JOIN RElementInfo re ON re.r_info_id = ri.r_info_id) "
                     + "WHERE re.r_id = 15");
             String actual = rs.getString("info");
