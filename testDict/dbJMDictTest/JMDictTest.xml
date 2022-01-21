@@ -845,4 +845,26 @@ various information fields.
 <gloss>to show off</gloss>
 </sense>
 </entry>
+<entry>
+<ent_seq>1000230</ent_seq>
+<k_ele>
+<keb>明かん</keb>
+</k_ele>
+<r_ele>
+<reb>あかん</reb>
+</r_ele>
+<r_ele>
+<reb>アカン</reb>
+<re_nokanji/>
+</r_ele>
+<sense>
+<pos>&exp;</pos>
+<misc>&uk;</misc>
+<s_inf>commonly used with adj-i inflections, e.g. あかんかった, あかんくない, etc.</s_inf>
+<dial>&ksb;</dial>
+<gloss>useless</gloss>
+<gloss>no good</gloss>
+<gloss>hopeless</gloss>
+</sense>
+</entry>
 </JMdict>

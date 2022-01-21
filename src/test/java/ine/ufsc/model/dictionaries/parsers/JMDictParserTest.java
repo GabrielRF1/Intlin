@@ -320,7 +320,7 @@ public class JMDictParserTest {
     }
 
     
-     @org.junit.jupiter.api.Test
+    @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectReadingInfo() {
         String expected = "word containing irregular kana usage"; 
         try {
@@ -329,6 +329,22 @@ public class JMDictParserTest {
                     + " INNER JOIN RElementInfo re ON re.r_info_id = ri.r_info_id) "
                     + "WHERE re.r_id = 15");
             String actual = rs.getString("info");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
+    
+    @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectDialect() {
+        String expected = "Kansai-ben"; 
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT d.dial FROM (Dialect d"
+                    + " INNER JOIN Definition de ON ed.def_id = d.dial_id) "
+                    + "WHERE de.def_id = 29");
+            String actual = rs.getString("dial");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
             Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
