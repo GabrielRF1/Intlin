@@ -32,6 +32,8 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement glossStm;
     private final PreparedStatement posStm;
     private final PreparedStatement defPosStm;
+    private final PreparedStatement dialStm;
+    private final PreparedStatement defDialStm;
     private final PreparedStatement kInfStm;
     private final PreparedStatement kInfKeleStm;
     private final PreparedStatement rInfStm;
@@ -42,10 +44,12 @@ public class JMDictParser implements DictParser {
     private int curKele = 0;
     private int curRele = 0;
     private int latestPosId = 0;
+    private int latestDialId = 0;
     private int latestKIndId = 0;
     private int latestRIndId = 0;
     
     private final Map<String, Integer> posSet = new HashMap<>();
+    private final Map<String, Integer> dialSet = new HashMap<>();
     private final Map<String, Integer> kInfSet = new HashMap<>();
     private final Map<String, Integer> rInfSet = new HashMap<>();
 
@@ -71,6 +75,11 @@ public class JMDictParser implements DictParser {
                 + "VALUES(?)");
         this.defPosStm = con.prepareStatement("INSERT OR IGNORE INTO DefPos"
                 + "(def_id, pos_id)"
+                + "VALUES(?, ?)");
+        this.dialStm = con.prepareStatement("INSERT OR IGNORE INTO Dialect(dial)"
+                + "VALUES(?)");
+        this.defDialStm = con.prepareStatement("INSERT OR IGNORE INTO DefDial"
+                + "(def_id, dial_id)"
                 + "VALUES(?, ?)");
         this.kInfStm = con.prepareStatement("INSERT OR IGNORE INTO KanjiInfo(info)"
                 + "VALUES(?)");
@@ -258,6 +267,18 @@ public class JMDictParser implements DictParser {
                     defPosStm.setInt(2, posSet.get(pos));
                     defPosStm.addBatch();
                     break;
+                case "dial":
+                    String dial = senseChild.getTextContent();
+                    if(!dialSet.containsKey(dial)){
+                        latestDialId++;
+                        dialSet.put(dial, latestDialId);
+                        dialStm.setString(1, dial);
+                        dialStm.addBatch();
+                    }
+                    defDialStm.setInt(1, curDef);
+                    defDialStm.setInt(2, dialSet.get(dial));
+                    defDialStm.addBatch();
+                    break;
             }
         }
 
@@ -284,6 +305,8 @@ public class JMDictParser implements DictParser {
         glossStm.executeBatch();
         posStm.executeBatch();
         defPosStm.executeBatch();
+        dialStm.executeBatch();
+        defDialStm.executeBatch();
         kInfStm.executeBatch();
         kInfKeleStm.executeBatch();
         rInfStm.executeBatch();

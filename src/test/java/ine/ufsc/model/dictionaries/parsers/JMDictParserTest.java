@@ -152,7 +152,7 @@ public class JMDictParserTest {
      */
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAmount() {
-        int expectedAmount = 11;
+        int expectedAmount = 12;
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT COUNT(*) AS total FROM Word");
@@ -342,8 +342,8 @@ public class JMDictParserTest {
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT d.dial FROM (Dialect d"
-                    + " INNER JOIN Definition de ON ed.def_id = d.dial_id) "
-                    + "WHERE de.def_id = 29");
+                    + " INNER JOIN DefDial dd ON dd.dial_id = d.dial_id) "
+                    + "WHERE dd.def_id = 28");
             String actual = rs.getString("dial");
             assertEquals(expected, actual);
         } catch (SQLException | UnsupportedOperationException ex) {
