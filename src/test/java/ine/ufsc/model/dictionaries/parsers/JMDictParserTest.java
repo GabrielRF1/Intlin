@@ -121,8 +121,8 @@ public class JMDictParserTest {
         stm.execute("CREATE TABLE IF NOT EXISTS KElementInfo("
                 + "k_id INTEGER NOT NULL,"
                 + "k_info_id INTEGER NOT NULL,"
-                + "FOREIGN KEY(k_id) REFERENCES RElement(k_id),"
-                + "FOREIGN KEY(k_info_id) REFERENCES ReadingInfo(k_info_id),"
+                + "FOREIGN KEY(k_id) REFERENCES KElement(k_id),"
+                + "FOREIGN KEY(k_info_id) REFERENCES KanjiInfo(k_info_id),"
                 + "PRIMARY KEY(k_id, k_info_id))");
     }
 
@@ -152,7 +152,7 @@ public class JMDictParserTest {
      */
     @org.junit.jupiter.api.Test
     public void testDoParsingYieldsCorrectAmount() {
-        int expectedAmount = 10;
+        int expectedAmount = 11;
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT COUNT(*) AS total FROM Word");
@@ -319,4 +319,20 @@ public class JMDictParserTest {
         }
     }
 
+    
+     @org.junit.jupiter.api.Test
+    public void testDoParsingYieldsCorrectReadingInfo() {
+        String expected = "word containing irregular kana usage"; //todo
+        try {
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT ri.info FROM (ReadingInfo ki"
+                    + " INNER JOIN RElementInfo re ON re.r_info_id = ri.r_info_id) "
+                    + "WHERE re.r_id = 15");
+            String actual = rs.getString("info");
+            assertEquals(expected, actual);
+        } catch (SQLException | UnsupportedOperationException ex) {
+            Logger.getLogger(IntlinParserTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("\nException thrown: " + ex.getMessage());
+        }
+    }
 }

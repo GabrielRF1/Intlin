@@ -808,4 +808,41 @@ various information fields.
 <gloss g_type="expl">two-person comedy act (usu. presented as a fast-paced dialogue, occ. presented as a skit)</gloss>
 </sense>
 </entry>
+<entry>
+<ent_seq>1002880</ent_seq>
+<k_ele>
+<keb>格好つける</keb>
+</k_ele>
+<k_ele>
+<keb>格好付ける</keb>
+</k_ele>
+<k_ele>
+<keb>恰好つける</keb>
+</k_ele>
+<k_ele>
+<keb>恰好付ける</keb>
+</k_ele>
+<k_ele>
+<keb>かっこ付ける</keb>
+<ke_inf>&ik;</ke_inf>
+</k_ele>
+<r_ele>
+<reb>かっこうつける</reb>
+<re_restr>格好つける</re_restr>
+<re_restr>格好付ける</re_restr>
+<re_restr>恰好つける</re_restr>
+<re_restr>恰好付ける</re_restr>
+</r_ele>
+<r_ele>
+<reb>かっこつける</reb>
+<re_inf>&ik;</re_inf>
+</r_ele>
+<sense>
+<pos>&v1;</pos>
+<misc>&uk;</misc>
+<gloss>to affect a stylish air</gloss>
+<gloss>to try to look good</gloss>
+<gloss>to show off</gloss>
+</sense>
+</entry>
 </JMdict>
