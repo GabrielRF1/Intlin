@@ -42,7 +42,7 @@ public class JMDictParser implements DictParser {
     private final PreparedStatement kInfKeleStm;
     private final PreparedStatement rInfStm;
     private final PreparedStatement rInfReleStm;
-    private final int commitMark = 1000;
+    private final int commitMark = 8000;
 
     private int curDef = 0;
     private int curKele = 0;
@@ -61,7 +61,7 @@ public class JMDictParser implements DictParser {
     private final Map<String, Integer> kInfSet = new HashMap<>();
     private final Map<String, Integer> rInfSet = new HashMap<>();
 
-    JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
+    public JMDictParser(Connection con) throws SQLException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         this.builder = factory.newDocumentBuilder();
         this.con = con;
@@ -114,13 +114,16 @@ public class JMDictParser implements DictParser {
     @Override
     public void doParsing(ArrayList<File> files) throws IOException, SQLException {
         con.setAutoCommit(false);
+        int fileCount = 0;
         for (File file : files) {
             try {
+                fileCount++;
                 Document doc = builder.parse(file);
                 NodeList nodes = doc.getChildNodes();
                 Element JMDict = (Element) nodes.item(nodes.getLength() - 1);
                 NodeList entries = JMDict.getElementsByTagName("entry");
                 for (int i = 0; i < entries.getLength(); i++) {
+                    System.out.println(fileCount+": Loading: ("+(i+1)+"/"+entries.getLength()+")");
                     Element entry = (Element) entries.item(i);
                     parseEntry(entry);
                     if (i % commitMark == 0) {
@@ -323,7 +326,6 @@ public class JMDictParser implements DictParser {
                     break;
             }
         }
-
     }
 
     private void parseGloss(Node glossNode) throws SQLException {
