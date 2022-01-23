@@ -77,12 +77,10 @@ public class CardTest {
     @Test
     public void testGetState() {
         System.out.println("getState");
-        Card instance = null;
-        Card.cardState expResult = null;
+        Card instance = new Card(new CardContent(), new CardContent());
+        Card.cardState expResult = Card.cardState.active;
         Card.cardState result = instance.getState();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
