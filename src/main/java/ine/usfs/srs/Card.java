@@ -27,6 +27,7 @@ public class Card {
     public Card(CardContent front, CardContent back) {
         this.front = front;
         this.back = back;
+        this.state = cardState.active;
     }
 
     public CardContent getFront() {
