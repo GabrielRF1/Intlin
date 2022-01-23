@@ -16,18 +16,18 @@ public class CardContent {
     private ArrayList<Object> contents;
     
     public Object getContent(int index) {
-        return null;
+        return contents.get(index);
     }
     
     public void addText(String text) {
-    
+        contents.add(text);
     }
     
-    public void addImage(File file) {
-    
+    public void addImage(File img) {
+        contents.add(img);
     }
     
-    public void addAudio(File file) {
-    
+    public void addAudio(File audio) {
+        contents.add(audio);
     }
 }

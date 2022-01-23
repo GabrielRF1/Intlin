@@ -24,8 +24,9 @@ public class Card {
     private CardContent back;
     private Interval<Date> nextReview;
     
-    public Card() {
-    
+    public Card(CardContent front, CardContent back) {
+        this.front = front;
+        this.back = back;
     }
 
     public CardContent getFront() {

@@ -18,8 +18,9 @@ public class SRS {
     private String language;
     private Connection con;
     
-    public SRS() {
-    
+    public SRS(String srsDBname, String language) {
+        this.language = language;
+        this.srsDBName = srsDBname;
     }
     
     public ResultSet getDeck() {
