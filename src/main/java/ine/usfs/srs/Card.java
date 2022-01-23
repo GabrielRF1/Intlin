@@ -51,7 +51,7 @@ public class Card {
     }
 
     public void activate() {
-
+        this.state = cardState.active;
     }
 
     public void calcNextReview() {

@@ -100,10 +100,9 @@ public class CardTest {
     @Test
     public void testActivate() {
         System.out.println("activate");
-        Card instance = null;
+        Card instance = new Card(new CardContent(), new CardContent());
         instance.activate();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(instance.getState(), Card.cardState.active);
     }
 
     /**
