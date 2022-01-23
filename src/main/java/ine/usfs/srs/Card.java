@@ -54,7 +54,7 @@ public class Card {
         this.state = cardState.active;
     }
 
-    public void calcNextReview() {
+    public void calcNextReview(int difficulty) {
 
     }
 }

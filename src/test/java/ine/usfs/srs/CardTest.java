@@ -111,10 +111,9 @@ public class CardTest {
     @Test
     public void testCalcNextReview() {
         System.out.println("calcNextReview");
-        Card instance = null;
-        instance.calcNextReview();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.calcNextReview(0);
+        
     }
     
 }
