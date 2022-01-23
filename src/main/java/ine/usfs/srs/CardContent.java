@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Gabriel
  */
 public class CardContent {
-    private ArrayList<Object> contents;
+    private ArrayList<Object> contents = new ArrayList<>();
     
     public Object getContent(int index) {
         return contents.get(index);

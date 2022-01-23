@@ -35,12 +35,12 @@ public class CardTest {
     @Test
     public void testGetFront() {
         System.out.println("getFront");
-        Card instance = null;
-        CardContent expResult = null;
+        CardContent front = new CardContent();
+        CardContent back = new CardContent();
+        Card instance = new Card(front, back);
+        CardContent expResult = front;
         CardContent result = instance.getFront();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -49,12 +49,12 @@ public class CardTest {
     @Test
     public void testGetBack() {
         System.out.println("getBack");
-        Card instance = null;
-        CardContent expResult = null;
+        CardContent front = new CardContent();
+        CardContent back = new CardContent();
+        Card instance = new Card(front, back);
+        CardContent expResult = back;
         CardContent result = instance.getBack();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
