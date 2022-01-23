@@ -13,17 +13,17 @@ import java.util.Date;
  * @author Gabriel
  */
 public class Card {
-    
+
     static enum cardState {
         active,
         suspended,
     }
-    
+
     private cardState state;
     private CardContent front;
     private CardContent back;
     private Interval<Date> nextReview;
-    
+
     public Card(CardContent front, CardContent back) {
         this.front = front;
         this.back = back;
@@ -45,15 +45,16 @@ public class Card {
     public cardState getState() {
         return state;
     }
-    
+
     public void suspend() {
+        this.state = cardState.suspended;
     }
-    
+
     public void activate() {
-    
+
     }
-    
+
     public void calcNextReview() {
-    
+
     }
 }
