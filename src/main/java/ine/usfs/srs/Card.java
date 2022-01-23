@@ -55,6 +55,6 @@ public class Card {
     }
 
     public void calcNextReview(int difficulty) {
-
+        
     }
 }
