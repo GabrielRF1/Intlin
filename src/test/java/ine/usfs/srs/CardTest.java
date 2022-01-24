@@ -101,7 +101,7 @@ public class CardTest {
         Card instance = new Card(new CardContent(), new CardContent());
         LocalDate nextReview = instance.calcNextReview(0); 
         if(instance.getLevel() != Card.CardProficiency.toLearn)
-            fail("Card level was incorrectly updated");
+            fail("Card level must return to \"tolearn\"");
         
         assertEquals(LocalDate.now(), nextReview);
     }
@@ -134,5 +134,20 @@ public class CardTest {
             fail("Card level was supposed to upgrade by one");
         
         assertEquals(LocalDate.now().plusDays(3), nextReview);
+    }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewEasyAnswerAtLearningLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.learning);
+        LocalDate nextReview = instance.calcNextReview(3); 
+        if(instance.getLevel() != Card.CardProficiency.mastered)
+            fail("Card level was supposed to upgrade by two");
+        
+        assertEquals(LocalDate.now().plusWeeks(1), nextReview);
     }
 }

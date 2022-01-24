@@ -84,11 +84,9 @@ public class Card {
                         level = CardProficiency.comfortable;
                         break;
                     case comfortable:
-                        level = CardProficiency.mastered;
-                        break;
                     case mastered:
                         level = CardProficiency.mastered;
-                        break;   
+                        break;
                 }
                 return LocalDate.now().plusDays(3);
             case 3: //easy
