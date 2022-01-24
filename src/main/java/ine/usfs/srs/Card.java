@@ -74,7 +74,7 @@ public class Card {
                 level = CardProficiency.toLearn;
                 return LocalDate.now();
             case 1: //hard
-                break;
+                return LocalDate.now().plusDays(1);
             case 3: //good
                 break;
             case 4: //easy
@@ -82,4 +82,10 @@ public class Card {
         }
         return null;
     }
+    
+    // used in tests
+    protected void setLevel(CardProficiency level) {
+        this.level = level;
+    }
+
 }

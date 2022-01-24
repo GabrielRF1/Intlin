@@ -59,20 +59,6 @@ public class CardTest {
     }
 
     /**
-     * Test of getNextReview method, of class Card.
-     */
-    @Test
-    public void testGetNextReview() {
-        System.out.println("getNextReview");
-        Card instance = null;
-        Interval<Date> expResult = null;
-        Interval<Date> result = instance.getNextReview();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of getState method, of class Card.
      */
     @Test
@@ -117,7 +103,21 @@ public class CardTest {
         if(instance.getLevel() != Card.CardProficiency.toLearn)
             fail("Card level was incorrectly updated");
         
-        assertEquals(nextReview, LocalDate.now());
+        assertEquals(LocalDate.now(), nextReview);
     }
     
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewHardAnswerAtComfortableLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.comfortable);
+        LocalDate nextReview = instance.calcNextReview(1); 
+        if(instance.getLevel() != Card.CardProficiency.comfortable)
+            fail("Card level was not supposed to change");
+        
+        assertEquals(LocalDate.now().plusDays(1), nextReview);
+    }
 }
