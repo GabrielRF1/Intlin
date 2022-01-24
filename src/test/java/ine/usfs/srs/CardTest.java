@@ -113,7 +113,7 @@ public class CardTest {
     public void testCalcNextReviewWrongAnswer() {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
-        Date nextReview = instance.calcNextReview(0); 
+        LocalDate nextReview = instance.calcNextReview(0); 
         if(instance.getLevel() != Card.CardProficiency.toLearn)
             fail("Card level was incorrectly updated");
         

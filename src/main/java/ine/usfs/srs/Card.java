@@ -6,6 +6,7 @@
 package ine.usfs.srs;
 
 import ine.ufsc.util.Interval;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -36,6 +37,7 @@ public class Card {
         this.front = front;
         this.back = back;
         this.state = CardState.active;
+        this.level = CardProficiency.toLearn;
     }
 
     public CardContent getFront() {
@@ -66,10 +68,11 @@ public class Card {
         return level;
     }
 
-    public Date calcNextReview(int difficulty) {
+    public LocalDate calcNextReview(int difficulty) {
         switch(difficulty){
             case 0: //fail
-                break;
+                level = CardProficiency.toLearn;
+                return LocalDate.now();
             case 1: //hard
                 break;
             case 3: //good
