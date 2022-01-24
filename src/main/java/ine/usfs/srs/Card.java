@@ -75,9 +75,23 @@ public class Card {
                 return LocalDate.now();
             case 1: //hard
                 return LocalDate.now().plusDays(1);
-            case 3: //good
-                break;
-            case 4: //easy
+            case 2: //good
+                switch(level) {
+                    case toLearn:
+                        level = CardProficiency.learning;
+                        break;
+                    case learning:
+                        level = CardProficiency.comfortable;
+                        break;
+                    case comfortable:
+                        level = CardProficiency.mastered;
+                        break;
+                    case mastered:
+                        level = CardProficiency.mastered;
+                        break;   
+                }
+                return LocalDate.now().plusDays(3);
+            case 3: //easy
                 break;
         }
         return null;
