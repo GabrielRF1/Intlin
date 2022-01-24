@@ -66,7 +66,17 @@ public class Card {
         return level;
     }
 
-    public void calcNextReview(int difficulty) {
-        
+    public Date calcNextReview(int difficulty) {
+        switch(difficulty){
+            case 0: //fail
+                break;
+            case 1: //hard
+                break;
+            case 3: //good
+                break;
+            case 4: //easy
+                break;
+        }
+        return null;
     }
 }

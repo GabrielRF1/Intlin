@@ -6,6 +6,7 @@
 package ine.usfs.srs;
 
 import ine.ufsc.util.Interval;
+import java.time.LocalDate;
 import java.util.Date;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -109,10 +110,14 @@ public class CardTest {
      * Test of calcNextReview method, of class Card.
      */
     @Test
-    public void testCalcNextReview() {
+    public void testCalcNextReviewWrongAnswer() {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
-        instance.calcNextReview(0); 
+        Date nextReview = instance.calcNextReview(0); 
+        if(instance.getLevel() != Card.CardProficiency.toLearn)
+            fail("Card level was incorrectly updated");
+        
+        assertEquals(nextReview, LocalDate.now());
     }
     
 }
