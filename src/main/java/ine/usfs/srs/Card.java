@@ -14,12 +14,20 @@ import java.util.Date;
  */
 public class Card {
 
-    static enum cardState {
+    static enum CardState {
         active,
         suspended,
     }
 
-    private cardState state;
+    static enum CardProficiency {
+        toLearn,
+        learning,
+        comfortable,
+        mastered,
+    }
+    
+    private CardState state;
+    private CardProficiency level;
     private CardContent front;
     private CardContent back;
     private Interval<Date> nextReview;
@@ -27,7 +35,7 @@ public class Card {
     public Card(CardContent front, CardContent back) {
         this.front = front;
         this.back = back;
-        this.state = cardState.active;
+        this.state = CardState.active;
     }
 
     public CardContent getFront() {
@@ -42,16 +50,20 @@ public class Card {
         return nextReview;
     }
 
-    public cardState getState() {
+    public CardState getState() {
         return state;
     }
 
     public void suspend() {
-        this.state = cardState.suspended;
+        this.state = CardState.suspended;
     }
 
     public void activate() {
-        this.state = cardState.active;
+        this.state = CardState.active;
+    }
+
+    public CardProficiency getLevel() {
+        return level;
     }
 
     public void calcNextReview(int difficulty) {

@@ -78,8 +78,8 @@ public class CardTest {
     public void testGetState() {
         System.out.println("getState");
         Card instance = new Card(new CardContent(), new CardContent());
-        Card.cardState expResult = Card.cardState.active;
-        Card.cardState result = instance.getState();
+        Card.CardState expResult = Card.CardState.active;
+        Card.CardState result = instance.getState();
         assertEquals(expResult, result);
     }
 
@@ -91,7 +91,7 @@ public class CardTest {
         System.out.println("suspend");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.suspend();
-        assertEquals(instance.getState(), Card.cardState.suspended);
+        assertEquals(instance.getState(), Card.CardState.suspended);
     }
 
     /**
@@ -102,7 +102,7 @@ public class CardTest {
         System.out.println("activate");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.activate();
-        assertEquals(instance.getState(), Card.cardState.active);
+        assertEquals(instance.getState(), Card.CardState.active);
     }
 
     /**
@@ -112,8 +112,7 @@ public class CardTest {
     public void testCalcNextReview() {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
-        instance.calcNextReview(0);
-        
+        instance.calcNextReview(0); 
     }
     
 }
