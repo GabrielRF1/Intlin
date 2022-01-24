@@ -120,4 +120,19 @@ public class CardTest {
         
         assertEquals(LocalDate.now().plusDays(1), nextReview);
     }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewGoodAnswerAtLearningLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.learning);
+        LocalDate nextReview = instance.calcNextReview(2); 
+        if(instance.getLevel() != Card.CardProficiency.comfortable)
+            fail("Card level was supposed to upgrade by one");
+        
+        assertEquals(LocalDate.now().plusDays(3), nextReview);
+    }
 }
