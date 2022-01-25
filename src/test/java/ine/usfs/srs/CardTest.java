@@ -106,6 +106,36 @@ public class CardTest {
         assertEquals(LocalDate.now(), nextReview);
     }
     
+     /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewHardAnswerAtToLearnLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.toLearn);
+        LocalDate nextReview = instance.calcNextReview(1); 
+        if(instance.getLevel() != Card.CardProficiency.toLearn)
+            fail("Card level was not supposed to change");
+        
+        assertEquals(LocalDate.now().plusDays(1), nextReview);
+    }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewHardAnswerAtLearningLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.learning);
+        LocalDate nextReview = instance.calcNextReview(1); 
+        if(instance.getLevel() != Card.CardProficiency.learning)
+            fail("Card level was not supposed to change");
+        
+        assertEquals(LocalDate.now().plusDays(1), nextReview);
+    }
+    
     /**
      * Test of calcNextReview method, of class Card.
      */
@@ -119,6 +149,37 @@ public class CardTest {
             fail("Card level was not supposed to change");
         
         assertEquals(LocalDate.now().plusDays(2), nextReview);
+    }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewHardAnswerAtMasteredLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.mastered);
+        LocalDate nextReview = instance.calcNextReview(1); 
+        if(instance.getLevel() != Card.CardProficiency.mastered)
+            fail("Card level was not supposed to change");
+        
+        assertEquals(LocalDate.now().plusDays(3), nextReview);
+    }
+    
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewGoodAnswerAtToLearnLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.toLearn);
+        LocalDate nextReview = instance.calcNextReview(2); 
+        if(instance.getLevel() != Card.CardProficiency.learning)
+            fail("Card level was supposed to upgrade by one");
+        
+        assertEquals(LocalDate.now(), nextReview);
     }
     
     /**
@@ -140,6 +201,54 @@ public class CardTest {
      * Test of calcNextReview method, of class Card.
      */
     @Test
+    public void testCalcNextReviewGoodAnswerAtComfortableLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.comfortable);
+        LocalDate nextReview = instance.calcNextReview(2); 
+        if(instance.getLevel() != Card.CardProficiency.mastered)
+            fail("Card level was supposed to upgrade by one");
+        
+        assertEquals(LocalDate.now().plusDays(5), nextReview);
+    }
+    
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewGoodAnswerAtMasteredLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.mastered);
+        LocalDate nextReview = instance.calcNextReview(2); 
+        if(instance.getLevel() != Card.CardProficiency.mastered)
+            fail("Card level should not change");
+        
+        assertEquals(LocalDate.now().plusWeeks(1), nextReview);
+    }
+    
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewEasyAnswerAtToLearnLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.toLearn);
+        LocalDate nextReview = instance.calcNextReview(3); 
+        if(instance.getLevel() != Card.CardProficiency.comfortable)
+            fail("Card level was supposed to upgrade by two");
+        
+        assertEquals(LocalDate.now().plusDays(3), nextReview);
+    }
+    
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
     public void testCalcNextReviewEasyAnswerAtLearningLevel() {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
@@ -149,5 +258,35 @@ public class CardTest {
             fail("Card level was supposed to upgrade by two");
         
         assertEquals(LocalDate.now().plusDays(5), nextReview);
+    }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewEasyAnswerAtComfortableLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.comfortable);
+        LocalDate nextReview = instance.calcNextReview(3); 
+        if(instance.getLevel() != Card.CardProficiency.mastered)
+            fail("Card level was supposed to upgrade by two");
+        
+        assertEquals(LocalDate.now().plusWeeks(1), nextReview);
+    }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewEasyAnswerAtMasteredLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.mastered);
+        LocalDate nextReview = instance.calcNextReview(3); 
+        if(instance.getLevel() != Card.CardProficiency.mastered)
+            fail("Card level was supposed to upgrade by two");
+        
+        assertEquals(LocalDate.now().plusDays(9), nextReview);
     }
 }
