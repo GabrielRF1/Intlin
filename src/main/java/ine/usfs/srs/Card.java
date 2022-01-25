@@ -76,40 +76,43 @@ public class Card {
             case 1: //hard
                 switch(level) {
                     case toLearn:
-                        break;
+                        return LocalDate.now();
                     case learning:
-                        break;
+                        return LocalDate.now().plusDays(1);
                     case comfortable:
                         return LocalDate.now().plusDays(2);
                     case mastered:
-                        break;
+                        return LocalDate.now().plusDays(3);
                 }
             case 2: //good
                 switch(level) {
                     case toLearn:
                         level = CardProficiency.learning;
-                        break;
+                        return LocalDate.now();
                     case learning:
                         level = CardProficiency.comfortable;
-                        return LocalDate.now().plusDays(3);
+                        return LocalDate.now().plusDays(1);
                     case comfortable:
+                        level = CardProficiency.mastered;
+                        return LocalDate.now().plusDays(5);
                     case mastered:
                         level = CardProficiency.mastered;
-                        break;
+                        return LocalDate.now().plusWeeks(1);
                 }
             case 3: //easy
                  switch(level) {
                     case toLearn:
                         level = CardProficiency.comfortable;
-                        break;
+                        return LocalDate.now().plusDays(1);
                     case learning:
                         level = CardProficiency.mastered;
                         return LocalDate.now().plusDays(5);
                     case comfortable:
-                        break;
+                        level = CardProficiency.mastered;
+                        return LocalDate.now().plusWeeks(1);
                     case mastered:
                         level = CardProficiency.mastered;
-                        break;
+                        return LocalDate.now().plusWeeks(2);
                 }
         }
         return null;
