@@ -80,6 +80,9 @@ public class Card {
                 level = CardProficiency.toLearn;
                 return LocalDate.now();
             case 1: //hard
+                if(ease > 0) {
+                    ease -= ease * 0.15;
+                }
                 switch(level) {
                     case toLearn:
                         return LocalDate.now();

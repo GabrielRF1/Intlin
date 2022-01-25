@@ -5,9 +5,7 @@
  */
 package ine.usfs.srs;
 
-import ine.ufsc.util.Interval;
 import java.time.LocalDate;
-import java.util.Date;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -300,6 +298,6 @@ public class CardTest {
         instance.setEase(5.0f);
         instance.calcNextReview(1); 
         
-        assertEquals(, instance.getEase());
+        assertEquals(5 - 5*0.15, instance.getEase());
     }
 }
