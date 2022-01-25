@@ -289,4 +289,17 @@ public class CardTest {
         
         assertEquals(LocalDate.now().plusWeeks(2), nextReview);
     }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewHardAnswerDecreasesEase() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setEase(5.0f);
+        instance.calcNextReview(1); 
+        
+        assertEquals(, instance.getEase());
+    }
 }

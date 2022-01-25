@@ -32,14 +32,14 @@ public class Card {
     private final CardContent front;
     private final CardContent back;
     private Interval<Date> nextReview;
-    private int ease;
+    private float ease;
 
     public Card(CardContent front, CardContent back) {
         this.front = front;
         this.back = back;
         this.state = CardState.active;
         this.level = CardProficiency.toLearn;
-        this.ease = 0;
+        this.ease = 1.0f;
     }
 
     public CardContent getFront() {
@@ -68,6 +68,10 @@ public class Card {
 
     public CardProficiency getLevel() {
         return level;
+    }
+
+    public float getEase() {
+        return ease;
     }
 
     public LocalDate calcNextReview(int difficulty) {
@@ -123,6 +127,10 @@ public class Card {
     // used in tests
     protected void setLevel(CardProficiency level) {
         this.level = level;
+    }
+    
+    protected void setEase(float ease) {
+        this.ease = ease;
     }
 
 }
