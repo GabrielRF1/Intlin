@@ -118,7 +118,7 @@ public class CardTest {
         if(instance.getLevel() != Card.CardProficiency.toLearn)
             fail("Card level was not supposed to change");
         
-        assertEquals(LocalDate.now().plusDays(1), nextReview);
+        assertEquals(LocalDate.now(), nextReview);
     }
     
     /**
