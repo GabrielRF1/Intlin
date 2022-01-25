@@ -29,15 +29,17 @@ public class Card {
     
     private CardState state;
     private CardProficiency level;
-    private CardContent front;
-    private CardContent back;
+    private final CardContent front;
+    private final CardContent back;
     private Interval<Date> nextReview;
+    private int ease;
 
     public Card(CardContent front, CardContent back) {
         this.front = front;
         this.back = back;
         this.state = CardState.active;
         this.level = CardProficiency.toLearn;
+        this.ease = 0;
     }
 
     public CardContent getFront() {
