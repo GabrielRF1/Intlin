@@ -108,6 +108,7 @@ public class Card {
                         level = CardProficiency.mastered;
                         return LocalDate.now().plusDays(5);
                     case mastered:
+                        ease += (ease * 0.10);
                         level = CardProficiency.mastered;
                         return LocalDate.now().plusWeeks(1);
                 }

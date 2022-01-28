@@ -326,4 +326,18 @@ public class CardTest {
         
         assertEquals(5 - 5*0.30, instance.getEase());
     }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewGoodAnswerAtMasteredLevelIncreasesEase() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setEase(5.0f);
+        instance.setLevel(Card.CardProficiency.mastered);
+        instance.calcNextReview(2); 
+        
+        assertEquals(5 + 5*0.10, instance.getEase());
+    }
 }
