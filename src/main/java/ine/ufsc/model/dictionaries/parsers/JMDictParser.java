@@ -351,6 +351,8 @@ public class JMDictParser implements DictParser {
         defPosStm.executeBatch();
         dialStm.executeBatch();
         defDialStm.executeBatch();
+        miscStm.executeBatch();
+        defMiscStm.executeBatch();
         fieldStm.executeBatch();
         defFieldStm.executeBatch();
         kInfStm.executeBatch();

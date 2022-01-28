@@ -5,8 +5,6 @@
  */
 package ine.ufsc.srs;
 
-import ine.ufsc.srs.CardContent;
-import ine.ufsc.srs.Card;
 import java.time.LocalDate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
