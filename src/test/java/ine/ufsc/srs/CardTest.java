@@ -300,4 +300,30 @@ public class CardTest {
         
         assertEquals(5 - 5*0.15, instance.getEase());
     }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewEasyAnswerIncreasesEase() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setEase(5.0f);
+        instance.calcNextReview(3); 
+        
+        assertEquals(5 + 5*0.15, instance.getEase());
+    }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewWrongAnswerDecreasesEase() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setEase(5.0f);
+        instance.calcNextReview(0); 
+        
+        assertEquals(5 - 5*0.30, instance.getEase());
+    }
 }
