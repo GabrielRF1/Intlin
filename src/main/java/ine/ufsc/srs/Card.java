@@ -26,6 +26,13 @@ public class Card {
         comfortable,
         mastered,
     }
+    
+    static enum Difficulty {
+        fail,
+        hard,
+        good,
+        easy,
+    }
 
     private CardState state;
     private CardProficiency level;
@@ -74,15 +81,15 @@ public class Card {
         return ease;
     }
 
-    public LocalDate calcNextReview(int difficulty) {
+    public LocalDate calcNextReview(Difficulty difficulty) {
         switch (difficulty) {
-            case 0: //fail
+            case fail: 
                 if (ease > 0) {
                     ease -= (ease * 0.30);
                 }
                 level = CardProficiency.toLearn;
                 return LocalDate.now();
-            case 1: //hard
+            case hard: 
                 if (ease > 0) {
                     ease -= (ease * 0.15);
                 }
@@ -96,7 +103,7 @@ public class Card {
                     case mastered:
                         return LocalDate.now().plusDays(3);
                 }
-            case 2: //good
+            case good:
                 switch (level) {
                     case toLearn:
                         level = CardProficiency.learning;
@@ -112,7 +119,7 @@ public class Card {
                         level = CardProficiency.mastered;
                         return LocalDate.now().plusWeeks(1);
                 }
-            case 3: //easy
+            case easy:
                 ease += (ease * 0.15);
                 switch (level) {
                     case toLearn:

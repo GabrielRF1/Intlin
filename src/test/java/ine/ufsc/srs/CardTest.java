@@ -97,7 +97,7 @@ public class CardTest {
     public void testCalcNextReviewWrongAnswer() {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
-        LocalDate nextReview = instance.calcNextReview(0); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.fail); 
         if(instance.getLevel() != Card.CardProficiency.toLearn)
             fail("Card level must return to \"tolearn\"");
         
@@ -112,7 +112,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.toLearn);
-        LocalDate nextReview = instance.calcNextReview(1); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.hard); 
         if(instance.getLevel() != Card.CardProficiency.toLearn)
             fail("Card level was not supposed to change");
         
@@ -127,7 +127,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.learning);
-        LocalDate nextReview = instance.calcNextReview(1); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.hard); 
         if(instance.getLevel() != Card.CardProficiency.learning)
             fail("Card level was not supposed to change");
         
@@ -142,7 +142,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.comfortable);
-        LocalDate nextReview = instance.calcNextReview(1); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.hard); 
         if(instance.getLevel() != Card.CardProficiency.comfortable)
             fail("Card level was not supposed to change");
         
@@ -157,7 +157,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.mastered);
-        LocalDate nextReview = instance.calcNextReview(1); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.hard); 
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was not supposed to change");
         
@@ -173,7 +173,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.toLearn);
-        LocalDate nextReview = instance.calcNextReview(2); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.good); 
         if(instance.getLevel() != Card.CardProficiency.learning)
             fail("Card level was supposed to upgrade by one");
         
@@ -188,7 +188,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.learning);
-        LocalDate nextReview = instance.calcNextReview(2); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.good); 
         if(instance.getLevel() != Card.CardProficiency.comfortable)
             fail("Card level was supposed to upgrade by one");
         
@@ -203,7 +203,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.comfortable);
-        LocalDate nextReview = instance.calcNextReview(2); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.good); 
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by one");
         
@@ -219,7 +219,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.mastered);
-        LocalDate nextReview = instance.calcNextReview(2); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.good); 
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level should not change");
         
@@ -235,7 +235,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.toLearn);
-        LocalDate nextReview = instance.calcNextReview(3); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.easy); 
         if(instance.getLevel() != Card.CardProficiency.comfortable)
             fail("Card level was supposed to upgrade by two");
         
@@ -251,7 +251,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.learning);
-        LocalDate nextReview = instance.calcNextReview(3); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.easy); 
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by two");
         
@@ -266,7 +266,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.comfortable);
-        LocalDate nextReview = instance.calcNextReview(3); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.easy); 
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by two");
         
@@ -281,7 +281,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.mastered);
-        LocalDate nextReview = instance.calcNextReview(3); 
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.easy); 
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by two");
         
@@ -296,7 +296,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setEase(5.0f);
-        instance.calcNextReview(1); 
+        instance.calcNextReview(Card.Difficulty.hard); 
         
         assertEquals(5 - 5*0.15, instance.getEase());
     }
@@ -309,7 +309,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setEase(5.0f);
-        instance.calcNextReview(3); 
+        instance.calcNextReview(Card.Difficulty.easy); 
         
         assertEquals(5 + 5*0.15, instance.getEase());
     }
@@ -322,7 +322,7 @@ public class CardTest {
         System.out.println("calcNextReview");
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setEase(5.0f);
-        instance.calcNextReview(0); 
+        instance.calcNextReview(Card.Difficulty.fail); 
         
         assertEquals(5 - 5*0.30, instance.getEase());
     }
@@ -336,7 +336,7 @@ public class CardTest {
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setEase(5.0f);
         instance.setLevel(Card.CardProficiency.mastered);
-        instance.calcNextReview(2); 
+        instance.calcNextReview(Card.Difficulty.good); 
         
         assertEquals(5 + 5*0.10, instance.getEase());
     }
