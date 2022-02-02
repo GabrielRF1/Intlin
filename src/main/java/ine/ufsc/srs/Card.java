@@ -84,13 +84,13 @@ public class Card {
     public LocalDate calcNextReview(Difficulty difficulty) {
         switch (difficulty) {
             case fail: 
-                if (ease > 0) {
+                if (ease > 1) {
                     ease -= (ease * 0.30);
                 }
                 level = CardProficiency.toLearn;
                 return LocalDate.now();
             case hard: 
-                if (ease > 0) {
+                if (ease > 1) {
                     ease -= (ease * 0.15);
                 }
                 switch (level) {
@@ -113,11 +113,11 @@ public class Card {
                         return LocalDate.now().plusDays(1);
                     case comfortable:
                         level = CardProficiency.mastered;
-                        return LocalDate.now().plusDays(5);
+                        return LocalDate.now().plusDays(3);
                     case mastered:
                         ease += (ease * 0.10);
                         level = CardProficiency.mastered;
-                        return LocalDate.now().plusWeeks(1);
+                        return LocalDate.now().plusDays(5);
                 }
             case easy:
                 ease += (ease * 0.15);
@@ -127,13 +127,13 @@ public class Card {
                         return LocalDate.now().plusDays(1);
                     case learning:
                         level = CardProficiency.mastered;
-                        return LocalDate.now().plusDays(5);
+                        return LocalDate.now().plusDays(3);
                     case comfortable:
                         level = CardProficiency.mastered;
-                        return LocalDate.now().plusWeeks(1);
+                        return LocalDate.now().plusDays(5);
                     case mastered:
                         level = CardProficiency.mastered;
-                        return LocalDate.now().plusWeeks(2);
+                        return LocalDate.now().plusWeeks(1);
                 }
         }
         return null;

@@ -207,7 +207,7 @@ public class CardTest {
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by one");
         
-        assertEquals(LocalDate.now().plusDays(5), nextReview);
+        assertEquals(LocalDate.now().plusDays(3), nextReview);
     }
     
     
@@ -223,7 +223,7 @@ public class CardTest {
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level should not change");
         
-        assertEquals(LocalDate.now().plusWeeks(1), nextReview);
+        assertEquals(LocalDate.now().plusDays(5), nextReview);
     }
     
     
@@ -255,7 +255,7 @@ public class CardTest {
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by two");
         
-        assertEquals(LocalDate.now().plusDays(5), nextReview);
+        assertEquals(LocalDate.now().plusDays(3), nextReview);
     }
     
     /**
@@ -270,7 +270,7 @@ public class CardTest {
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by two");
         
-        assertEquals(LocalDate.now().plusWeeks(1), nextReview);
+        assertEquals(LocalDate.now().plusDays(5), nextReview);
     }
     
     /**
@@ -285,7 +285,7 @@ public class CardTest {
         if(instance.getLevel() != Card.CardProficiency.mastered)
             fail("Card level was supposed to upgrade by two");
         
-        assertEquals(LocalDate.now().plusWeeks(2), nextReview);
+        assertEquals(LocalDate.now().plusWeeks(1), nextReview);
     }
     
     /**
@@ -339,5 +339,5 @@ public class CardTest {
         instance.calcNextReview(Card.Difficulty.good); 
         
         assertEquals(5 + 5*0.10, instance.getEase());
-    }
+    }  
 }
