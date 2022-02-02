@@ -25,8 +25,9 @@ public class Card {
         learning,
         comfortable,
         mastered,
+        acquired,
     }
-    
+
     static enum Difficulty {
         fail,
         hard,
@@ -83,13 +84,13 @@ public class Card {
 
     public LocalDate calcNextReview(Difficulty difficulty) {
         switch (difficulty) {
-            case fail: 
+            case fail:
                 if (ease > 1) {
                     ease -= (ease * 0.30);
                 }
                 level = CardProficiency.toLearn;
                 return LocalDate.now();
-            case hard: 
+            case hard:
                 if (ease > 1) {
                     ease -= (ease * 0.15);
                 }
@@ -102,6 +103,8 @@ public class Card {
                         return LocalDate.now().plusDays(2);
                     case mastered:
                         return LocalDate.now().plusDays(3);
+                    case acquired:
+                        return LocalDate.now().plusDays(5);
                 }
             case good:
                 switch (level) {
@@ -116,8 +119,12 @@ public class Card {
                         return LocalDate.now().plusDays(3);
                     case mastered:
                         ease += (ease * 0.10);
-                        level = CardProficiency.mastered;
+                        level = CardProficiency.acquired;
                         return LocalDate.now().plusDays(5);
+                    case acquired:
+                        ease += (ease * 0.15);
+                        level = CardProficiency.acquired;
+                        return LocalDate.now().plusWeeks(1);
                 }
             case easy:
                 ease += (ease * 0.15);
@@ -129,11 +136,14 @@ public class Card {
                         level = CardProficiency.mastered;
                         return LocalDate.now().plusDays(3);
                     case comfortable:
-                        level = CardProficiency.mastered;
+                        level = CardProficiency.acquired;
                         return LocalDate.now().plusDays(5);
                     case mastered:
-                        level = CardProficiency.mastered;
+                        level = CardProficiency.acquired;
                         return LocalDate.now().plusWeeks(1);
+                    case acquired:
+                        level = CardProficiency.acquired;
+                        return LocalDate.now().plusWeeks(2);
                 }
         }
         return null;

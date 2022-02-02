@@ -164,6 +164,20 @@ public class CardTest {
         assertEquals(LocalDate.now().plusDays(3), nextReview);
     }
     
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewHardAnswerAtAcquiredLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.acquired);
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.hard); 
+        if(instance.getLevel() != Card.CardProficiency.acquired)
+            fail("Card level was not supposed to change");
+        
+        assertEquals(LocalDate.now().plusDays(5), nextReview);
+    }
     
     /**
      * Test of calcNextReview method, of class Card.
@@ -220,10 +234,25 @@ public class CardTest {
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.mastered);
         LocalDate nextReview = instance.calcNextReview(Card.Difficulty.good); 
-        if(instance.getLevel() != Card.CardProficiency.mastered)
-            fail("Card level should not change");
+        if(instance.getLevel() != Card.CardProficiency.acquired)
+            fail("Card level was supposed to upgrade by one");
         
         assertEquals(LocalDate.now().plusDays(5), nextReview);
+    }
+    
+        /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewGoodAnswerAtAcquiredLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.acquired);
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.good); 
+        if(instance.getLevel() != Card.CardProficiency.acquired)
+            fail("Card level was supposed to upgrade by one");
+        
+        assertEquals(LocalDate.now().plusWeeks(1), nextReview);
     }
     
     
@@ -267,7 +296,7 @@ public class CardTest {
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.comfortable);
         LocalDate nextReview = instance.calcNextReview(Card.Difficulty.easy); 
-        if(instance.getLevel() != Card.CardProficiency.mastered)
+        if(instance.getLevel() != Card.CardProficiency.acquired)
             fail("Card level was supposed to upgrade by two");
         
         assertEquals(LocalDate.now().plusDays(5), nextReview);
@@ -282,10 +311,25 @@ public class CardTest {
         Card instance = new Card(new CardContent(), new CardContent());
         instance.setLevel(Card.CardProficiency.mastered);
         LocalDate nextReview = instance.calcNextReview(Card.Difficulty.easy); 
-        if(instance.getLevel() != Card.CardProficiency.mastered)
+        if(instance.getLevel() != Card.CardProficiency.acquired)
             fail("Card level was supposed to upgrade by two");
         
         assertEquals(LocalDate.now().plusWeeks(1), nextReview);
+    }
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewEasyAnswerAtAcquiredLevel() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setLevel(Card.CardProficiency.acquired);
+        LocalDate nextReview = instance.calcNextReview(Card.Difficulty.easy); 
+        if(instance.getLevel() != Card.CardProficiency.acquired)
+            fail("Card level was supposed to upgrade by two");
+        
+        assertEquals(LocalDate.now().plusWeeks(2), nextReview);
     }
     
     /**
@@ -340,4 +384,18 @@ public class CardTest {
         
         assertEquals(5 + 5*0.10, instance.getEase());
     }  
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewGoodAnswerAtAcquiredLevelIncreasesEase() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setEase(5.0f);
+        instance.setLevel(Card.CardProficiency.acquired);
+        instance.calcNextReview(Card.Difficulty.good); 
+        
+        assertEquals(5 + 5*0.15, instance.getEase());
+    } 
 }
