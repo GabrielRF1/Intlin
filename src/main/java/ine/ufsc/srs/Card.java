@@ -40,14 +40,14 @@ public class Card {
     private final CardContent front;
     private final CardContent back;
     private Interval<Date> nextReview;
-    private float ease;
+    private double ease;
 
     public Card(CardContent front, CardContent back) {
         this.front = front;
         this.back = back;
         this.state = CardState.active;
         this.level = CardProficiency.toLearn;
-        this.ease = 1.0f;
+        this.ease = 0.0f;
     }
 
     public CardContent getFront() {
@@ -78,7 +78,7 @@ public class Card {
         return level;
     }
 
-    public float getEase() {
+    public double getEase() {
         return ease;
     }
 
@@ -86,13 +86,13 @@ public class Card {
         switch (difficulty) {
             case fail:
                 if (ease > 1) {
-                    ease -= (ease * 0.30);
+                    ease -= 0.80;
                 }
                 level = CardProficiency.toLearn;
                 return LocalDate.now();
             case hard:
                 if (ease > 1) {
-                    ease -= (ease * 0.15);
+                    ease -= 0.25;
                 }
                 switch (level) {
                     case toLearn:
@@ -118,16 +118,16 @@ public class Card {
                         level = CardProficiency.mastered;
                         return LocalDate.now().plusDays(3);
                     case mastered:
-                        ease += (ease * 0.10);
+                        ease += 0.20;
                         level = CardProficiency.acquired;
                         return LocalDate.now().plusDays(5);
                     case acquired:
-                        ease += (ease * 0.15);
+                        ease += 0.25;
                         level = CardProficiency.acquired;
                         return LocalDate.now().plusWeeks(1);
                 }
             case easy:
-                ease += (ease * 0.15);
+                ease += 0.25;
                 switch (level) {
                     case toLearn:
                         level = CardProficiency.comfortable;

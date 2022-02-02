@@ -342,7 +342,7 @@ public class CardTest {
         instance.setEase(5.0f);
         instance.calcNextReview(Card.Difficulty.hard); 
         
-        assertEquals(5 - 5*0.15, instance.getEase());
+        assertEquals(5.0 - 0.25, instance.getEase());
     }
     
     /**
@@ -355,7 +355,7 @@ public class CardTest {
         instance.setEase(5.0f);
         instance.calcNextReview(Card.Difficulty.easy); 
         
-        assertEquals(5 + 5*0.15, instance.getEase());
+        assertEquals(5.0 + 0.25, instance.getEase());
     }
     
     /**
@@ -368,7 +368,7 @@ public class CardTest {
         instance.setEase(5.0f);
         instance.calcNextReview(Card.Difficulty.fail); 
         
-        assertEquals(5 - 5*0.30, instance.getEase());
+        assertEquals(5.0 - 0.8, instance.getEase());
     }
     
     /**
@@ -382,7 +382,7 @@ public class CardTest {
         instance.setLevel(Card.CardProficiency.mastered);
         instance.calcNextReview(Card.Difficulty.good); 
         
-        assertEquals(5 + 5*0.10, instance.getEase());
+        assertEquals(5.0 + 0.20, instance.getEase());
     }  
     
     /**
@@ -396,6 +396,6 @@ public class CardTest {
         instance.setLevel(Card.CardProficiency.acquired);
         instance.calcNextReview(Card.Difficulty.good); 
         
-        assertEquals(5 + 5*0.15, instance.getEase());
+        assertEquals(5.0 + 0.25, instance.getEase());
     } 
 }
