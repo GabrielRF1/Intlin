@@ -83,15 +83,21 @@ public class Card {
     }
 
     public LocalDate calcNextReview(Difficulty difficulty) {
+        LocalDate nextReviewBase = calcBaseReview(difficulty);
+
+        return nextReviewBase.plusDays(Math.round(ease));
+    }
+
+    private LocalDate calcBaseReview(Difficulty difficulty) {
         switch (difficulty) {
             case fail:
-                if (ease > 1) {
+                if (ease > 0) {
                     ease -= 0.80;
                 }
                 level = CardProficiency.toLearn;
                 return LocalDate.now();
             case hard:
-                if (ease > 1) {
+                if (ease > 0) {
                     ease -= 0.25;
                 }
                 switch (level) {
@@ -145,8 +151,9 @@ public class Card {
                         level = CardProficiency.acquired;
                         return LocalDate.now().plusWeeks(2);
                 }
+            default: // should not reach
+                return LocalDate.now();
         }
-        return null;
     }
 
     // used in tests

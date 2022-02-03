@@ -398,4 +398,17 @@ public class CardTest {
         
         assertEquals(5.0 + 0.25, instance.getEase());
     } 
+    
+    /**
+     * Test of calcNextReview method, of class Card.
+     */
+    @Test
+    public void testCalcNextReviewGoodAnswerAtLearningIsInfluencedByEase() {
+        System.out.println("calcNextReview");
+        Card instance = new Card(new CardContent(), new CardContent());
+        instance.setEase(4.5f);
+        instance.setLevel(Card.CardProficiency.learning);
+        
+        assertEquals(LocalDate.now().plusDays(1).plusDays(Math.round(5)), instance.calcNextReview(Card.Difficulty.good));
+    } 
 }
