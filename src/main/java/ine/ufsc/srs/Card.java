@@ -5,9 +5,7 @@
  */
 package ine.ufsc.srs;
 
-import ine.ufsc.util.Interval;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  *
@@ -39,7 +37,8 @@ public class Card {
     private CardProficiency level;
     private final CardContent front;
     private final CardContent back;
-    private Interval<Date> nextReview;
+    private LocalDate nextReview;
+    private Integer id;
     private double ease;
 
     public Card(CardContent front, CardContent back) {
@@ -49,6 +48,16 @@ public class Card {
         this.level = CardProficiency.toLearn;
         this.ease = 0.0f;
     }
+    
+    public Card(CardContent front, CardContent back, Integer id) {
+        this.front = front;
+        this.back = back;
+        this.state = CardState.active;
+        this.level = CardProficiency.toLearn;
+        this.ease = 0.0f;
+        this.id = id;
+    }
+    
 
     public CardContent getFront() {
         return front;
@@ -58,7 +67,15 @@ public class Card {
         return back;
     }
 
-    public Interval<Date> getNextReview() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public LocalDate getNextReview() {
         return nextReview;
     }
 
