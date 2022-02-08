@@ -357,10 +357,7 @@ public class IntlinDictionary extends Dictionary {
 
     private boolean bdExists() {
         File file = new File(filesPath + File.separator + dbFileName + ".db");
-        if (file.length() > 0) {
-            return true;
-        }
-        return false;
+        return file.length() > 0;
     }
 
     private boolean insertDef(int wordId, IntlinInfo info) throws SQLException {

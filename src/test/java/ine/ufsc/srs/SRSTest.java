@@ -6,6 +6,10 @@
 package ine.ufsc.srs;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,21 +28,26 @@ public class SRSTest {
 
     static SRS testIntance;
     static String dbName = "TestSpanishSRS";
-    static String deckName = "Spanish";
+    static Path dbPath;
+    static Path dbBackupPath;
 
     public SRSTest() {
     }
 
     @BeforeAll
-    public static void setUpClass() throws ClassNotFoundException, SQLException {
-        testIntance = new SRS(deckName, dbName);
+    public static void setUpClass() throws ClassNotFoundException, SQLException, IOException {
+        testIntance = new SRS(dbName);
+        dbPath = new File("srs" + File.separator +"TestSpanishSRS.db").toPath();
+        dbBackupPath = new File("srs" + File.separator +"TestSpanishSRS(1).db").toPath();
+        
+        Files.copy(dbPath, dbBackupPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @AfterAll
-    public static void tearDownClass() throws SQLException {
+    public static void tearDownClass() throws SQLException, IOException {
         testIntance.closeConnection();
-        File dbFile = new File("srs" + File.separator + dbName + ".db");
-        dbFile.delete();
+        Files.delete(dbPath);
+        dbBackupPath.toFile().renameTo(new File("srs" + File.separator +"TestSpanishSRS.db"));
     }
 
     /**
@@ -46,12 +55,16 @@ public class SRSTest {
      */
     @Test
     public void testCreateDeck_String() {
-        System.out.println("createDeck");
-        String deckName = SRSTest.deckName;
-        SRS instance = testIntance;
-        boolean expResult = true;
-        boolean result = instance.createDeck(deckName);
-        assertEquals(expResult, result);
+        try {
+            System.out.println("createDeck");
+            String deckName = "Sentences";
+            SRS instance = testIntance;
+            boolean expResult = true;
+            boolean result = instance.createDeck(deckName);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("Could not create deck. exception thrown: " + ex.getMessage());
+        }
     }
 
     /**
@@ -60,7 +73,7 @@ public class SRSTest {
     @Test
     public void testCreateDeck_String_int() {
         System.out.println("createDeck");
-        String deckName = SRSTest.deckName;
+        String deckName = "verbs";
         int parentDeckId = 0;
         SRS instance = testIntance;
         boolean expResult = true;
