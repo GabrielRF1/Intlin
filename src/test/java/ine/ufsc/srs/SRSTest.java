@@ -93,7 +93,7 @@ public class SRSTest {
     @Test
     public void testAddToDeck() {
         System.out.println("addToDeck");
-        int deckId = 0;
+        String deckName = "Grammar";
         CardContent front = new CardContent();
         CardContent back = new CardContent();
         front.addText("mantequilla");
@@ -101,7 +101,7 @@ public class SRSTest {
         Card card = new Card(front, back);
         SRS instance = testIntance;
         boolean expResult = true;
-        boolean result = instance.addToDeck(deckId, card);
+        boolean result = instance.addToDeck(deckName, card);
         assertEquals(expResult, result);
     }
 

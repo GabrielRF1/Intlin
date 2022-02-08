@@ -83,7 +83,7 @@ public class SRS {
         return success;
     }
 
-    public boolean addToDeck(int deckId, Card card) {
+    public boolean addToDeck(String deckName, Card card) {
         return false;
     }
 
@@ -108,11 +108,13 @@ public class SRS {
         stm = con.createStatement();
         stm.execute("CREATE TABLE \"Card\" (\n"
                 + "	\"cardId\"	INTEGER,\n"
-                + "	\"deckId\"	INTEGER,\n"
+                + "	\"deckId\"	INTEGER NOT NULL,\n"
                 + "	\"reviewDate\"	TEXT,\n"
                 + "	\"isSuspended\"	INTEGER NOT NULL,\n"
-                + "	PRIMARY KEY(\"cardId\" AUTOINCREMENT),\n"
-                + "	FOREIGN KEY(\"deckId\") REFERENCES \"Deck\"(\"deckId\")\n"
+                + "	\"ease\"	INTEGER NOT NULL,\n"
+                + "	\"level\"	INTEGER NOT NULL,\n"
+                + "	FOREIGN KEY(\"deckId\") REFERENCES \"Deck\"(\"deckId\"),\n"
+                + "	PRIMARY KEY(\"cardId\" AUTOINCREMENT)\n"
                 + ")");
         stm = con.createStatement();
         stm.execute("CREATE TABLE \"Content\" (\n"
