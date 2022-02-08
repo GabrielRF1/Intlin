@@ -70,8 +70,17 @@ public class SRS {
         return success;
     }
 
-    public boolean createDeck(String deckName, int parentDeckId) {
-        return false;
+    public boolean createDeck(String deckName, int parentDeckId) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("INSERT INTO Deck(name, parentDeckId) "
+                + "VALUES(?, ?)");
+        stm.setString(1, deckName);
+        stm.setInt(2, parentDeckId);
+        boolean success = !stm.execute();
+        if (success) {
+            int id = con.prepareStatement("SELECT last_insert_rowid() AS id").executeQuery().getInt("ID");
+            deckToId.put(deckName, id);
+        }
+        return success;
     }
 
     public boolean addToDeck(int deckId, Card card) {

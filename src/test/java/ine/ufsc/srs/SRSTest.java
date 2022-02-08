@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -72,13 +74,17 @@ public class SRSTest {
      */
     @Test
     public void testCreateDeck_String_int() {
-        System.out.println("createDeck");
-        String deckName = "verbs";
-        int parentDeckId = 0;
-        SRS instance = testIntance;
-        boolean expResult = true;
-        boolean result = instance.createDeck(deckName, parentDeckId);
-        assertEquals(expResult, result);
+        try {
+            System.out.println("createDeck");
+            String deckName = "verbs";
+            int parentDeckId = 1;
+            SRS instance = testIntance;
+            boolean expResult = true;
+            boolean result = instance.createDeck(deckName, parentDeckId);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("Could not create deck. exception thrown: " + ex.getMessage());
+        }
     }
 
     /**
