@@ -47,14 +47,16 @@ public class Card {
         this.state = CardState.active;
         this.level = CardProficiency.toLearn;
         this.ease = 0.0f;
+        this.nextReview = LocalDate.now();
     }
     
-    public Card(CardContent front, CardContent back, Integer id) {
+    public Card(CardContent front, CardContent back, Integer id, String nextReview, double ease, CardProficiency level, boolean isActive) {
         this.front = front;
         this.back = back;
-        this.state = CardState.active;
-        this.level = CardProficiency.toLearn;
-        this.ease = 0.0f;
+        this.state = isActive? CardState.active:CardState.active;
+        this.level = level;
+        this.ease = ease;
+        this.nextReview = LocalDate.parse(nextReview);
         this.id = id;
     }
     

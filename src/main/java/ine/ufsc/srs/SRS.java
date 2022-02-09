@@ -83,12 +83,64 @@ public class SRS {
         return success;
     }
 
-    public boolean addToDeck(String deckName, Card card) {
-        return false;
+    public boolean addToDeck(String deckName, Card card) throws SQLException {
+        boolean res = true;
+        int deckId = deckToId.get(deckName);
+        System.out.println("int deckId = deckToId.get(deckName);");
+        PreparedStatement cardStm = con.prepareStatement("INSERT INTO Card"
+                + "(deckId, reviewDate, isSuspended, ease, level) VALUES"
+                + "(?, ?, ?, ?, ?)");
+        cardStm.setInt(1, deckId);
+        cardStm.setString(2, card.getNextReview().toString());
+        cardStm.setInt(3, card.getState() == Card.CardState.active ? 1 : 0);
+        cardStm.setDouble(4, card.getEase());
+        cardStm.setString(5, card.getLevel().toString());
+
+        res &= !cardStm.execute();
+
+        res &= addContents(card, true);
+        res &= addContents(card, false);
+
+        return res;
     }
 
     public HashSet<Card> getTodaysReview() {
         return null;
+    }
+
+    protected boolean addContents(Card card, boolean isFrontFace) throws SQLException {
+        boolean res = true;
+        CardContent face = isFrontFace ? card.getFront() : card.getBack();
+        for (int i = 0; i < face.size(); i++) {
+            PreparedStatement faceStm = con.prepareStatement("INSERT INTO Content"
+                    + "(content, contentType) VALUES"
+                    + "(?, ?)");
+            Content content = face.getContent(i);
+            switch (content.getType()) {
+                case text:
+                    faceStm.setString(1, (String) content.getElement());
+                    break;
+                case image:
+                case audio:
+                    faceStm.setString(1, ((File) content.getElement()).getPath());
+                    break;
+            }
+            faceStm.setString(2, content.getType().toString());
+            res &= !faceStm.execute();
+            res &= addContentFace(isFrontFace ? "FrontContent" : "BackContent", content.getPosition());
+        }
+        return res;
+    }
+
+    protected boolean addContentFace(String table, int placement) throws SQLException {
+        PreparedStatement faceContStm = con.prepareStatement(String.format("INSERT INTO %s"
+                    + "(contentId, placement) VALUES"
+                    + "(?, ?)", table));
+        int id = con.prepareStatement("SELECT last_insert_rowid() AS id").executeQuery().getInt("ID");
+        faceContStm.setInt(1, id);
+        faceContStm.setInt(2, placement);
+        
+        return !faceContStm.execute();
     }
 
     private boolean bdExists() {
@@ -111,8 +163,8 @@ public class SRS {
                 + "	\"deckId\"	INTEGER NOT NULL,\n"
                 + "	\"reviewDate\"	TEXT,\n"
                 + "	\"isSuspended\"	INTEGER NOT NULL,\n"
-                + "	\"ease\"	INTEGER NOT NULL,\n"
-                + "	\"level\"	INTEGER NOT NULL,\n"
+                + "	\"ease\"	REAL NOT NULL,\n"
+                + "	\"level\"	TEXT NOT NULL,\n"
                 + "	FOREIGN KEY(\"deckId\") REFERENCES \"Deck\"(\"deckId\"),\n"
                 + "	PRIMARY KEY(\"cardId\" AUTOINCREMENT)\n"
                 + ")");
@@ -120,7 +172,7 @@ public class SRS {
         stm.execute("CREATE TABLE \"Content\" (\n"
                 + "	\"contentId\"	INTEGER,\n"
                 + "	\"content\"	TEXT NOT NULL,\n"
-                + "	\"contentType\"	INTEGER NOT NULL,\n"
+                + "	\"contentType\"	TEXT NOT NULL,\n"
                 + "	PRIMARY KEY(\"contentId\" AUTOINCREMENT)\n"
                 + ")");
         stm = con.createStatement();

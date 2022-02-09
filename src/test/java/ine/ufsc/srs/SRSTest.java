@@ -39,9 +39,9 @@ public class SRSTest {
     @BeforeAll
     public static void setUpClass() throws ClassNotFoundException, SQLException, IOException {
         testIntance = new SRS(dbName);
-        dbPath = new File("srs" + File.separator +"TestSpanishSRS.db").toPath();
-        dbBackupPath = new File("srs" + File.separator +"TestSpanishSRS(1).db").toPath();
-        
+        dbPath = new File("srs" + File.separator + "TestSpanishSRS.db").toPath();
+        dbBackupPath = new File("srs" + File.separator + "TestSpanishSRS(1).db").toPath();
+
         Files.copy(dbPath, dbBackupPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -49,7 +49,7 @@ public class SRSTest {
     public static void tearDownClass() throws SQLException, IOException {
         testIntance.closeConnection();
         Files.delete(dbPath);
-        dbBackupPath.toFile().renameTo(new File("srs" + File.separator +"TestSpanishSRS.db"));
+        dbBackupPath.toFile().renameTo(new File("srs" + File.separator + "TestSpanishSRS.db"));
     }
 
     /**
@@ -92,17 +92,21 @@ public class SRSTest {
      */
     @Test
     public void testAddToDeck() {
-        System.out.println("addToDeck");
-        String deckName = "Grammar";
-        CardContent front = new CardContent();
-        CardContent back = new CardContent();
-        front.addText("mantequilla");
-        back.addText("butter");
-        Card card = new Card(front, back);
-        SRS instance = testIntance;
-        boolean expResult = true;
-        boolean result = instance.addToDeck(deckName, card);
-        assertEquals(expResult, result);
+        try {
+            System.out.println("addToDeck");
+            String deckName = "Grammar";
+            CardContent front = new CardContent();
+            CardContent back = new CardContent();
+            front.addText("mantequilla");
+            back.addText("butter");
+            Card card = new Card(front, back);
+            SRS instance = testIntance;
+            boolean expResult = true;
+            boolean result = instance.addToDeck(deckName, card);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("could not add card to deck. exception: " + ex.getMessage());
+        }
     }
 
     /**
