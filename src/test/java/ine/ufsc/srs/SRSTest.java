@@ -13,6 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -103,6 +104,14 @@ public class SRSTest {
             SRS instance = testIntance;
             boolean expResult = true;
             boolean result = instance.addToDeck(deckName, card);
+
+            Statement stm = instance.con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT content, count(*) as total FROM Content WHERE "
+                    + "content = \'mantequilla\' OR content = \'butter\'");
+            if (rs.isClosed() || rs.getInt("total") != 2) {
+                fail("card not properly inserted");
+            }
+
             assertEquals(expResult, result);
         } catch (SQLException ex) {
             fail("could not add card to deck. exception: " + ex.getMessage());
