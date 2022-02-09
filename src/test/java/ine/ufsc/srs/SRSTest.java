@@ -105,11 +105,28 @@ public class SRSTest {
             boolean expResult = true;
             boolean result = instance.addToDeck(deckName, card);
 
-            Statement stm = instance.con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT content, count(*) as total FROM Content WHERE "
+            Statement stmCont = instance.con.createStatement();
+            ResultSet rsCont = stmCont.executeQuery("SELECT content, count(*) as total FROM Content WHERE "
                     + "content = \'mantequilla\' OR content = \'butter\'");
-            if (rs.isClosed() || rs.getInt("total") != 2) {
+            if (rsCont.isClosed() || rsCont.getInt("total") != 2) {
                 fail("card not properly inserted");
+            }
+            
+            Statement stmFront = instance.con.createStatement();
+            ResultSet rsFront = stmFront.executeQuery("SELECT * FROM Content c INNER JOIN"
+                    + " FrontContent fc ON c.contentId = fc.contentId INNER JOIN "
+                    + " Card cd ON cd.cardId = fc.CardId WHERE "
+                    + "c.content = \'mantequilla\'");
+            if (rsFront.isClosed()) {
+                fail("card front not properly inserted");
+            }
+            Statement stmBack = instance.con.createStatement();
+            ResultSet rsBack = stmBack.executeQuery("SELECT * FROM Content c INNER JOIN"
+                    + " BackContent bc ON c.contentId = bc.contentId INNER JOIN "
+                    + " Card cd ON cd.cardId = bc.CardId WHERE "
+                    + "c.content = \'butter\'");
+            if (rsBack.isClosed()) {
+                fail("card back not properly inserted");
             }
 
             assertEquals(expResult, result);

@@ -98,6 +98,9 @@ public class SRS {
 
         res &= !cardStm.execute();
 
+        int cardId = con.prepareStatement("SELECT last_insert_rowid() AS id").executeQuery().getInt("ID");
+        card.setId(cardId);
+
         res &= addContents(card, true);
         res &= addContents(card, false);
 
@@ -105,7 +108,9 @@ public class SRS {
     }
 
     public HashSet<Card> getTodaysReview() {
-        return null;
+        HashSet<Card> todaysCards = new HashSet<>();
+
+        return todaysCards;
     }
 
     protected boolean addContents(Card card, boolean isFrontFace) throws SQLException {
@@ -127,19 +132,20 @@ public class SRS {
             }
             faceStm.setString(2, content.getType().toString());
             res &= !faceStm.execute();
-            res &= addContentFace(isFrontFace ? "FrontContent" : "BackContent", content.getPosition());
+            res &= addContentFace(isFrontFace ? "FrontContent" : "BackContent", content.getPosition(), card.getId());
         }
         return res;
     }
 
-    protected boolean addContentFace(String table, int placement) throws SQLException {
+    protected boolean addContentFace(String table, int placement, int cardId) throws SQLException {
         PreparedStatement faceContStm = con.prepareStatement(String.format("INSERT INTO %s"
-                    + "(contentId, placement) VALUES"
-                    + "(?, ?)", table));
-        int id = con.prepareStatement("SELECT last_insert_rowid() AS id").executeQuery().getInt("ID");
-        faceContStm.setInt(1, id);
-        faceContStm.setInt(2, placement);
-        
+                + "(cardId, contentId, placement) VALUES"
+                + "(?, ?, ?)", table));
+        int contentId = con.prepareStatement("SELECT last_insert_rowid() AS id").executeQuery().getInt("ID");
+        faceContStm.setInt(1, cardId);
+        faceContStm.setInt(2, contentId);
+        faceContStm.setInt(3, placement);
+
         return !faceContStm.execute();
     }
 
