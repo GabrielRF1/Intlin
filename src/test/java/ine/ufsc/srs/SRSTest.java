@@ -176,4 +176,35 @@ public class SRSTest {
         }
     }
 
+    /**
+     * Test of updateCard method, of class SRS.
+     */
+    @Test
+    public void testUpdateCard() {
+        try {
+            System.out.println("updateCard");
+            SRS instance = testIntance;
+            Card card = new Card(new CardContent(), new CardContent());
+            instance.addToDeck("Grammar", card);
+            card.calcNextReview(Card.Difficulty.easy);
+            boolean result = instance.updateCard(card);
+            boolean expResult = true;
+            PreparedStatement stm = instance.con.prepareStatement("SELECT ease, "
+                    + "nextReview, level FROM Card where cardId=?");
+            stm.setInt(0, card.getId());
+
+            ResultSet res = stm.executeQuery();
+            double ease = res.getDouble("ease");
+            String nextReview = res.getString("nextReview");
+            String level = res.getString("level");
+
+            result &= (ease == 0.25)
+                    && nextReview.equals(LocalDate.now().plusDays(1).toString())
+                    && level.equals("comfortable");
+
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            fail("Could not create deck. exception thrown: " + ex.getMessage());
+        }
+    }
 }

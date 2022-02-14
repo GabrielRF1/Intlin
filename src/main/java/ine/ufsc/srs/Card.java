@@ -37,7 +37,7 @@ public class Card {
     private CardProficiency level;
     private final CardContent front;
     private final CardContent back;
-    private final LocalDate nextReview;
+    private LocalDate nextReview;
     private Integer id;
     private double ease;
 
@@ -113,65 +113,86 @@ public class Card {
                     ease -= 0.80;
                 }
                 level = CardProficiency.toLearn;
-                return LocalDate.now();
+                nextReview = LocalDate.now();
+                break;
             case hard:
                 if (ease > 0) {
                     ease -= 0.25;
                 }
                 switch (level) {
                     case toLearn:
-                        return LocalDate.now();
+                        nextReview = LocalDate.now();
+                        break;
                     case learning:
-                        return LocalDate.now().plusDays(1);
+                        nextReview = LocalDate.now().plusDays(1);
+                        break;
                     case comfortable:
-                        return LocalDate.now().plusDays(2);
+                        nextReview = LocalDate.now().plusDays(2);
+                        break;
                     case mastered:
-                        return LocalDate.now().plusDays(3);
+                        nextReview = LocalDate.now().plusDays(3);
+                        break;
                     case acquired:
-                        return LocalDate.now().plusDays(5);
+                        nextReview = LocalDate.now().plusDays(5);
+                        break;
                 }
+                break;
             case good:
                 switch (level) {
                     case toLearn:
                         level = CardProficiency.learning;
-                        return LocalDate.now();
+                        nextReview = LocalDate.now();
+                        break;
                     case learning:
                         level = CardProficiency.comfortable;
-                        return LocalDate.now().plusDays(1);
+                        nextReview = LocalDate.now().plusDays(1);
+                        break;
                     case comfortable:
                         level = CardProficiency.mastered;
-                        return LocalDate.now().plusDays(3);
+                        nextReview = LocalDate.now().plusDays(3);
+                        break;
                     case mastered:
                         ease += 0.20;
                         level = CardProficiency.acquired;
-                        return LocalDate.now().plusDays(5);
+                        nextReview = LocalDate.now().plusDays(5);
+                        break;
                     case acquired:
                         ease += 0.25;
                         level = CardProficiency.acquired;
-                        return LocalDate.now().plusWeeks(1);
+                        nextReview = LocalDate.now().plusWeeks(1);
+                        break;
                 }
+                break;
             case easy:
                 ease += 0.25;
                 switch (level) {
                     case toLearn:
                         level = CardProficiency.comfortable;
-                        return LocalDate.now().plusDays(1);
+                        nextReview = LocalDate.now().plusDays(1);
+                        break;
                     case learning:
                         level = CardProficiency.mastered;
-                        return LocalDate.now().plusDays(3);
+                        nextReview = LocalDate.now().plusDays(3);
+                        break;
                     case comfortable:
                         level = CardProficiency.acquired;
-                        return LocalDate.now().plusDays(5);
+                        nextReview = LocalDate.now().plusDays(5);
+                        break;
                     case mastered:
                         level = CardProficiency.acquired;
-                        return LocalDate.now().plusWeeks(1);
+                        nextReview = LocalDate.now().plusWeeks(1);
+                        break;
                     case acquired:
                         level = CardProficiency.acquired;
-                        return LocalDate.now().plusWeeks(2);
+                        nextReview = LocalDate.now().plusWeeks(2);
+                        break;
                 }
+                break;
             default: // should not reach
-                return LocalDate.now();
+                nextReview = LocalDate.now();
+                break;
         }
+        return nextReview;
     }
 
     // used in tests

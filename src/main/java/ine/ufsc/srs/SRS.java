@@ -107,6 +107,11 @@ public class SRS {
         return res;
     }
 
+    public boolean updateCard(Card card) throws SQLException {
+        
+        return false;
+    }
+    
     public HashSet<Card> getTodaysReviewByDeck(String deck) throws SQLException {
         HashSet<Card> todaysCards = new HashSet<>();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM Card WHERE "
