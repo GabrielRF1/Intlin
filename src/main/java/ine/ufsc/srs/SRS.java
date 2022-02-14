@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -86,7 +87,6 @@ public class SRS {
     public boolean addToDeck(String deckName, Card card) throws SQLException {
         boolean res = true;
         int deckId = deckToId.get(deckName);
-        System.out.println("int deckId = deckToId.get(deckName);");
         PreparedStatement cardStm = con.prepareStatement("INSERT INTO Card"
                 + "(deckId, reviewDate, isSuspended, ease, level) VALUES"
                 + "(?, ?, ?, ?, ?)");
@@ -107,9 +107,28 @@ public class SRS {
         return res;
     }
 
-    public HashSet<Card> getTodaysReview() {
+    public HashSet<Card> getTodaysReviewByDeck(String deck) throws SQLException {
         HashSet<Card> todaysCards = new HashSet<>();
-
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM Card WHERE "
+                + "deckId=? AND reviewDate=? OR reviewDate IS NULL");
+        stm.setInt(1, deckToId.get(deck));
+        stm.setString(2, LocalDate.now().toString());
+        ResultSet cardInfo = stm.executeQuery();
+        while (cardInfo.next()) {
+            Card.CardProficiency level = cardInfo.getString("level").equals("toLearn")
+                    ? Card.CardProficiency.toLearn
+                    : cardInfo.getString("level").equals("learning") ? Card.CardProficiency.learning
+                    : cardInfo.getString("level").equals("comfortable") ? Card.CardProficiency.comfortable
+                    : cardInfo.getString("level").equals("mastered") ? Card.CardProficiency.mastered
+                    : Card.CardProficiency.acquired;
+            CardContent front = retrieveCardsFace(cardInfo.getInt("cardId"), false);
+            CardContent back = retrieveCardsFace(cardInfo.getInt("cardId"), true);
+            
+            Card card = new Card(front, back, cardInfo.getInt("cardId"),
+                    cardInfo.getString("reviewDate"), cardInfo.getInt("ease"),
+                    level, cardInfo.getInt("isSuspended") == 1);
+            todaysCards.add(card);
+        }
         return todaysCards;
     }
 
@@ -147,6 +166,36 @@ public class SRS {
         faceContStm.setInt(3, placement);
 
         return !faceContStm.execute();
+    }
+
+    protected CardContent retrieveCardsFace(int cardId, boolean isBack) throws SQLException {
+        String table = isBack ? "BackContent" : "FrontContent";
+        PreparedStatement contIdStm = con.prepareStatement(String.format("SELECT "
+                + "contentId, placement FROM %s WHERE cardId=?", table));
+        contIdStm.setInt(1, cardId);
+        ResultSet contIdRs = contIdStm.executeQuery();
+        HashMap<Integer, Integer> contenIds = new HashMap<>();
+        while (contIdRs.next()) {
+            contenIds.put(contIdRs.getInt("contentId"), contIdRs.getInt("placement"));
+        }
+
+        CardContent face = new CardContent();
+        for (Integer id : contenIds.keySet()) {
+            PreparedStatement contStm = con.prepareStatement("SELECT content, contentType "
+                    + "FROM Content WHERE contentId=?");
+            contStm.setInt(1, id);
+            ResultSet contRs = contStm.executeQuery();
+            while (contRs.next()) {
+                Content.Type type = contRs.getString("contentType").equals("text") ? Content.Type.text
+                        : contRs.getString("contentType").equals("audio") ? Content.Type.audio
+                        : Content.Type.image;
+                Content content = new Content(contenIds.get(id), id,
+                        contRs.getString("content"), type);
+
+                face.addContent(content);
+            }
+        }
+        return face;
     }
 
     private boolean bdExists() {

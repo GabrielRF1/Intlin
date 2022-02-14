@@ -37,7 +37,7 @@ public class Card {
     private CardProficiency level;
     private final CardContent front;
     private final CardContent back;
-    private LocalDate nextReview;
+    private final LocalDate nextReview;
     private Integer id;
     private double ease;
 
@@ -49,17 +49,16 @@ public class Card {
         this.ease = 0.0f;
         this.nextReview = LocalDate.now();
     }
-    
-    public Card(CardContent front, CardContent back, Integer id, String nextReview, double ease, CardProficiency level, boolean isActive) {
+
+    public Card(CardContent front, CardContent back, Integer id, String nextReview, double ease, CardProficiency level, boolean isSuspended) {
         this.front = front;
         this.back = back;
-        this.state = isActive? CardState.active:CardState.active;
+        this.state = isSuspended ? CardState.suspended : CardState.active;
         this.level = level;
         this.ease = ease;
-        this.nextReview = LocalDate.parse(nextReview);
+        this.nextReview = (nextReview == null) ? LocalDate.now() : LocalDate.parse(nextReview);
         this.id = id;
     }
-    
 
     public CardContent getFront() {
         return front;

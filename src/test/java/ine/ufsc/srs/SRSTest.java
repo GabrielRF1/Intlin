@@ -111,7 +111,7 @@ public class SRSTest {
             if (rsCont.isClosed() || rsCont.getInt("total") != 2) {
                 fail("card not properly inserted");
             }
-            
+
             Statement stmFront = instance.con.createStatement();
             ResultSet rsFront = stmFront.executeQuery("SELECT * FROM Content c INNER JOIN"
                     + " FrontContent fc ON c.contentId = fc.contentId INNER JOIN "
@@ -136,40 +136,44 @@ public class SRSTest {
     }
 
     /**
-     * Test of getTodaysReview method, of class SRS.
+     * Test of getTodaysReviewByDeck method, of class SRS.
      */
     @Test
-    public void testGetTodaysReview() {
-        System.out.println("getTodaysReview");
-        SRS instance = testIntance;
-
-        HashSet<Card> result = instance.getTodaysReview();
-        HashSet<Integer> ids = new HashSet<>();
-
-        for (Card card : result) {
-            if (!card.getNextReview().equals(LocalDate.now())) {
-                fail("Only today's reviews are supposed to be returned");
-            }
-            ids.add(card.getId());
-        }
-
-        boolean res = true;
-        String today = LocalDate.now().toString();
+    public void testGetTodaysReviewByDeck() {
         try {
-            PreparedStatement stm = testIntance.con.prepareStatement("SELECT cardId FROM Card WHERE reviewDate = ? or reviewDate = NULL");
-            stm.setString(1, today);
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                if (!ids.contains(rs.getInt("cardId"))) {
-                    res = false;
+            System.out.println("getTodaysReview");
+            SRS instance = testIntance;
+
+            HashSet<Card> result = instance.getTodaysReviewByDeck("Grammar");
+            HashSet<Integer> ids = new HashSet<>();
+
+            for (Card card : result) {
+                if (!card.getNextReview().equals(LocalDate.now())) {
+                    fail("Only today's reviews are supposed to be returned");
                 }
-
+                ids.add(card.getId());
             }
-        } catch (SQLException ex) {
-            fail("SQL error");
-        }
 
-        assertTrue(res, res == false ? "There are missing cards in the result set" : null);
+            boolean res = true;
+            String today = LocalDate.now().toString();
+            try {
+                PreparedStatement stm = testIntance.con.prepareStatement("SELECT cardId FROM Card WHERE reviewDate = ? or reviewDate = NULL");
+                stm.setString(1, today);
+                ResultSet rs = stm.executeQuery();
+                while (rs.next()) {
+                    if (!ids.contains(rs.getInt("cardId"))) {
+                        res = false;
+                    }
+
+                }
+            } catch (SQLException ex) {
+                fail("SQL error");
+            }
+
+            assertTrue(res, res == false ? "There are missing cards in the result set" : null);
+        } catch (SQLException ex) {
+            fail("exception thrown: " + ex.getMessage());
+        }
     }
 
 }

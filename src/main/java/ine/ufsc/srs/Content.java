@@ -5,25 +5,35 @@
  */
 package ine.ufsc.srs;
 
+import java.io.File;
+
 /**
  *
  * @author Gabriel
  */
 public class Content {
+
     static enum Type {
         audio,
         image,
         text,
     }
-    
+
     private int position;
+    private Integer id;
     private Object element;
     private final Type type;
-    
 
     public Content(int position, Object element, Type type) {
         this.position = position;
         this.element = element;
+        this.type = type;
+    }
+
+    public Content(int position, int id, String element, Type type) {
+        this.position = position;
+        this.id = id;
+        this.element = type == Type.text ? element : new File(element);
         this.type = type;
     }
 
@@ -52,6 +62,5 @@ public class Content {
     public void setElement(Object element) {
         this.element = element;
     }
-    
-    
+
 }

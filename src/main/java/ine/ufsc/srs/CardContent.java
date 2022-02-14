@@ -20,6 +20,10 @@ public class CardContent {
         return contents.get(index);
     }
 
+    public void addContent(Content content) {
+        contents.add(content);
+    }
+
     public void addText(String text) {
         Content cont = new Content(text, Content.Type.text);
         contents.add(cont);
