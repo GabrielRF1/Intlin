@@ -190,12 +190,12 @@ public class SRSTest {
             boolean result = instance.updateCard(card);
             boolean expResult = true;
             PreparedStatement stm = instance.con.prepareStatement("SELECT ease, "
-                    + "nextReview, level FROM Card where cardId=?");
-            stm.setInt(0, card.getId());
+                    + "reviewDate, level FROM Card where cardId=?");
+            stm.setInt(1, card.getId());
 
             ResultSet res = stm.executeQuery();
             double ease = res.getDouble("ease");
-            String nextReview = res.getString("nextReview");
+            String nextReview = res.getString("reviewDate");
             String level = res.getString("level");
 
             result &= (ease == 0.25)
@@ -204,7 +204,7 @@ public class SRSTest {
 
             assertEquals(expResult, result);
         } catch (SQLException ex) {
-            fail("Could not create deck. exception thrown: " + ex.getMessage());
+            fail("Could not update card. exception thrown: " + ex.getMessage());
         }
     }
 }

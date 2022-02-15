@@ -108,10 +108,22 @@ public class SRS {
     }
 
     public boolean updateCard(Card card) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("UPDATE Card SET "
+                + "reviewDate = ?,"
+                + "isSuspended = ?,"
+                + "ease = ?,"
+                + "level = ? WHERE cardId = ?");
+        stm.setString(1, card.getNextReview().toString());
+        stm.setInt(2, card.getState() == Card.CardState.active ? 0 : 1);
+        stm.setDouble(3, card.getEase());
+        stm.setString(4, card.getLevel().toString());
+        stm.setInt(5, card.getId());
         
-        return false;
+        boolean result = !stm.execute();
+
+        return result;
     }
-    
+
     public HashSet<Card> getTodaysReviewByDeck(String deck) throws SQLException {
         HashSet<Card> todaysCards = new HashSet<>();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM Card WHERE "
@@ -128,7 +140,7 @@ public class SRS {
                     : Card.CardProficiency.acquired;
             CardContent front = retrieveCardsFace(cardInfo.getInt("cardId"), false);
             CardContent back = retrieveCardsFace(cardInfo.getInt("cardId"), true);
-            
+
             Card card = new Card(front, back, cardInfo.getInt("cardId"),
                     cardInfo.getString("reviewDate"), cardInfo.getInt("ease"),
                     level, cardInfo.getInt("isSuspended") == 1);
