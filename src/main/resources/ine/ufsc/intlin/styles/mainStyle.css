@@ -1,0 +1,24 @@
+.bg-1 {
+    -fx-background-color: rgba(118, 163, 198, 0.9);
+}
+
+.bg-2 {
+    -fx-background-color: rgba(112, 158, 194, 0.9)
+}
+
+.bg-3 {
+    -fx-background-color: rgba(118, 163, 198, 1);
+}
+
+.bg-4 {
+    -fx-background-color: rgba(112, 158, 194, 1);
+}
+
+.surface {
+    -fx-background-color: rgb(245, 245, 245);
+}
+
+.headline {
+    -fx-font-size: 26;
+    -fx-font-weight: 600;
+}

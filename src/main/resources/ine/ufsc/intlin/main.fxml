@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="surface" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.MainController">
+    <stylesheets>
+        <URL value="@/ine/ufsc/intlin/styles/mainStyle.css" />
+    </stylesheets>
+   <children>
+      <HBox id="main_surface" prefHeight="100.0" prefWidth="200.0" styleClass="surface" stylesheets="@styles/mainStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane maxWidth="300.0" prefHeight="400.0" prefWidth="151.0" style="-fx-border-style: solid;" HBox.hgrow="ALWAYS" />
+            <AnchorPane prefHeight="400.0" prefWidth="450.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox prefHeight="400.0" prefWidth="403.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane>
+                           <children>
+                              <TabPane prefHeight="265.0" prefWidth="448.0" styleClass="surface" stylesheets="@styles/mainStyle.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <tabs>
+                                  <Tab styleClass="surface" text="Untitled Tab 1">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="236.0" prefWidth="456.0">
+                                             <children>
+                                                <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <AnchorPane prefHeight="236.0" prefWidth="147.0">
+                                                         <children>
+                                                            <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="surface" stylesheets="@styles/mainStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                               <top>
+                                                                  <Label id="transcript_headline" alignment="CENTER" prefHeight="38.0" prefWidth="116.0" styleClass="headline" stylesheets="@styles/mainStyle.css" text="Label" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                                                                     <BorderPane.margin>
+                                                                        <Insets top="12.0" />
+                                                                     </BorderPane.margin>
+                                                                  </Label>
+                                                               </top>
+                                                               <center>
+                                                                  <AnchorPane BorderPane.alignment="CENTER">
+                                                                     <children>
+                                                                        <ScrollPane fitToWidth="true" prefHeight="173.0" prefWidth="147.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                          <content>
+                                                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="491.0" prefWidth="133.0" />
+                                                                          </content>
+                                                                        </ScrollPane>
+                                                                     </children>
+                                                                  </AnchorPane>
+                                                               </center>
+                                                            </BorderPane>
+                                                         </children>
+                                                      </AnchorPane>
+                                                   </children>
+                                                </HBox>
+                                             </children></AnchorPane>
+                                    </content>
+                                  </Tab>
+                                  <Tab styleClass="surface" text="Untitled Tab 2">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="216.0" prefWidth="402.0" />
+                                    </content>
+                                  </Tab>
+                                </tabs>
+                              </TabPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="449.0" style="-fx-border-style: solid;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                <content>
+                                  <AnchorPane prefHeight="545.0" prefWidth="435.0" styleClass="bg-1" stylesheets="@styles/mainStyle.css" />
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -3,6 +3,7 @@ module ine.ufsc.intlin {
     requires org.json;
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.base;
 
     opens ine.ufsc.intlin to javafx.fxml;
     exports ine.ufsc.intlin;
