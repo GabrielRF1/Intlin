@@ -6,10 +6,13 @@
 package ine.ufsc.intlin;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
@@ -40,14 +43,13 @@ public class MainController implements Initializable {
         chosenMedia = null;
     }
 
-    public void openMedia() {
+    public void openMedia() throws IOException {
         FileChooser filechooser = new FileChooser();
-        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("select your media", "*.mp4", ".pdf", ".mp3");
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("select your media", "*.mp4", "*.pdf", "*.mp3");
         filechooser.getExtensionFilters().add(filter);
         filechooser.setInitialDirectory(chosenMedia);
 
-        MediaPlayer mp;
-        MediaView mediaView;
+        FXMLLoader fxmlLoader;
         File file = filechooser.showOpenDialog(null);
         if (file == null) {
             return;
@@ -56,10 +58,17 @@ public class MainController implements Initializable {
 
         if (filepath != null) {
             Media media = new Media(filepath);
-            mp = new MediaPlayer(media);
-            mediaView = new MediaView(mp);
             loadMediaButton.setVisible(false);
-            mediaTabPane.getChildren().add(mediaView);
+            loadMediaButton.setDisable(true);
+
+            fxmlLoader = new FXMLLoader(App.class.getResource("videoPlayer.fxml"));
+
+            Node playerPane = fxmlLoader.load();
+            
+
+            VideoPlayerController videoPlayer = fxmlLoader.getController();
+            videoPlayer.setMedia(media);
+            mediaTabPane.getChildren().add(playerPane);
         }
 
         chosenMedia = file.getParentFile();
