@@ -103,7 +103,9 @@ public class Card {
     public LocalDate calcNextReview(Difficulty difficulty) {
         LocalDate nextReviewBase = calcBaseReview(difficulty);
 
-        return nextReviewBase.plusDays(Math.round(ease));
+        long bonusDay = level != CardProficiency.toLearn ? Math.round(ease) : 0;
+        
+        return nextReviewBase.plusDays(bonusDay);
     }
 
     private LocalDate calcBaseReview(Difficulty difficulty) {

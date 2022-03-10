@@ -15,10 +15,13 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="surface" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.MainController">
     <stylesheets>
@@ -33,7 +36,7 @@
                     <menus>
                       <Menu fx:id="settings" mnemonicParsing="false" text="File">
                         <items>
-                          <MenuItem fx:id="languageSettings" mnemonicParsing="false" text="Close" />
+                          <MenuItem fx:id="languageSettings" mnemonicParsing="false" text="Load language" />
                         </items>
                       </Menu>
                       <Menu fx:id="help" mnemonicParsing="false" text="Help">
@@ -45,33 +48,87 @@
                   </MenuBar>
                   <AnchorPane prefHeight="397.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <SplitPane dividerPositions="0.9" orientation="VERTICAL" prefHeight="388.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.9" layoutX="-34.0" orientation="VERTICAL" prefHeight="435.0" prefWidth="634.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <items>
                               <AnchorPane prefHeight="416.0" prefWidth="600.0">
                                  <children>
                                     <TabPane prefHeight="265.0" prefWidth="448.0" styleClass="surface" stylesheets="@styles/mainStyle.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <tabs>
-                                        <Tab text="label-media">
+                                        <Tab text="Media">
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="236.0" prefWidth="456.0">
                                                    <children>
                                                       <StackPane fx:id="mediaTabPane" styleClass="surface" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Button fx:id="loadMediaButton" mnemonicParsing="false" onAction="#openMedia" prefHeight="69.0" prefWidth="99.0" styleClass="color-60" stylesheets="@styles/mainStyle.css" text="Button">
+                                                            <ImageView fx:id="loadMediaButton" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#openMedia" onMouseEntered="#removeShadow" onMouseExited="#createShadow" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../Icons/icons8-load-from-file-96.png" />
+                                                               </image>
                                                                <cursor>
                                                                   <Cursor fx:constant="HAND" />
-                                                               </cursor></Button>
+                                                               </cursor>
+                                                               <effect>
+                                                                  <DropShadow height="15.07" radius="9.01" width="22.97" />
+                                                               </effect>
+                                                            </ImageView>
                                                          </children>
                                                       </StackPane>
                                                    </children>
                                                 </AnchorPane>
                                           </content>
                                         </Tab>
-                                        <Tab text="SRS">
+                                        <Tab onSelectionChanged="#buildSRSTab" text="SRS">
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="216.0" prefWidth="402.0">
                                                    <children>
-                                                      <Label alignment="CENTER" layoutX="-1.0" layoutY="14.0" prefHeight="17.0" prefWidth="597.0" styleClass="headline" text="Label-studied-language" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                                      <VBox layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <AnchorPane>
+                                                               <children>
+                                                                  <Label fx:id="SRSTitleLabel" alignment="CENTER" prefHeight="17.0" prefWidth="597.0" styleClass="headline" text="SRS Tab" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets top="20.0" />
+                                                               </VBox.margin>
+                                                            </AnchorPane>
+                                                            <AnchorPane>
+                                                               <VBox.margin>
+                                                                  <Insets top="80.0" />
+                                                               </VBox.margin>
+                                                               <children>
+                                                                  <Label fx:id="tempText1" alignment="CENTER" prefHeight="17.0" prefWidth="601.0" text="It seems that no language is currently loaded" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                     <font>
+                                                                        <Font size="14.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <AnchorPane>
+                                                               <VBox.margin>
+                                                                  <Insets top="10.0" />
+                                                               </VBox.margin>
+                                                               <children>
+                                                                  <Label fx:id="tempText2" alignment="CENTER" prefHeight="17.0" prefWidth="610.0" text="You can use the dictionary bellow to load a language" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                     <font>
+                                                                        <Font size="14.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <AnchorPane>
+                                                               <children>
+                                                                  <Label fx:id="tempText3" alignment="CENTER" prefHeight="17.0" prefWidth="610.0" text="Or you might go to File &gt; load language" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                     <font>
+                                                                        <Font size="14.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets top="10.0" />
+                                                               </VBox.margin>
+                                                            </AnchorPane>
+                                                         </children>
+                                                      </VBox>
                                                    </children>
                                                 </AnchorPane>
                                           </content>
@@ -90,17 +147,17 @@
                                                    <children>
                                                       <AnchorPane>
                                                          <children>
-                                                            <Label id="dict_headline" alignment="CENTER" contentDisplay="CENTER" prefHeight="38.0" prefWidth="537.0" styleClass="headline" stylesheets="@styles/mainStyle.css" text="Label-dict" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <Label id="dict_headline" alignment="CENTER" contentDisplay="CENTER" prefHeight="38.0" prefWidth="537.0" styleClass="headline" stylesheets="@styles/mainStyle.css" text="Dictionary" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                          </children>
                                                          <VBox.margin>
-                                                            <Insets bottom="8.0" />
+                                                            <Insets bottom="8.0" top="8.0" />
                                                          </VBox.margin>
                                                       </AnchorPane>
                                                       <AnchorPane prefHeight="27.0" prefWidth="139.0">
                                                          <children>
                                                             <StackPane prefHeight="27.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                <children>
-                                                                  <ChoiceBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="163.0" styleClass="color-60" StackPane.alignment="CENTER">
+                                                                  <ChoiceBox fx:id="languageSelectionBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#loadSelectionBox" prefHeight="31.0" prefWidth="163.0" styleClass="color-60" StackPane.alignment="CENTER">
                                                                      <StackPane.margin>
                                                                         <Insets />
                                                                      </StackPane.margin>
@@ -116,15 +173,22 @@
                                                          <children>
                                                             <HBox alignment="TOP_CENTER" layoutX="0.6666666865348816" prefHeight="81.0" prefWidth="163.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.6666666865348816" AnchorPane.rightAnchor="0.6666666467984328" AnchorPane.topAnchor="0.0">
                                                                <children>
-                                                                  <TextField style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
+                                                                  <TextField prefHeight="31.0" prefWidth="129.0" style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
                                                                      <HBox.margin>
                                                                         <Insets right="4.0" />
                                                                      </HBox.margin>
                                                                   </TextField>
-                                                                  <Button mnemonicParsing="false" styleClass="color-60" text="Button" HBox.hgrow="NEVER">
+                                                                  <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="30.0" styleClass="color-60" HBox.hgrow="NEVER">
                                                                      <cursor>
                                                                         <Cursor fx:constant="HAND" />
                                                                      </cursor>
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="14.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../../../Icons/icons8-pesquisar-64.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
                                                                   </Button>
                                                                </children>
                                                             </HBox>

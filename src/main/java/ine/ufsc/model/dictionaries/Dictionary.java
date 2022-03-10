@@ -25,6 +25,10 @@ public abstract class Dictionary {
     public Dictionary(String dbFileName, String filesPath) throws ClassNotFoundException, SQLException {
         this.dbFileName = dbFileName;
         this.filesPath = filesPath;
+        File file = new File(filesPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         connect();
     }
     

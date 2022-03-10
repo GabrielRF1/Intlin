@@ -125,8 +125,11 @@ public class VideoPlayerController implements Initializable {
             startLoop();
         });
         
-         mediaView.getMediaPlayer().setStartTime(Duration.ZERO);
+        mediaView.getMediaPlayer().setStartTime(Duration.ZERO);
         mediaView.getMediaPlayer().setStopTime(Duration.seconds(media.getDuration().toSeconds()));
+        mediaView.getMediaPlayer().setOnEndOfMedia(() -> {
+            onEndVideo();
+        });
     }
 
     public void startTimerCount() {
