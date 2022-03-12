@@ -125,7 +125,7 @@ public class MainController implements Initializable {
         Node pdfPane = fxmlLoader.load();
 
         PdfWebViewController pdfController = fxmlLoader.getController();
-        pdfController.setPDF(file.toURI().toString());
+        pdfController.setPDF(file);
         mediaTabPane.getChildren().add(pdfPane);
     }
 

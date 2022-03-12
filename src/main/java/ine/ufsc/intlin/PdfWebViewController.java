@@ -6,14 +6,24 @@
 package ine.ufsc.intlin;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * FXML Controller class
@@ -33,26 +43,30 @@ public class PdfWebViewController implements Initializable {
         // TODO
     }
 
-    public void setPDF(String path) {
+    public void setPDF(File file) {
         WebEngine engine = webView.getEngine();
-        String url = getClass().getResource("/web/viewer.html").toExternalForm();
+        String url = getClass().getResource("web/viewer.html").toExternalForm();
 
-        // connect CSS styles to customize pdf.js appearance
-        engine.setUserStyleSheetLocation(getClass().getResource("/web.css").toExternalForm());
+        engine.setUserStyleSheetLocation(getClass().getResource("web/viewer.css").toExternalForm());
 
         engine.setJavaScriptEnabled(true);
-        engine.load(url);
 
         engine.getLoadWorker()
                 .stateProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    try {
-                        byte[] data = FileUtils.readFileToByteArray(new File(path));
-                        String base64 = Base64.getEncoder().encodeToString(data);
-                        engine.executeScript("openFileFromBase64('" + base64 + "')");
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (newValue == Worker.State.SUCCEEDED) {
+                        try {
+                            byte[] data;
+                            URI uri = file.toURI();
+                            data = Files.readAllBytes(Path.of(uri));
+                            String base64 = Base64.getEncoder().encodeToString(data);
+                            engine.executeScript("openBase64File('" + base64 + "')");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
+
+        engine.load(url);
     }
 }
