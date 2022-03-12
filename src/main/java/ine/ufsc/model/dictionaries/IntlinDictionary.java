@@ -23,6 +23,7 @@ public class IntlinDictionary extends Dictionary {
     public static class IntlinInfo {
 
         public String word;
+        public int wordId;
         public String gender;
         public String wordClass;
         public String def;

@@ -13,12 +13,12 @@ import java.time.LocalDate;
  */
 public class Card {
 
-    static enum CardState {
+    public static enum CardState {
         active,
         suspended,
     }
 
-    static enum CardProficiency {
+    public static enum CardProficiency {
         toLearn,
         learning,
         comfortable,
@@ -26,7 +26,7 @@ public class Card {
         acquired,
     }
 
-    static enum Difficulty {
+    public static enum Difficulty {
         fail,
         hard,
         good,
@@ -104,8 +104,8 @@ public class Card {
         LocalDate nextReviewBase = calcBaseReview(difficulty);
 
         long bonusDay = level != CardProficiency.toLearn ? Math.round(ease) : 0;
-        
-        return nextReviewBase.plusDays(bonusDay);
+        nextReview = nextReviewBase.plusDays(bonusDay);
+        return nextReview;
     }
 
     private LocalDate calcBaseReview(Difficulty difficulty) {

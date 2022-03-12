@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -45,6 +46,10 @@ public class SRS {
         return language;
     }
 
+    public Set<String> getDeckNames() {
+        return deckToId.keySet();
+    }
+
     public void closeConnection() throws SQLException {
         con.close();
     }
@@ -72,6 +77,9 @@ public class SRS {
     }
 
     public boolean createDeck(String deckName, int parentDeckId) throws SQLException {
+        if (deckToId.keySet().contains(deckName)) {
+            deckName += "_new";
+        }
         PreparedStatement stm = con.prepareStatement("INSERT INTO Deck(name, parentDeckId) "
                 + "VALUES(?, ?)");
         stm.setString(1, deckName);
@@ -118,7 +126,7 @@ public class SRS {
         stm.setDouble(3, card.getEase());
         stm.setString(4, card.getLevel().toString());
         stm.setInt(5, card.getId());
-        
+
         boolean result = !stm.execute();
 
         return result;
@@ -131,20 +139,22 @@ public class SRS {
         stm.setInt(1, deckToId.get(deck));
         stm.setString(2, LocalDate.now().toString());
         ResultSet cardInfo = stm.executeQuery();
-        while (cardInfo.next()) {
-            Card.CardProficiency level = cardInfo.getString("level").equals("toLearn")
-                    ? Card.CardProficiency.toLearn
-                    : cardInfo.getString("level").equals("learning") ? Card.CardProficiency.learning
-                    : cardInfo.getString("level").equals("comfortable") ? Card.CardProficiency.comfortable
-                    : cardInfo.getString("level").equals("mastered") ? Card.CardProficiency.mastered
-                    : Card.CardProficiency.acquired;
-            CardContent front = retrieveCardsFace(cardInfo.getInt("cardId"), false);
-            CardContent back = retrieveCardsFace(cardInfo.getInt("cardId"), true);
+        if (!cardInfo.isClosed()) {
+            while (cardInfo.next()) {
+                Card.CardProficiency level = cardInfo.getString("level").equals("toLearn")
+                        ? Card.CardProficiency.toLearn
+                        : cardInfo.getString("level").equals("learning") ? Card.CardProficiency.learning
+                        : cardInfo.getString("level").equals("comfortable") ? Card.CardProficiency.comfortable
+                        : cardInfo.getString("level").equals("mastered") ? Card.CardProficiency.mastered
+                        : Card.CardProficiency.acquired;
+                CardContent front = retrieveCardsFace(cardInfo.getInt("cardId"), false);
+                CardContent back = retrieveCardsFace(cardInfo.getInt("cardId"), true);
 
-            Card card = new Card(front, back, cardInfo.getInt("cardId"),
-                    cardInfo.getString("reviewDate"), cardInfo.getInt("ease"),
-                    level, cardInfo.getInt("isSuspended") == 1);
-            todaysCards.add(card);
+                Card card = new Card(front, back, cardInfo.getInt("cardId"),
+                        cardInfo.getString("reviewDate"), cardInfo.getInt("ease"),
+                        level, cardInfo.getInt("isSuspended") == 1);
+                todaysCards.add(card);
+            }
         }
         return todaysCards;
     }

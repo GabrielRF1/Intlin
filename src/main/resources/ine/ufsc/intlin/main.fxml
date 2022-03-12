@@ -21,9 +21,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="surface" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.MainController">
+<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="surface" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.MainController">
     <stylesheets>
         <URL value="@/ine/ufsc/intlin/styles/mainStyle.css" />
     </stylesheets>
@@ -77,55 +76,50 @@
                                                 </AnchorPane>
                                           </content>
                                         </Tab>
-                                        <Tab onSelectionChanged="#buildSRSTab" text="SRS">
+                                        <Tab text="SRS">
                                           <content>
-                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="216.0" prefWidth="402.0">
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#buildSRSTab" prefHeight="216.0" prefWidth="402.0">
                                                    <children>
                                                       <VBox layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <AnchorPane>
+                                                            <AnchorPane nodeOrientation="RIGHT_TO_LEFT" prefHeight="58.0" prefWidth="597.0" VBox.vgrow="ALWAYS">
+                                                               <children>
+                                                                  <ImageView fitHeight="31.0" fitWidth="43.0" layoutX="33.0" layoutY="1.0" onMouseClicked="#createDeck" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="533.3333333333334" AnchorPane.topAnchor="1.0">
+                                                                     <image>
+                                                                        <Image url="@../../../Icons/icons8-plus-64.png" />
+                                                                     </image>
+                                                                     <cursor>
+                                                                        <Cursor fx:constant="HAND" />
+                                                                     </cursor>
+                                                                  </ImageView>
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets top="10.0" />
+                                                               </VBox.margin>
+                                                            </AnchorPane>
+                                                            <AnchorPane prefHeight="68.0" prefWidth="597.0" VBox.vgrow="NEVER">
                                                                <children>
                                                                   <Label fx:id="SRSTitleLabel" alignment="CENTER" prefHeight="17.0" prefWidth="597.0" styleClass="headline" text="SRS Tab" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                                </children>
                                                                <VBox.margin>
-                                                                  <Insets top="20.0" />
+                                                                  <Insets />
                                                                </VBox.margin>
                                                             </AnchorPane>
-                                                            <AnchorPane>
+                                                            <AnchorPane VBox.vgrow="ALWAYS">
                                                                <VBox.margin>
-                                                                  <Insets top="80.0" />
+                                                                  <Insets top="25.0" />
                                                                </VBox.margin>
                                                                <children>
-                                                                  <Label fx:id="tempText1" alignment="CENTER" prefHeight="17.0" prefWidth="601.0" text="It seems that no language is currently loaded" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                     <font>
-                                                                        <Font size="14.0" />
-                                                                     </font>
-                                                                  </Label>
+                                                                  <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                     <content>
+                                                                        <AnchorPane prefHeight="252.0" prefWidth="597.0">
+                                                                           <children>
+                                                                              <VBox fx:id="srsTableVBox" layoutY="-20.0" prefHeight="207.0" prefWidth="597.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </content>
+                                                                  </ScrollPane>
                                                                </children>
-                                                            </AnchorPane>
-                                                            <AnchorPane>
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                               <children>
-                                                                  <Label fx:id="tempText2" alignment="CENTER" prefHeight="17.0" prefWidth="610.0" text="You can use the dictionary bellow to load a language" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                     <font>
-                                                                        <Font size="14.0" />
-                                                                     </font>
-                                                                  </Label>
-                                                               </children>
-                                                            </AnchorPane>
-                                                            <AnchorPane>
-                                                               <children>
-                                                                  <Label fx:id="tempText3" alignment="CENTER" prefHeight="17.0" prefWidth="610.0" text="Or you might go to File &gt; load language" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                     <font>
-                                                                        <Font size="14.0" />
-                                                                     </font>
-                                                                  </Label>
-                                                               </children>
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
                                                             </AnchorPane>
                                                          </children>
                                                       </VBox>
@@ -137,7 +131,7 @@
                                     </TabPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="64.0" prefWidth="597.0">
+                              <AnchorPane onMouseMoved="#buildSRSTab" prefHeight="64.0" prefWidth="597.0">
                                  <children>
                                     <HBox style="-fx-border-style: solid solid none solid;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -173,12 +167,12 @@
                                                          <children>
                                                             <HBox alignment="TOP_CENTER" layoutX="0.6666666865348816" prefHeight="81.0" prefWidth="163.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.6666666865348816" AnchorPane.rightAnchor="0.6666666467984328" AnchorPane.topAnchor="0.0">
                                                                <children>
-                                                                  <TextField prefHeight="31.0" prefWidth="129.0" style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
+                                                                  <TextField fx:id="searchTextBox" prefHeight="31.0" prefWidth="129.0" style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
                                                                      <HBox.margin>
                                                                         <Insets right="4.0" />
                                                                      </HBox.margin>
                                                                   </TextField>
-                                                                  <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="30.0" styleClass="color-60" HBox.hgrow="NEVER">
+                                                                  <Button mnemonicParsing="false" onAction="#searchWord" prefHeight="31.0" prefWidth="30.0" styleClass="color-60" HBox.hgrow="NEVER">
                                                                      <cursor>
                                                                         <Cursor fx:constant="HAND" />
                                                                      </cursor>
@@ -211,7 +205,10 @@
                                              <children>
                                                 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="48.0" prefWidth="423.0" stylesheets="@styles/mainStyle.css" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="-13.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <content>
-                                                    <AnchorPane prefHeight="142.0" prefWidth="407.0" styleClass="color-60" stylesheets="@styles/mainStyle.css" />
+                                                    <AnchorPane prefHeight="142.0" prefWidth="407.0" stylesheets="@styles/mainStyle.css">
+                                                         <children>
+                                                            <VBox fx:id="definitionsPane" prefHeight="200.0" prefWidth="100.0" styleClass="color-60" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                         </children></AnchorPane>
                                                   </content>
                                                 </ScrollPane>
                                              </children>

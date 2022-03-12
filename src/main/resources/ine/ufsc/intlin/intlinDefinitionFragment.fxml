@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="114.0" prefWidth="618.0" style="-fx-border-style: dashed none none none;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.IntlinDefinitionFragmentController">
+    <stylesheets>
+        <URL value="@/ine/ufsc/intlin/styles/mainStyle.css" />
+    </stylesheets>
+   <children>
+      <HBox prefHeight="100.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane style="-fx-border-style: none solid none;" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox prefHeight="92.0" prefWidth="174.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="187.0" text="Synonyms">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="synonymsLabel" prefHeight="17.0" prefWidth="163.0" text="synonymsLabel" wrapText="true" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="6.0" top="2.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </Label>
+                        <Label prefHeight="17.0" prefWidth="187.0" text="Antonyms">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="antonymsLabel" prefHeight="17.0" prefWidth="163.0" text="antonymsLabel" wrapText="true">
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets left="6.0" top="2.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="99.0" prefWidth="408.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane prefHeight="116.0" prefWidth="416.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="definitionLabel" alignment="TOP_LEFT" prefHeight="53.0" prefWidth="416.0" text="n. definitionLabel" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets top="2.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </AnchorPane>
+                        <Label fx:id="extrasButton" onMouseClicked="#showExtrasAction" text="Extras &gt;" textFill="#4897e2" underline="true">
+                           <VBox.margin>
+                              <Insets bottom="4.0" right="10.0" />
+                           </VBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                        <AnchorPane prefHeight="101.0" prefWidth="310.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Label fx:id="extrasLabel" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="399.0" text="Label" textAlignment="RIGHT" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="200.0" right="15.0" />
+                           </VBox.margin>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -39,6 +40,8 @@ public class VideoPlayerController implements Initializable {
     private ProgressBar progressBar;
     @FXML
     private Label loopIconButton;
+    @FXML
+    private ImageView imageView;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -106,25 +109,25 @@ public class VideoPlayerController implements Initializable {
         loopIconButton.setOnMouseClicked((t) -> {
             dismissLoop();
         });
-        
+
         mediaView.getMediaPlayer().seek(Duration.seconds(loopStartSeconds));
-        
+
         mediaView.getMediaPlayer().setStartTime(Duration.seconds(loopStartSeconds));
         mediaView.getMediaPlayer().setStopTime(Duration.seconds(loopEndSeconds));
-        
+
         mediaView.getMediaPlayer().setOnEndOfMedia(() -> {
             mediaView.getMediaPlayer().seek(Duration.seconds(loopStartSeconds));
             mediaView.getMediaPlayer().play();
         });
     }
-    
+
     public void dismissLoop() {
         loopIconButton.setText("∞");
         loopEndSeconds = mediaView.getMediaPlayer().getCurrentTime().toSeconds();
         loopIconButton.setOnMouseClicked((t) -> {
             startLoop();
         });
-        
+
         mediaView.getMediaPlayer().setStartTime(Duration.ZERO);
         mediaView.getMediaPlayer().setStopTime(Duration.seconds(media.getDuration().toSeconds()));
         mediaView.getMediaPlayer().setOnEndOfMedia(() -> {
@@ -140,7 +143,6 @@ public class VideoPlayerController implements Initializable {
                 double now = mediaView.getMediaPlayer().getCurrentTime().toMillis();
                 double end = media.getDuration().toMillis();
 
-                System.out.println(".run(): " + now / end);
                 progressBar.setProgress(now / end);
 
                 if (now / end == 1) {

@@ -13,7 +13,7 @@ import java.io.File;
  */
 public class Content {
 
-    static enum Type {
+    public static enum Type {
         audio,
         image,
         text,
