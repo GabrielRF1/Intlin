@@ -42,14 +42,23 @@ public class IntlinDefinitionFragmentController implements Initializable {
 
     public void setDefinition(int defNum, String def) {
         definitionLabel.setText(String.format("%d. %s", defNum, def));
+        Tooltip tp = new Tooltip(definitionLabel.getText());
+        tp.setShowDelay(Duration.seconds(1));
+        definitionLabel.setTooltip(tp);
     }
 
     public void setSynonyms(List<String> syns) {
         synonymsLabel.setText(syns.toString());
+        Tooltip tp = new Tooltip(synonymsLabel.getText());
+        tp.setShowDelay(Duration.seconds(1));
+        synonymsLabel.setTooltip(tp);
     }
 
     public void setAntonyms(List<String> ants) {
         antonymsLabel.setText(ants.toString());
+        Tooltip tp = new Tooltip(antonymsLabel.getText());
+        tp.setShowDelay(Duration.seconds(1));
+        antonymsLabel.setTooltip(tp);
     }
 
     public void setExtras(List<String> extras) {

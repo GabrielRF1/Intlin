@@ -18,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -76,22 +78,25 @@ public class IntlinEntryCardController implements Initializable {
 
     public void saveEntryToFlashCard() {
         CardContent frontContent = new CardContent();
-        frontContent.addText(wordLabel.getText());
-        CardContent backContent = new CardContent();
         String firstLine = wordLabel.getText();
         if (!genderLabel.getText().equals("()")) {
             firstLine += " " + genderLabel.getText();
         }
         firstLine += ": " + wordClassLabel.getText();
-        backContent.addText(firstLine);
+        frontContent.addText(firstLine);
+
+        CardContent backContent = new CardContent();
 
         defsRegion.getChildren().forEach((child) -> {
-            Label def = (Label) child.getScene().lookup("#definitionLabel");
+            HBox outerBox = ((HBox) ((AnchorPane) child).getChildren().get(0));
+            AnchorPane defAnchor = ((AnchorPane) outerBox.getChildren().get(1));
+            VBox defBox = ((VBox) defAnchor.getChildren().get(0));
+            Label def = ((Label) ((AnchorPane) defBox.getChildren().get(0)).getChildren().get(0));
             backContent.addText(def.getText());
         });
-        
+
         Card card = new Card(frontContent, backContent);
-        
+
         try {
             Controller.instance.tryAndCreateDeck("Vocabulary");
             Controller.instance.addCardToDeck("Vocabulary", card);

@@ -10,6 +10,7 @@ import ine.ufsc.srs.Card;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -18,8 +19,10 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -116,8 +119,8 @@ public class ReviewScreenController implements Initializable {
         CardFaceController frontControl = front.getController();
         CardFaceController backControl = back.getController();
 
-        frontControl.setCardContent(cur.getFront());
-        backControl.setCardContent(cur.getBack());
+        frontControl.setCardContent(cur.getFront(), Pos.CENTER);
+        backControl.setCardContent(cur.getBack(), Pos.TOP_CENTER);
 
         cardFrontAnchorPane.getChildren().removeIf((t) -> {
             return true;
@@ -126,15 +129,15 @@ public class ReviewScreenController implements Initializable {
         cardBackAnchorPane.getChildren().removeIf((t) -> {
             return true;
         });
-        
+
         cardFrontAnchorPane.getChildren().add(cardFront);
         cardBackAnchorPane.getChildren().add(cardBack);
-        
+
         AnchorPane.setTopAnchor(cardFront, 0.0);
         AnchorPane.setRightAnchor(cardFront, 0.0);
         AnchorPane.setLeftAnchor(cardFront, 0.0);
         AnchorPane.setBottomAnchor(cardFront, 0.0);
-        
+
         AnchorPane.setTopAnchor(cardBack, 0.0);
         AnchorPane.setRightAnchor(cardBack, 0.0);
         AnchorPane.setLeftAnchor(cardBack, 0.0);
@@ -144,26 +147,29 @@ public class ReviewScreenController implements Initializable {
     }
 
     public void onEasyPressed() throws IOException {
-        Controller.instance.answerCard(cur, Card.Difficulty.easy);
-        onAnswerComplete();
+        LocalDate day = Controller.instance.answerCard(cur, Card.Difficulty.easy);
+        onAnswerComplete(day);
     }
 
     public void onGoodPressed() throws IOException {
-        Controller.instance.answerCard(cur, Card.Difficulty.good);
-        onAnswerComplete();
+        LocalDate day = Controller.instance.answerCard(cur, Card.Difficulty.good);
+        onAnswerComplete(day);
     }
 
     public void onHardPressed() throws IOException {
-        Controller.instance.answerCard(cur, Card.Difficulty.hard);
-        onAnswerComplete();
+        LocalDate day = Controller.instance.answerCard(cur, Card.Difficulty.hard);
+        onAnswerComplete(day);
     }
 
     public void onFailPressed() throws IOException {
-        Controller.instance.answerCard(cur, Card.Difficulty.fail);
-        onAnswerComplete();
+        LocalDate day = Controller.instance.answerCard(cur, Card.Difficulty.fail);
+        onAnswerComplete(day);
     }
 
-    private void onAnswerComplete() {
+    private void onAnswerComplete(LocalDate day) {
+        if (day.equals(LocalDate.now())) {
+            reviewCards.add(cur);
+        }
         cardBackScrollRegion.setVisible(true);
         hardB.setVisible(false);
         failB.setVisible(false);

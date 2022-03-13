@@ -56,7 +56,6 @@ public class DeckFragmentController implements Initializable {
             Scene srsScene = new Scene(reviewNode);
             Stage newWindow = new Stage();
             newWindow.setTitle("Review");
-            newWindow.setResizable(false);
             newWindow.setScene(srsScene);
             newWindow.showAndWait();
         } catch (SQLException ex) {

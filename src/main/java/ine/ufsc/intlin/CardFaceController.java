@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -34,13 +35,13 @@ public class CardFaceController implements Initializable {
         // TODO
     }
 
-    public void setCardContent(CardContent cardContent) {
+    public void setCardContent(CardContent cardContent, Pos pos) {
+        String face = "";
         for (int i = 0; i < cardContent.size(); i++) {
             Content content = cardContent.getContent(i);
             switch (content.getType()) {
                 case text:
-                    String face = ContentLabel.getText() +"\n"+ (String) content.getElement();
-                    ContentLabel.setText(face);
+                    face += (String) content.getElement() + "\n";
                     // for now only one line with one content is supported, to be improved
                     break;
                 case audio:
@@ -49,6 +50,9 @@ public class CardFaceController implements Initializable {
                     break;
             }
         }
+        System.out.println("ine.ufsc.intlin.CardFaceController.setCardContent(): "+face);
+        ContentLabel.setText(face);
+        ContentLabel.setAlignment(pos);
     }
 
 }

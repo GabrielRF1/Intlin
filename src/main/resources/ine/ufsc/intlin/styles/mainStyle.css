@@ -1,22 +1,22 @@
-.color-30 {
+.color-10 {
     -fx-background-color: #76a3c6;
 }
 
-.color-10 {
-    -fx-background-color: #8776c6;
+.color-30 {
+    -fx-background-color: #8dc676;
 }
 
 .color-60 {
     -fx-background-color: #76c699;
 }
 
-.color-30:focused {
+.color-10:focused {
     -fx-border-color: #4580ad;
     -fx-border-radius: 5;
 }
 
-.color-10:focused {
-    -fx-border-color: #5b45ad;
+.color-30:focused {
+    -fx-border-color: #62ad45;
     -fx-border-radius: 5;
 }
 

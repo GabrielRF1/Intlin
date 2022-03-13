@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -122,8 +123,8 @@ public class Controller {
         }
     }
 
-    public void answerCard(Card card, Card.Difficulty difficulty) {
-        card.calcNextReview(difficulty);
+    public LocalDate answerCard(Card card, Card.Difficulty difficulty) {
+        return card.calcNextReview(difficulty);
     }
 
     public void addCardToDeck(String deckName, Card card) throws SQLException {

@@ -25,10 +25,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="synonymsLabel" prefHeight="17.0" prefWidth="163.0" text="synonymsLabel" wrapText="true" VBox.vgrow="ALWAYS">
-                           <VBox.margin>
-                              <Insets left="6.0" top="2.0" />
-                           </VBox.margin>
+                        <Label fx:id="synonymsLabel" prefHeight="17.0" prefWidth="163.0" text="synonymsLabel" wrapText="true">
                            <padding>
                               <Insets bottom="10.0" />
                            </padding>
@@ -42,9 +39,6 @@
                            <padding>
                               <Insets bottom="10.0" />
                            </padding>
-                           <VBox.margin>
-                              <Insets left="6.0" top="2.0" />
-                           </VBox.margin>
                         </Label>
                      </children>
                   </VBox>
