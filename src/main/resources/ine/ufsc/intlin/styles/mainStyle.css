@@ -46,3 +46,10 @@
     -fx-font-size: 26;
     -fx-font-weight: 600;
 }
+
+.labelSubs {
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+    -fx-stroke: black;
+    -fx-stroke-width: 1px;
+}

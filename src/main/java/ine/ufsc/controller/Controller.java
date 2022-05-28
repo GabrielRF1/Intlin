@@ -7,6 +7,9 @@ package ine.ufsc.controller;
 
 import ine.ufsc.model.dictionaries.Dictionary;
 import ine.ufsc.model.dictionaries.IntlinDictionary;
+import ine.ufsc.model.subtitle.BadlyFomattedSubtitleFileException;
+import ine.ufsc.model.subtitle.Subtitle;
+import ine.ufsc.model.subtitle.parser.SrtParser;
 import ine.ufsc.srs.Card;
 import ine.ufsc.srs.SRS;
 import java.io.File;
@@ -17,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,8 +50,8 @@ public class Controller {
         supportedlangsList = new HashSet<>();
         reviews = new HashMap<>();
         SupportedLanguage suports[] = SupportedLanguage.values();
-        for (int i = 0; i < suports.length; i++) {
-            supportedlangsList.add(suports[i]);
+        for (SupportedLanguage suport : suports) {
+            supportedlangsList.add(suport);
         }
     }
 
@@ -137,6 +141,11 @@ public class Controller {
 
     public void setAsReviewed(String deckName, Card card) {
         reviews.get(deckName).remove(card);
+    }
+    
+    public LinkedList<Subtitle> parseSubs(File srtFile) throws IOException, BadlyFomattedSubtitleFileException {
+        SrtParser parser = new SrtParser();
+        return parser.parse(srtFile);
     }
 
     public ArrayList<IntlinDictionary.IntlinInfo> searchIntlinWord(SupportedLanguage dictKey, String word) throws SQLException {

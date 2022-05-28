@@ -1,6 +1,5 @@
 package ine.ufsc.intlin;
 
-import java.io.File;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,8 +19,8 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("main"), 640, 480);
         stage.setScene(scene);
-        stage.setMinWidth(680);
-        stage.setMinHeight(480);
+        stage.setMinWidth(880);
+        stage.setMinHeight(500);
         stage.setTitle("INTLIN");
         stage.show();
     }
@@ -35,7 +34,7 @@ public class App extends Application {
         return fxmlLoader.load();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         launch();
     }
 
