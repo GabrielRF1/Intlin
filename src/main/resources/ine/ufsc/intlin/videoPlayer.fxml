@@ -128,18 +128,31 @@
                               </HBox>
                            </children>
                         </AnchorPane>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="377.0" prefWidth="109.0" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
-                          <content>
-                            <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="103.0">
-                                 <children>
-                                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane VBox.vgrow="ALWAYS">
+                           <children>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="377.0" prefWidth="109.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <content>
+                                    <VBox fx:id="transcriptionListView" prefHeight="0.0">
                                        <padding>
                                           <Insets left="4.0" right="4.0" />
                                        </padding>
                                     </VBox>
-                                 </children></AnchorPane>
-                          </content>
-                        </ScrollPane>
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="45.0" prefWidth="223.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Button alignment="CENTER" layoutX="16.0" layoutY="10.0" mnemonicParsing="false" onAction="#saveSelectedSubtitles" styleClass="color-60" stylesheets="@styles/mainStyle.css" text="Save selected" AnchorPane.bottomAnchor="10.000000000000004" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets left="16.0" right="16.0" />
+                           </padding>
+                        </AnchorPane>
                      </children>
                   </VBox>
                </children>

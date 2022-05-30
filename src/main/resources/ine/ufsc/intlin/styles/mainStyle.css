@@ -53,3 +53,19 @@
     -fx-stroke: black;
     -fx-stroke-width: 1px;
 }
+
+.check-box .box {
+-fx-background-color: whitesmoke;
+-fx-border-color: grey;
+-fx-border-radius: 2px; 
+
+}
+
+.check-box:selected .box {
+
+-fx-background-color: white;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #8dc676;
+}

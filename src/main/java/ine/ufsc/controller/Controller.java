@@ -5,6 +5,7 @@
  */
 package ine.ufsc.controller;
 
+import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.model.dictionaries.Dictionary;
 import ine.ufsc.model.dictionaries.IntlinDictionary;
 import ine.ufsc.model.subtitle.BadlyFomattedSubtitleFileException;
@@ -23,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  *
@@ -39,15 +41,20 @@ public class Controller {
     private final Map<SupportedLanguage, Dictionary> loadedDictionaries;
     private final Set<SupportedLanguage> supportedlangsList;
 
+    private final Map<Integer, String> linesToSave;
+
     private SupportedLanguage selectedLanguage;
 
     private SRS loadedSRS;
 
-    private Map<String, HashSet<Card>> reviews;
+    private boolean srsIsDirty = false;
+
+    private final Map<String, HashSet<Card>> reviews;
 
     private Controller() {
         loadedDictionaries = new HashMap<>();
         supportedlangsList = new HashSet<>();
+        linesToSave = new TreeMap<>();
         reviews = new HashMap<>();
         SupportedLanguage suports[] = SupportedLanguage.values();
         for (SupportedLanguage suport : suports) {
@@ -119,11 +126,14 @@ public class Controller {
 
     public void refetchReview(String deckName) throws SQLException {
         reviews.put(deckName, loadedSRS.getTodaysReviewByDeck(deckName));
+        srsIsDirty = true;
     }
 
-    public void tryAndCreateDeck(String deckName) throws SQLException {
+    public void tryAndCreateDeck(String deckName) throws SQLException, SRSNotLoadedException {
+        if(selectedLanguage == null) throw new SRSNotLoadedException("You must choose a language before creating decks and cards");
         if (!reviews.keySet().contains(deckName)) {
             loadedSRS.createDeck(deckName);
+            srsIsDirty = true;
         }
     }
 
@@ -133,16 +143,19 @@ public class Controller {
 
     public void addCardToDeck(String deckName, Card card) throws SQLException {
         loadedSRS.addToDeck(deckName, card);
+        srsIsDirty = true;
     }
 
     public void updateCards(Card card) throws SQLException {
         loadedSRS.updateCard(card);
+        srsIsDirty = true;
     }
 
     public void setAsReviewed(String deckName, Card card) {
         reviews.get(deckName).remove(card);
+        srsIsDirty = true;
     }
-    
+
     public LinkedList<Subtitle> parseSubs(File srtFile) throws IOException, BadlyFomattedSubtitleFileException {
         SrtParser parser = new SrtParser();
         return parser.parse(srtFile);
@@ -184,5 +197,25 @@ public class Controller {
         }
 
         return result;
+    }
+
+    public boolean isSrsDirty() {
+        return srsIsDirty;
+    }
+
+    public void setSrsIsDirty(boolean srsIsDirty) {
+        this.srsIsDirty = srsIsDirty;
+    }
+
+    public TreeMap<Integer, String> getLinesToSave() {
+        return (TreeMap<Integer, String>) linesToSave;
+    }
+
+    public void saveLine(String line, int id) {
+        linesToSave.put(id, line);
+    }
+
+    public void removeLineIfSaved(int id) {
+        linesToSave.remove(id);
     }
 }

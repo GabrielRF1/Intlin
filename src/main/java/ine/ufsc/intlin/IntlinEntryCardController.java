@@ -5,6 +5,7 @@
  */
 package ine.ufsc.intlin;
 
+import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.controller.Controller;
 import ine.ufsc.srs.Card;
 import ine.ufsc.srs.CardContent;
@@ -17,6 +18,8 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -103,6 +106,11 @@ public class IntlinEntryCardController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(IntlinEntryCardController.class.getName()).log(Level.SEVERE, null, ex);
             //tratar
+        } catch (SRSNotLoadedException ex) {
+            Dialog dialog = new Alert(Alert.AlertType.WARNING);
+            dialog.setTitle("Language not loaded");
+            dialog.setContentText(ex.getMessage());
+            dialog.show();
         }
     }
 }

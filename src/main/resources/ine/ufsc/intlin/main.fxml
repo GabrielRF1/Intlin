@@ -76,7 +76,7 @@
                                                 </AnchorPane>
                                           </content>
                                         </Tab>
-                                        <Tab text="SRS">
+                                        <Tab onSelectionChanged="#buildSRSTab" text="SRS">
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#buildSRSTab" prefHeight="216.0" prefWidth="402.0">
                                                    <children>
@@ -131,7 +131,7 @@
                                     </TabPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane onMouseMoved="#buildSRSTab" prefHeight="64.0" prefWidth="597.0">
+                              <AnchorPane prefHeight="64.0" prefWidth="597.0">
                                  <children>
                                     <HBox style="-fx-border-style: solid solid none solid;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>

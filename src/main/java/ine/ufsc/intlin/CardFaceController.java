@@ -42,7 +42,6 @@ public class CardFaceController implements Initializable {
             switch (content.getType()) {
                 case text:
                     face += (String) content.getElement() + "\n";
-                    // for now only one line with one content is supported, to be improved
                     break;
                 case audio:
                     break;

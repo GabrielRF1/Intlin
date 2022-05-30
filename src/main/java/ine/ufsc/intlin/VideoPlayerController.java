@@ -5,12 +5,17 @@
  */
 package ine.ufsc.intlin;
 
+import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.controller.Controller;
 import ine.ufsc.model.subtitle.BadlyFomattedSubtitleFileException;
 import ine.ufsc.model.subtitle.Subtitle;
+import ine.ufsc.srs.Card;
+import ine.ufsc.srs.CardContent;
+import ine.ufsc.srs.Content;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -19,7 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
@@ -27,10 +34,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
@@ -59,6 +67,8 @@ public class VideoPlayerController implements Initializable {
     private Label curSubLabel;
     @FXML
     private ImageView imageView;
+    @FXML
+    private VBox transcriptionListView;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -98,7 +108,8 @@ public class VideoPlayerController implements Initializable {
             double target = (progression * mediaView.getMediaPlayer().getTotalDuration().toMillis());
             Duration duration = new Duration(target);
             progressBar.setProgress(target / media.getDuration().toMillis());
-            mediaView.getMediaPlayer().seek(duration);
+//            mediaView.getMediaPlayer().seek(duration);
+            seekTo(duration);
         });
     }
 
@@ -121,7 +132,8 @@ public class VideoPlayerController implements Initializable {
     }
 
     public void restartVideo() {
-        mediaView.getMediaPlayer().seek(Duration.ZERO);
+//        mediaView.getMediaPlayer().seek(Duration.ZERO);
+        seekTo(Duration.ZERO);
         playVideo();
     }
 
@@ -142,13 +154,16 @@ public class VideoPlayerController implements Initializable {
             dismissLoop();
         });
 
-        mediaView.getMediaPlayer().seek(Duration.millis(loopStartMilliSeconds));
+//        mediaView.getMediaPlayer().seek(Duration.millis(loopStartMilliSeconds));
+        seekTo(Duration.millis(loopStartMilliSeconds));
 
         mediaView.getMediaPlayer().setStartTime(Duration.millis(loopStartMilliSeconds));
         mediaView.getMediaPlayer().setStopTime(Duration.millis(loopEndMilliSeconds));
-        
+
         mediaView.getMediaPlayer().setOnEndOfMedia(() -> {
-            mediaView.getMediaPlayer().seek(Duration.millis(loopStartMilliSeconds));
+//            mediaView.getMediaPlayer().seek(Duration.millis(loopStartMilliSeconds));
+//            curSubLabel.setText("");
+            seekTo(Duration.millis(loopStartMilliSeconds));
             mediaView.getMediaPlayer().play();
         });
     }
@@ -164,10 +179,11 @@ public class VideoPlayerController implements Initializable {
 
         try {
             subtitles = Controller.instance.parseSubs(srtFile);
+            buildSubtitleList();
         } catch (IOException | BadlyFomattedSubtitleFileException ex) {
             Dialog dialog = new Alert(Alert.AlertType.ERROR);
-            dialog.setTitle("Could load subtitles");
-            dialog.setContentText("It appears that your file is poorly formated");
+            dialog.setTitle("Could not load subtitles");
+            dialog.setContentText("An error has occurred while trying load the subtitles");
             dialog.show();
         }
         if (timer != null) {
@@ -230,6 +246,31 @@ public class VideoPlayerController implements Initializable {
         timer.scheduleAtFixedRate(timerTask, 1, 1);
     }
 
+    public void saveSelectedSubtitles() {
+        CardContent front = new CardContent();
+        final var linesToSave = Controller.instance.getLinesToSave();
+        String[] selectedList = linesToSave.values().toArray(new String[linesToSave.size()]);
+        int pos = 0;
+        for (var selected : selectedList) {
+            front.addContent(new Content(++pos, (pos+": " + selected), Content.Type.text));
+        }
+        Card card = new Card(front, new CardContent());
+        try {
+            Controller.instance.tryAndCreateDeck("Sentences");
+            Controller.instance.addCardToDeck("Sentences", card);
+        } catch (SQLException ex) {
+            Dialog dialog = new Alert(Alert.AlertType.ERROR);
+            dialog.setTitle("Could not create the flashcard");
+            dialog.setContentText("An error has occurred while trying to create the flashcard");
+            dialog.show();
+        } catch (SRSNotLoadedException ex) {
+            Dialog dialog = new Alert(Alert.AlertType.WARNING);
+            dialog.setTitle("Language not loaded");
+            dialog.setContentText(ex.getMessage());
+            dialog.show();
+        }
+    }
+
     private Subtitle findCurrentSub(double videoTime) {
         for (Subtitle subtitle : subtitles) {
             if (videoTime >= subtitle.getStart().toMillis() && videoTime < subtitle.getEnd().toMillis()) {
@@ -246,4 +287,27 @@ public class VideoPlayerController implements Initializable {
         playButton.setText("↻");
     }
 
+    private void buildSubtitleList() {
+        int id = 1;
+        for (Subtitle subtitle : subtitles) {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("SubtitleTile.fxml"));
+            try {
+                Node subtitleTile = fxmlLoader.load();
+                SubtitleTileController tileController = fxmlLoader.getController();
+
+                tileController.setLine(subtitle.getLine(), id++);
+
+                transcriptionListView.getChildren().add(subtitleTile);
+            } catch (IOException ex) {
+                Logger.getLogger(VideoPlayerController.class.getName()).log(Level.SEVERE, null, ex);
+                // tratar
+            }
+        }
+        transcriptionListView.getChildren().forEach(child -> VBox.setVgrow(child, Priority.ALWAYS));
+    }
+
+    private void seekTo(Duration duration) {
+        mediaView.getMediaPlayer().seek(duration);
+        curSubLabel.setText("");
+    }
 }

@@ -5,6 +5,7 @@
  */
 package ine.ufsc.intlin;
 
+import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.controller.Controller;
 import ine.ufsc.model.dictionaries.IntlinDictionary;
 import java.io.File;
@@ -63,6 +64,8 @@ public class MainController implements Initializable {
     private File chosenMedia;
 
     private Set<Controller.SupportedLanguage> languages;
+
+    private boolean isSRSTabBuilt = false;
 
     /**
      * Initializes the controller class.
@@ -151,7 +154,7 @@ public class MainController implements Initializable {
         loadMediaButton.setVisible(false);
         loadMediaButton.setDisable(true);
     }
-    
+
     private void enableLoadButton() {
         loadMediaButton.setVisible(true);
         loadMediaButton.setDisable(false);
@@ -183,46 +186,49 @@ public class MainController implements Initializable {
     }
 
     public void buildSRSTab() throws IOException {
-        Controller.SupportedLanguage lang = Controller.instance.getSelectedLanguage();
-        if (lang != null) {
-            SRSTitleLabel.setText(Controller.instance.supportedLanguageToString(lang));
-            srsTableVBox.getChildren().removeIf((t) -> {
-                return true;
-            });
-            FXMLLoader srsLoader = new FXMLLoader(App.class.getResource("SRSTabDecksTable.fxml"));
-            Node srsTabNode = srsLoader.load();
-            SRSTabDecksTableController srsController = srsLoader.getController();
-
-            Set<String> decks = Controller.instance.getDecks();
-
-            ArrayList<Node> deckFragments = new ArrayList<>();
-            for (String deck : decks) {
-                try {
-                    FXMLLoader srsInfoLoader = new FXMLLoader(App.class.getResource("deckFragment.fxml"));
-                    Node deckInfoNode = srsInfoLoader.load();
-                    DeckFragmentController deckInfoController = srsInfoLoader.getController();
-                    deckInfoController.setData(deck, Controller.instance.getDecksReview(deck).size());
-                    deckFragments.add(deckInfoNode);
-                } catch (SQLException ex) {
-                    Label notFound = new Label();
-                    notFound.setText("Error Loading SRS");
-                    notFound.setFont(Font.font(16));
-                    srsTableVBox.getChildren().add(notFound);
-                    return;
-                }
-            }
-
-            srsController.setDeck(deckFragments);
-
-            srsTableVBox.getChildren().add(srsTabNode);
+        if (isSRSTabBuilt && !Controller.instance.isSrsDirty()) {
+            return;
         }
+        Controller.instance.setSrsIsDirty(false);
+        Controller.SupportedLanguage lang = Controller.instance.getSelectedLanguage();
+        if (lang == null) {
+            return;
+        }
+
+        SRSTitleLabel.setText(Controller.instance.supportedLanguageToString(lang));
+        srsTableVBox.getChildren().removeIf((t) -> {
+            return true;
+        });
+        FXMLLoader srsLoader = new FXMLLoader(App.class.getResource("SRSTabDecksTable.fxml"));
+        Node srsTabNode = srsLoader.load();
+        SRSTabDecksTableController srsController = srsLoader.getController();
+
+        Set<String> decks = Controller.instance.getDecks();
+
+        ArrayList<Node> deckFragments = new ArrayList<>();
+        for (String deck : decks) {
+            try {
+                FXMLLoader srsInfoLoader = new FXMLLoader(App.class.getResource("deckFragment.fxml"));
+                Node deckInfoNode = srsInfoLoader.load();
+                DeckFragmentController deckInfoController = srsInfoLoader.getController();
+                deckInfoController.setData(deck, Controller.instance.getDecksReview(deck).size());
+                deckFragments.add(deckInfoNode);
+            } catch (SQLException ex) {
+                Label notFound = new Label();
+                notFound.setText("Error Loading SRS");
+                notFound.setFont(Font.font(16));
+                srsTableVBox.getChildren().add(notFound);
+                return;
+            }
+        }
+
+        srsController.setDeck(deckFragments);
+
+        srsTableVBox.getChildren().add(srsTabNode);
+        isSRSTabBuilt = true;
     }
 
     public void createDeck() throws IOException {
-        if (Controller.instance.getSelectedLanguage() == null) {
-            return;
-
-        }
         try {
             TextInputDialog dialog = new TextInputDialog("Deck Name");
 
@@ -237,6 +243,11 @@ public class MainController implements Initializable {
             Dialog dialog = new Alert(Alert.AlertType.ERROR);
             dialog.setTitle("Could not create deck");
             dialog.setContentText("An error has occurred while trying to create the deck");
+            dialog.show();
+        } catch (SRSNotLoadedException ex) {
+            Dialog dialog = new Alert(Alert.AlertType.WARNING);
+            dialog.setTitle("Language not loaded");
+            dialog.setContentText(ex.getMessage());
             dialog.show();
         }
     }

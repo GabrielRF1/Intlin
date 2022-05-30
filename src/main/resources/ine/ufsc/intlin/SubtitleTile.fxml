@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="135.0" prefWidth="411.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.SubtitleTileController">
+   <children>
+      <HBox layoutX="45.0" maxHeight="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: grey; -fx-border-style: solid none none none;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <CheckBox fx:id="checkbox" alignment="CENTER" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#onCheckBoxClicked" prefHeight="137.0" prefWidth="19.0" stylesheets="@styles/mainStyle.css" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets left="24.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </CheckBox>
+            <Label fx:id="lineLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" minHeight="111.0" prefHeight="160.0" prefWidth="358.0" stylesheets="@styles/mainStyle.css" text="line" wrapText="true" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="8.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets top="4.0" />
+               </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

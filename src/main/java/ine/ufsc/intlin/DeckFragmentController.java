@@ -84,6 +84,6 @@ public class DeckFragmentController implements Initializable {
     }
 
     public void removeHighlightLabel() {
-        //deckName.setStyle("-fx-background-color: invisible;");
+        deckName.setStyle("-fx-background-color: invisible;");;
     }
 }
