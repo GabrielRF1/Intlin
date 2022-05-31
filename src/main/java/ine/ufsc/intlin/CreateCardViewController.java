@@ -66,6 +66,5 @@ public class CreateCardViewController implements Initializable {
             Logger.getLogger(CreateCardViewController.class.getName()).log(Level.SEVERE, null, ex);
             //tratar
         }
-        
     }
 }

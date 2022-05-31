@@ -37,6 +37,7 @@ public class CardFaceController implements Initializable {
 
     public void setCardContent(CardContent cardContent, Pos pos) {
         String face = "";
+        cardContent.sortContents();
         for (int i = 0; i < cardContent.size(); i++) {
             Content content = cardContent.getContent(i);
             switch (content.getType()) {
@@ -49,7 +50,6 @@ public class CardFaceController implements Initializable {
                     break;
             }
         }
-        System.out.println("ine.ufsc.intlin.CardFaceController.setCardContent(): "+face);
         ContentLabel.setText(face);
         ContentLabel.setAlignment(pos);
     }

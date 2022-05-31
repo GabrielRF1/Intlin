@@ -7,6 +7,8 @@ package ine.ufsc.srs;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
@@ -56,5 +58,13 @@ public class CardContent {
 
     public int size() {
         return contents.size();
+    }
+
+    public void sortContents() {
+        Collections.sort(contents, (Content content2, Content content1) -> {
+            Integer pos1 = content1.getPosition();
+            Integer pos2 = content2.getPosition();
+            return  pos2.compareTo(pos1);
+        });
     }
 }
