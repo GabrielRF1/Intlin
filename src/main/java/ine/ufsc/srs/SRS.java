@@ -65,6 +65,7 @@ public class SRS {
     }
 
     public boolean createDeck(String deckName) throws SQLException {
+        con.setAutoCommit(false);
         PreparedStatement stm = con.prepareStatement("INSERT INTO Deck(name) "
                 + "VALUES(?)");
         stm.setString(1, deckName);
@@ -73,10 +74,12 @@ public class SRS {
             int id = con.prepareStatement("SELECT last_insert_rowid() AS id").executeQuery().getInt("ID");
             deckToId.put(deckName, id);
         }
+        con.commit();
         return success;
     }
 
     public boolean createDeck(String deckName, int parentDeckId) throws SQLException {
+        con.setAutoCommit(false);
         if (deckToId.keySet().contains(deckName)) {
             deckName += "_new";
         }
@@ -89,10 +92,12 @@ public class SRS {
             int id = con.prepareStatement("SELECT last_insert_rowid() AS id").executeQuery().getInt("ID");
             deckToId.put(deckName, id);
         }
+        con.commit();
         return success;
     }
 
     public boolean addToDeck(String deckName, Card card) throws SQLException {
+        con.setAutoCommit(false);
         boolean res = true;
         int deckId = deckToId.get(deckName);
         PreparedStatement cardStm = con.prepareStatement("INSERT INTO Card"
@@ -111,11 +116,13 @@ public class SRS {
 
         res &= addContents(card, true);
         res &= addContents(card, false);
-
+        con.commit();
         return res;
     }
 
     public boolean updateCard(Card card) throws SQLException {
+        con.setAutoCommit(false);
+
         PreparedStatement stm = con.prepareStatement("UPDATE Card SET "
                 + "reviewDate = ?,"
                 + "isSuspended = ?,"
@@ -128,11 +135,12 @@ public class SRS {
         stm.setInt(5, card.getId());
 
         boolean result = !stm.execute();
-
+        con.commit();
         return result;
     }
 
     public HashSet<Card> getTodaysReviewByDeck(String deck) throws SQLException {
+        con.setAutoCommit(false);
         HashSet<Card> todaysCards = new HashSet<>();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM Card WHERE "
                 + "deckId=? AND reviewDate=? OR reviewDate IS NULL");
@@ -156,10 +164,12 @@ public class SRS {
                 todaysCards.add(card);
             }
         }
+        con.commit();
         return todaysCards;
     }
 
     protected boolean addContents(Card card, boolean isFrontFace) throws SQLException {
+        con.setAutoCommit(false);
         boolean res = true;
         CardContent face = isFrontFace ? card.getFront() : card.getBack();
         for (int i = 0; i < face.size(); i++) {
@@ -180,10 +190,12 @@ public class SRS {
             res &= !faceStm.execute();
             res &= addContentFace(isFrontFace ? "FrontContent" : "BackContent", content.getPosition(), card.getId());
         }
+        con.commit();
         return res;
     }
 
     protected boolean addContentFace(String table, int placement, int cardId) throws SQLException {
+        con.setAutoCommit(false);
         PreparedStatement faceContStm = con.prepareStatement(String.format("INSERT INTO %s"
                 + "(cardId, contentId, placement) VALUES"
                 + "(?, ?, ?)", table));
@@ -191,11 +203,13 @@ public class SRS {
         faceContStm.setInt(1, cardId);
         faceContStm.setInt(2, contentId);
         faceContStm.setInt(3, placement);
-
-        return !faceContStm.execute();
+        var res = !faceContStm.execute();
+        con.commit();
+        return res;
     }
 
     protected CardContent retrieveCardsFace(int cardId, boolean isBack) throws SQLException {
+        con.setAutoCommit(false);
         String table = isBack ? "BackContent" : "FrontContent";
         PreparedStatement contIdStm = con.prepareStatement(String.format("SELECT "
                 + "contentId, placement FROM %s WHERE cardId=?", table));
@@ -222,6 +236,7 @@ public class SRS {
                 face.addContent(content);
             }
         }
+        con.commit();
         return face;
     }
 

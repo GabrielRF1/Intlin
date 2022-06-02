@@ -22,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -119,7 +118,7 @@ public class ReviewScreenController implements Initializable {
         CardFaceController frontControl = front.getController();
         CardFaceController backControl = back.getController();
 
-        frontControl.setCardContent(cur.getFront(), Pos.CENTER);
+        frontControl.setCardContent(cur.getFront(), Pos.TOP_CENTER);
         backControl.setCardContent(cur.getBack(), Pos.TOP_CENTER);
 
         cardFrontAnchorPane.getChildren().removeIf((t) -> {

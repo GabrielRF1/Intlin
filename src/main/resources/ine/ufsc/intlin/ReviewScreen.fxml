@@ -12,7 +12,11 @@
    <children>
       <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="cardFrontAnchorPane" prefHeight="297.0" prefWidth="300.0" />
+            <ScrollPane fitToWidth="true" prefHeight="295.0" prefWidth="300.0">
+               <content>
+                  <AnchorPane fx:id="cardFrontAnchorPane" prefHeight="756.0" prefWidth="285.0" />
+               </content>
+            </ScrollPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <ScrollPane fx:id="cardBackScrollRegion" fitToWidth="true" prefHeight="200.0" prefWidth="300.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
