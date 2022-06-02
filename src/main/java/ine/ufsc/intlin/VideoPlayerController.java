@@ -58,8 +58,6 @@ public class VideoPlayerController implements Initializable {
     @FXML
     private Button playButton;
     @FXML
-    private Button loadSubButton;
-    @FXML
     private ProgressBar progressBar;
     @FXML
     private Label loopIconButton;
@@ -87,8 +85,11 @@ public class VideoPlayerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-    public void setMedia(Media media) {
+    public void setMedia(Media media, boolean isAudio) {
         this.media = media;
+
+        imageView.setVisible(isAudio);
+
         MediaPlayer mp = new MediaPlayer(media);
         mp.setOnEndOfMedia(() -> {
             onEndVideo();
@@ -252,7 +253,7 @@ public class VideoPlayerController implements Initializable {
         String[] selectedList = linesToSave.values().toArray(new String[linesToSave.size()]);
         int pos = 0;
         for (var selected : selectedList) {
-            front.addContent(new Content(++pos, (pos+": " + selected), Content.Type.text));
+            front.addContent(new Content(++pos, (pos + ": " + selected), Content.Type.text));
         }
         Card card = new Card(front, new CardContent());
         try {

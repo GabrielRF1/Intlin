@@ -1,11 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="ine.ufsc.intlin.PdfWebViewController">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.PdfWebViewController">
    <children>
-      <WebView fx:id="webView" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane VBox.vgrow="NEVER">
+         <children>
+            <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane fx:id="progressBarPane" prefHeight="41.0" prefWidth="617.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER" layoutX="-1.0" prefHeight="41.0" prefWidth="657.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane prefHeight="35.0" prefWidth="47.0">
+                                 <HBox.margin>
+                                    <Insets bottom="6.0" left="6.0" />
+                                 </HBox.margin>
+                                 <children>
+                                    <Button fx:id="playButton" layoutX="7.0" layoutY="6.0" mnemonicParsing="false" onAction="#playAudio" prefHeight="29.0" prefWidth="45.0" styleClass="color-60" stylesheets="@styles/mainStyle.css" text="▶" AnchorPane.bottomAnchor="3.552713678800501E-15" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="5.9999999999999964">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <ProgressBar fx:id="progressBar" layoutY="11.0" prefHeight="20.0" prefWidth="561.0" progress="0.0" styleClass="progress_bar" stylesheets="@styles/mainStyle.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                       <padding>
+                                          <Insets left="6.0" right="6.0" />
+                                       </padding>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ProgressBar>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </AnchorPane>
+                           </children>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="1.75" radius="0.1875" width="1.0" />
+                     </effect>
+                  </AnchorPane>
+                  <Button fx:id="loadAudioButton" mnemonicParsing="false" onAction="#loadAudio" prefHeight="25.0" prefWidth="92.0" styleClass="color-60" stylesheets="@styles/mainStyle.css" text="Load audio" StackPane.alignment="CENTER">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <MediaView fx:id="audioPlayer" preserveRatio="false" />
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+         <children>
+            <WebView fx:id="webView" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</VBox>

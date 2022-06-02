@@ -17,8 +17,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,7 +30,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -114,8 +111,9 @@ public class MainController implements Initializable {
                 openPDF(file);
                 break;
             case "mp3":
+                openMedia(file, true);
             case "mp4":
-                openVideo(file);
+                openMedia(file, false);
                 break;
         }
 
@@ -132,7 +130,7 @@ public class MainController implements Initializable {
         mediaTabPane.getChildren().add(pdfPane);
     }
 
-    private void openVideo(File file) throws IOException {
+    private void openMedia(File file, boolean isAudio) throws IOException {
         String filepath = file.toURI().toString();
         if (filepath != null) {
             Media media = new Media(filepath);
@@ -143,7 +141,7 @@ public class MainController implements Initializable {
             Node playerPane = fxmlLoader.load();
 
             VideoPlayerController videoPlayer = fxmlLoader.getController();
-            videoPlayer.setMedia(media);
+            videoPlayer.setMedia(media, isAudio);
             mediaTabPane.getChildren().add(playerPane);
         }
 
