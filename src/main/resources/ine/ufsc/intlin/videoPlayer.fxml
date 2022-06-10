@@ -42,6 +42,17 @@
                                     <Image url="@../../../Icons/icons8-audio-filled-outline-perfect-76.png" />
                                  </image>
                               </ImageView>
+                              <ImageView fx:id="cameraIcon" fitHeight="49.0" fitWidth="61.0" onMouseClicked="#saveFrameToFlashcard" onMouseEntered="#onHoverCamera" onMouseExited="#unfocusCameraIcon" opacity="0.4" pickOnBounds="true" preserveRatio="true" visible="false" StackPane.alignment="TOP_LEFT">
+                                 <image>
+                                    <Image url="@../../../Icons/icons8-adicionar-câmera-80.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets left="40.0" top="40.0" />
+                                 </StackPane.margin>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
                            </children>
                         </StackPane>
                      </children>

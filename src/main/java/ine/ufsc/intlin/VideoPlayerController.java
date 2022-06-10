@@ -5,6 +5,11 @@
  */
 package ine.ufsc.intlin;
 
+import com.xuggle.mediatool.IMediaReader;
+import com.xuggle.mediatool.MediaListenerAdapter;
+import com.xuggle.mediatool.ToolFactory;
+import com.xuggle.mediatool.event.IVideoPictureEvent;
+import com.xuggle.xuggler.Global;
 import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.controller.Controller;
 import ine.ufsc.model.subtitle.BadlyFomattedSubtitleFileException;
@@ -32,6 +37,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -48,6 +54,8 @@ import javafx.util.Duration;
  * @author Gabriel
  */
 public class VideoPlayerController implements Initializable {
+
+    public static int TYPE_3BYTE_BGR = 5;
 
     private Media media;
 
@@ -66,6 +74,8 @@ public class VideoPlayerController implements Initializable {
     @FXML
     private ImageView imageView;
     @FXML
+    private ImageView cameraIcon;
+    @FXML
     private VBox transcriptionListView;
 
     private Timer timer;
@@ -78,6 +88,9 @@ public class VideoPlayerController implements Initializable {
     private Subtitle curSubtitle;
     private double closeCurSubMilisec;
 
+    private static boolean takeScreenshot=false;
+    private static double screenShotStamp;
+
     /**
      * Initializes the controller class.
      */
@@ -85,14 +98,23 @@ public class VideoPlayerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-    public void setMedia(Media media, boolean isAudio) {
-        this.media = media;
+    public void setMedia(String mediaPath, boolean isAudio) {
+        this.media = new Media(mediaPath);
 
         imageView.setVisible(isAudio);
+        cameraIcon.setVisible(!isAudio);
+
+        IMediaReader mediaReader = ToolFactory.makeReader(mediaPath.replaceFirst("file:/", "").replaceAll("%20", " "));
+        mediaReader.setBufferedImageTypeToGenerate(TYPE_3BYTE_BGR);
+        mediaReader.addListener(new snapListener());
 
         MediaPlayer mp = new MediaPlayer(media);
         mp.setOnEndOfMedia(() -> {
             onEndVideo();
+        });
+        mp.setOnPlaying(() -> {
+            while (mediaReader.readPacket() != null) {
+            }
         });
         mediaView.setMediaPlayer(mp);
         mediaView.setPreserveRatio(false);
@@ -109,7 +131,6 @@ public class VideoPlayerController implements Initializable {
             double target = (progression * mediaView.getMediaPlayer().getTotalDuration().toMillis());
             Duration duration = new Duration(target);
             progressBar.setProgress(target / media.getDuration().toMillis());
-//            mediaView.getMediaPlayer().seek(duration);
             seekTo(duration);
         });
     }
@@ -133,7 +154,6 @@ public class VideoPlayerController implements Initializable {
     }
 
     public void restartVideo() {
-//        mediaView.getMediaPlayer().seek(Duration.ZERO);
         seekTo(Duration.ZERO);
         playVideo();
     }
@@ -155,15 +175,12 @@ public class VideoPlayerController implements Initializable {
             dismissLoop();
         });
 
-//        mediaView.getMediaPlayer().seek(Duration.millis(loopStartMilliSeconds));
         seekTo(Duration.millis(loopStartMilliSeconds));
 
         mediaView.getMediaPlayer().setStartTime(Duration.millis(loopStartMilliSeconds));
         mediaView.getMediaPlayer().setStopTime(Duration.millis(loopEndMilliSeconds));
 
         mediaView.getMediaPlayer().setOnEndOfMedia(() -> {
-//            mediaView.getMediaPlayer().seek(Duration.millis(loopStartMilliSeconds));
-//            curSubLabel.setText("");
             seekTo(Duration.millis(loopStartMilliSeconds));
             mediaView.getMediaPlayer().play();
         });
@@ -272,6 +289,31 @@ public class VideoPlayerController implements Initializable {
         }
     }
 
+    public void onHoverCamera() {
+        cameraIcon.setOpacity(1);
+        DropShadow shadow = new DropShadow();
+        shadow.setWidth(11);
+        shadow.setHeight(10);
+        shadow.setRadius(5);
+        cameraIcon.setEffect(shadow);
+    }
+
+    public void unfocusCameraIcon() {
+        cameraIcon.setOpacity(0.4);
+        cameraIcon.setEffect(null);
+    }
+
+    public void saveFrameToFlashcard() {
+        if (timer != null) {
+            pauseVideo();
+        }
+        takeScreenshot = true;
+        screenShotStamp = mediaView.getMediaPlayer().getCurrentTime().toSeconds();
+        if (timer != null) {
+            playVideo();
+        }
+    }
+
     private Subtitle findCurrentSub(double videoTime) {
         for (Subtitle subtitle : subtitles) {
             if (videoTime >= subtitle.getStart().toMillis() && videoTime < subtitle.getEnd().toMillis()) {
@@ -310,5 +352,16 @@ public class VideoPlayerController implements Initializable {
     private void seekTo(Duration duration) {
         mediaView.getMediaPlayer().seek(duration);
         curSubLabel.setText("");
+    }
+
+    private static class snapListener extends MediaListenerAdapter {
+
+        @Override
+        public void onVideoPicture(IVideoPictureEvent event) {
+            if (takeScreenshot) {
+                System.out.println("timer: " + event.getTimeStamp() + ";\n calc: " + screenShotStamp * Global.DEFAULT_PTS_PER_SECOND);
+                takeScreenshot = false;
+            }
+        }
     }
 }

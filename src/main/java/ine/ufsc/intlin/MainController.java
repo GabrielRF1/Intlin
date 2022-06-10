@@ -112,6 +112,7 @@ public class MainController implements Initializable {
                 break;
             case "mp3":
                 openMedia(file, true);
+                break;
             case "mp4":
                 openMedia(file, false);
                 break;
@@ -133,7 +134,6 @@ public class MainController implements Initializable {
     private void openMedia(File file, boolean isAudio) throws IOException {
         String filepath = file.toURI().toString();
         if (filepath != null) {
-            Media media = new Media(filepath);
             disableLoadButton();
 
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("videoPlayer.fxml"));
@@ -141,7 +141,7 @@ public class MainController implements Initializable {
             Node playerPane = fxmlLoader.load();
 
             VideoPlayerController videoPlayer = fxmlLoader.getController();
-            videoPlayer.setMedia(media, isAudio);
+            videoPlayer.setMedia(filepath, isAudio);
             mediaTabPane.getChildren().add(playerPane);
         }
 
