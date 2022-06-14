@@ -34,9 +34,9 @@ import javafx.stage.Stage;
 public class ReviewScreenController implements Initializable {
 
     @FXML
-    private AnchorPane cardFrontAnchorPane;
-    @FXML
-    private AnchorPane cardBackAnchorPane;
+    private ScrollPane cardFrontScrollRegion;
+//    @FXML
+//    private ScrollPane cardBackScrollPane;
     @FXML
     private ScrollPane cardBackScrollRegion;
     @FXML
@@ -73,7 +73,7 @@ public class ReviewScreenController implements Initializable {
     }
 
     public void buildEndCard() {
-        cardFrontAnchorPane.setVisible(false);
+        cardFrontScrollRegion.setVisible(false);
         hardB.setVisible(false);
         failB.setVisible(false);
         easyB.setVisible(false);
@@ -121,16 +121,18 @@ public class ReviewScreenController implements Initializable {
         frontControl.setCardContent(cur.getFront(), Pos.TOP_CENTER);
         backControl.setCardContent(cur.getBack(), Pos.TOP_CENTER);
 
-        cardFrontAnchorPane.getChildren().removeIf((t) -> {
-            return true;
-        });
-
-        cardBackAnchorPane.getChildren().removeIf((t) -> {
-            return true;
-        });
-
-        cardFrontAnchorPane.getChildren().add(cardFront);
-        cardBackAnchorPane.getChildren().add(cardBack);
+//        cardFrontScrollPane.getChildren().removeIf((t) -> {
+//            return true;
+//        });
+//
+//        cardBackScrollPane.getChildren().removeIf((t) -> {
+//            return true;
+//        });
+//
+//        cardFrontScrollPane.getChildren().add(cardFront);
+//        cardBackScrollPane.getChildren().add(cardBack);
+        cardFrontScrollRegion.setContent(cardFront);
+        cardBackScrollRegion.setContent(cardBack);
 
         AnchorPane.setTopAnchor(cardFront, 0.0);
         AnchorPane.setRightAnchor(cardFront, 0.0);

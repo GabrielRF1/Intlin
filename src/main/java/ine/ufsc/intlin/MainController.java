@@ -33,7 +33,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.scene.media.Media;
 import javafx.scene.text.Font;
 
 /**
