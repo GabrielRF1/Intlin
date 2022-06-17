@@ -14,12 +14,9 @@ import java.util.Base64;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
@@ -167,5 +164,10 @@ public class PdfWebViewController implements Initializable {
             }
         };
         timer.scheduleAtFixedRate(timerTask, 1, 1);
+    }
+
+    public void closePdfViewer() {
+        webView.getEngine().load(null);
+        audioPlayer.getMediaPlayer().dispose();
     }
 }

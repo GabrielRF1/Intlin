@@ -126,6 +126,10 @@ public class VideoPlayerController implements Initializable, Observer {
             seekTo(duration);
         });
     }
+    
+    public void closeMediaPlayer() {
+        mediaView.getMediaPlayer().dispose();
+    }
 
     public void playVideo() {
         startTimerCount();

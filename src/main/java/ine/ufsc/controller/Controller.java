@@ -106,7 +106,6 @@ public class Controller implements Observable {
     public void checkAndLoadLastStudiedLanguage() {
         SupportedLanguage lastStudiedLanguage = ConfigController.instance.getLastStudiedLanguage();
         if (lastStudiedLanguage != null) {
-            System.out.println("ine.ufsc.controller.Controller.checkAndLoadLastStudiedLanguage()");
             try {
                 selectLanguage(lastStudiedLanguage);
             } catch (ClassNotFoundException | SQLException | IOException ex) {

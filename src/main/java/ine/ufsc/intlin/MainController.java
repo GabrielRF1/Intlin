@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,6 +34,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
@@ -67,8 +70,8 @@ public class MainController implements Initializable, Observer {
     private ImageView createDeckIconButton;
     @FXML
     private Button searchButton;
-
-    private File chosenMedia;
+    @FXML
+    private MenuItem loadMediaMenuButton;
 
     private Set<Controller.SupportedLanguage> languages;
 
@@ -77,7 +80,6 @@ public class MainController implements Initializable, Observer {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        chosenMedia = null;
         languages = new HashSet<>();
         loadSelectionBox();
         languageSelectionBox.setOnAction((t) -> {
@@ -103,7 +105,6 @@ public class MainController implements Initializable, Observer {
         FileChooser filechooser = new FileChooser();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("select your media", "*.mp4", "*.mp3", "*.pdf");
         filechooser.getExtensionFilters().add(filter);
-        filechooser.setInitialDirectory(chosenMedia);
 
         File file = filechooser.showOpenDialog(null);
         if (file == null) {
@@ -139,6 +140,12 @@ public class MainController implements Initializable, Observer {
         PdfWebViewController pdfController = fxmlLoader.getController();
         pdfController.setPDF(file);
         mediaTabPane.getChildren().add(pdfPane);
+        loadMediaMenuButton.setText("Close content");
+        loadMediaMenuButton.setOnAction((t) -> {
+            pdfController.closePdfViewer();
+            mediaTabPane.getChildren().remove(pdfPane);
+            enableLoadButton();
+        });
     }
 
     private void openMedia(File file, boolean isAudio) throws IOException {
@@ -153,9 +160,13 @@ public class MainController implements Initializable, Observer {
             VideoPlayerController videoPlayer = fxmlLoader.getController();
             videoPlayer.setMedia(filepath, isAudio);
             mediaTabPane.getChildren().add(playerPane);
+            loadMediaMenuButton.setText("Close content");
+            loadMediaMenuButton.setOnAction((t) -> {
+                videoPlayer.closeMediaPlayer();
+                mediaTabPane.getChildren().remove(playerPane);
+                enableLoadButton();
+            });
         }
-
-        chosenMedia = file.getParentFile();
     }
 
     private void disableLoadButton() {
@@ -166,6 +177,15 @@ public class MainController implements Initializable, Observer {
     private void enableLoadButton() {
         loadMediaButton.setVisible(true);
         loadMediaButton.setDisable(false);
+        loadMediaMenuButton.setText("Open content");
+        loadMediaMenuButton.setOnAction((t) -> {
+            try {
+                openMedia();
+            } catch (IOException ex) {
+                ModalDialog dialog = new ModalDialog(Alert.AlertType.ERROR, "Could not open load media", "An unexpected error has occurred");
+                dialog.show();
+            }
+        });
     }
 
     public void removeShadow() {

@@ -36,6 +36,7 @@
                       <Menu fx:id="settings" mnemonicParsing="false" text="File">
                         <items>
                           <MenuItem fx:id="languageSettings" mnemonicParsing="false" onAction="#openLanguageLoadPrompt" text="Load language" />
+                              <MenuItem fx:id="loadMediaMenuButton" mnemonicParsing="false" onAction="#openMedia" text="Open content" />
                         </items>
                       </Menu>
                       <Menu fx:id="help" mnemonicParsing="false" text="About">
