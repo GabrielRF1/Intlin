@@ -36,6 +36,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -52,6 +54,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
 
@@ -197,7 +200,7 @@ public class VideoPlayerController implements Initializable {
         } catch (IOException | BadlyFomattedSubtitleFileException ex) {
             Dialog dialog = new Alert(Alert.AlertType.ERROR);
             dialog.setTitle("Could not load subtitles");
-            dialog.setContentText("An error has occurred while trying load the subtitles");
+            dialog.setContentText("An error has occurred while trying to load the subtitles");
             dialog.show();
         }
         if (timer != null) {
@@ -268,8 +271,7 @@ public class VideoPlayerController implements Initializable {
         for (var selected : selectedList) {
             front.addContent(new Content(++pos, (pos + ": " + selected), Content.Type.text));
         }
-        Card card = new Card(front, new CardContent());
-        addCardToDeck(card, "Sentences");
+        addCardToDeck(front, "Sentences");
     }
 
     public void onHoverCamera() {
@@ -295,15 +297,20 @@ public class VideoPlayerController implements Initializable {
         if (curSubtitle != null) {
             text = curSubtitle.getLine();
         }
-        CardContent front = new CardContent();
         int pos = 0;
-        if (!text.isEmpty()) {
+        CardContent front = new CardContent();
+        final var selectedLines = Controller.instance.getLinesToSave();
+        if (!selectedLines.isEmpty()) {
+            String[] selectedList = selectedLines.values().toArray(new String[selectedLines.size()]);
+            for (var selected : selectedList) {
+                front.addContent(new Content(++pos, (pos + ": " + selected), Content.Type.text));
+            }
+        } else if (!text.isEmpty()) {
             front.addText(text, ++pos);
         }
         front.addImage(new File(imagePath), ++pos);
-        Card card = new Card(front, new CardContent());
 
-        addCardToDeck(card, "Sentences");
+        addCardToDeck(front, "Sentences");
         if (timer != null) {
             playVideo();
         }
@@ -320,7 +327,7 @@ public class VideoPlayerController implements Initializable {
             if (!imgPath.exists()) {
                 imgPath.mkdir();
             }
-            String finalPath = imgPath.getPath() + File.separator  + media.toString() + mediaView.getMediaPlayer().getCurrentTime().toMillis() + ".jpg";
+            String finalPath = imgPath.getPath() + File.separator + media.toString() + mediaView.getMediaPlayer().getCurrentTime().toMillis() + ".jpg";
             ImageIO.write(buffimg2, "jpg", new File(finalPath));
             return finalPath;
         } catch (IOException ex) {
@@ -329,15 +336,24 @@ public class VideoPlayerController implements Initializable {
         }
     }
 
-    private void addCardToDeck(Card card, String deckName) {
+    private void addCardToDeck(CardContent cardFront, String deckName) {
         try {
-            Controller.instance.tryAndCreateDeck(deckName);
-            Controller.instance.addCardToDeck("Sentences", card);
-        } catch (SQLException ex) {
-            ModalDialog dialog = new ModalDialog(Alert.AlertType.ERROR, "Could not create the flashcard", "An error has occurred while trying to create the flashcard");
-            dialog.show();
-        } catch (SRSNotLoadedException ex) {
-            ModalDialog dialog = new ModalDialog(Alert.AlertType.WARNING, "Language not loaded", ex.getMessage());
+            FXMLLoader createCardAnswaerloader = new FXMLLoader(App.class.getResource("addCardAnswerPrompt.fxml"));
+            Parent addCardAnswerNode = createCardAnswaerloader.load();
+            AddCardAnswerPromptController CreateCardAnswerControl = createCardAnswaerloader.getController();
+
+            CreateCardAnswerControl.setDeckNameAndFront(deckName, cardFront);
+
+            Scene srsScene = new Scene(addCardAnswerNode);
+            Stage newWindow = new Stage();
+            newWindow.setTitle("Add an answer to your card");
+            newWindow.setResizable(false);
+            newWindow.setScene(srsScene);
+            newWindow.showAndWait();
+        } catch (IOException ex) {
+            Dialog dialog = new Alert(Alert.AlertType.ERROR);
+            dialog.setTitle("Could not create card");
+            dialog.setContentText("An unknown error has occurred while trying to create the flashcard");
             dialog.show();
         }
     }

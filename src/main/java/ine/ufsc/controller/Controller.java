@@ -120,7 +120,12 @@ public class Controller {
     }
 
     public HashSet<Card> getDecksReview(String deckName) throws SQLException {
-        reviews.put(deckName, loadedSRS.getTodaysReviewByDeck(deckName));
+        String lastOpenedDate = ConfigController.instance.getLastUsage();
+        HashSet<Card> forToday = loadedSRS.getTodaysReviewByDeck(deckName);
+        if (!lastOpenedDate.equals(LocalDate.now().toString())) {
+            forToday.addAll(loadedSRS.getReviewsFromPeriodByDeckName(LocalDate.parse(lastOpenedDate), LocalDate.now(), deckName));
+        }
+        reviews.put(deckName, forToday);
         return reviews.get(deckName);
     }
 
@@ -130,7 +135,9 @@ public class Controller {
     }
 
     public void tryAndCreateDeck(String deckName) throws SQLException, SRSNotLoadedException {
-        if(selectedLanguage == null) throw new SRSNotLoadedException("You must choose a language before creating decks and cards");
+        if (selectedLanguage == null) {
+            throw new SRSNotLoadedException("You must choose a language before creating decks and cards");
+        }
         if (!reviews.keySet().contains(deckName)) {
             loadedSRS.createDeck(deckName);
             srsIsDirty = true;

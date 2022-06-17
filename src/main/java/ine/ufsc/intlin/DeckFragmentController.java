@@ -57,6 +57,8 @@ public class DeckFragmentController implements Initializable {
             Stage newWindow = new Stage();
             newWindow.setTitle("Review");
             newWindow.setScene(srsScene);
+            newWindow.setResizable(false);
+            newWindow.setMaximized(true);
             newWindow.showAndWait();
         } catch (SQLException ex) {
             Logger.getLogger(DeckFragmentController.class.getName()).log(Level.SEVERE, null, ex);

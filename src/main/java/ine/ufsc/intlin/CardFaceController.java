@@ -8,17 +8,13 @@ package ine.ufsc.intlin;
 import ine.ufsc.srs.CardContent;
 import ine.ufsc.srs.Content;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
@@ -61,13 +57,12 @@ public class CardFaceController implements Initializable {
                     contentNode = new Label();
                     contentNode.setGraphic(imageView);
                     break;
-
                 default:
                     contentNode = new Label("");
             }
-            contentNode.setAlignment(pos);;
+            contentNode.setAlignment(pos);
+            contentNode.setPadding(new Insets(0, 0, 10, 0));
             anchorPane.getChildren().add(contentNode);
-            AnchorPane.setBottomAnchor(contentNode, 0.0);
             AnchorPane.setTopAnchor(contentNode, 0.0);
             AnchorPane.setLeftAnchor(contentNode, 0.0);
             AnchorPane.setRightAnchor(contentNode, 0.0);

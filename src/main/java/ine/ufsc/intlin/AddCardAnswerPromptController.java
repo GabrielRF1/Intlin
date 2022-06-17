@@ -5,6 +5,7 @@
  */
 package ine.ufsc.intlin;
 
+import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.controller.Controller;
 import ine.ufsc.intlin.utils.ModalDialog;
 import ine.ufsc.srs.Card;
@@ -12,6 +13,8 @@ import ine.ufsc.srs.CardContent;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -24,26 +27,29 @@ import javafx.stage.Stage;
  *
  * @author Gabriel
  */
-public class CreateCardViewController implements Initializable {
+public class AddCardAnswerPromptController implements Initializable {
 
     private String deckName;
+    private CardContent cardFront;
+    
     @FXML
     private Button cancelButton;
     @FXML
-    private TextArea cardFrontText;
-    @FXML
     private TextArea cardBackText;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // TODO
     }
 
-    public void setDeckName(String name) {
-        deckName = name;
+    void setDeckNameAndFront(String deckName, CardContent cardFront) {
+        this.deckName = deckName;
+        this.cardFront = cardFront;
     }
-
+    
     public void dispose() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         
@@ -51,19 +57,22 @@ public class CreateCardViewController implements Initializable {
     }
 
     public void createCard() {        
-        CardContent frontContent = new CardContent();
-        frontContent.addText(cardFrontText.getText());
         CardContent backContent = new CardContent();
         backContent.addText(cardBackText.getText());
         
-        Card card = new Card(frontContent, backContent);
+        Card card = new Card(cardFront, backContent);
         
         try {
+            Controller.instance.tryAndCreateDeck(deckName);
             Controller.instance.addCardToDeck(deckName, card);
             dispose();
         } catch (SQLException ex) {
             ModalDialog dialog = new ModalDialog(Alert.AlertType.ERROR, "Could not create the flashcard", "An error has occurred while trying to create the flashcard");
             dialog.show();
+        } catch (SRSNotLoadedException ex) {
+            ModalDialog dialog = new ModalDialog(Alert.AlertType.WARNING, "Language not loaded", ex.getMessage());
+            dialog.show();
         }
     }
+
 }

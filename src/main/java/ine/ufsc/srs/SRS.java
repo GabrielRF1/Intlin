@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -142,11 +143,38 @@ public class SRS {
     public HashSet<Card> getTodaysReviewByDeck(String deck) throws SQLException {
         con.setAutoCommit(false);
         HashSet<Card> todaysCards = new HashSet<>();
+        ResultSet cardInfo = getReviewsFromDate(deck, LocalDate.now());
+        todaysCards.addAll(parseReviewsToCard(cardInfo));
+        con.commit();
+        return todaysCards;
+    }
+
+    public HashSet<Card> getReviewsFromPeriodByDeckName(LocalDate from, LocalDate to, String deckName) throws SQLException {
+        con.setAutoCommit(false);
+        HashSet<Card> cards = new HashSet<>();
+        for (LocalDate date = from.plusDays(1); date.isBefore(to); date = date.plusDays(1)) {
+            PreparedStatement stm = con.prepareStatement("SELECT * FROM Card WHERE "
+                    + "deckId=? AND reviewDate=? OR reviewDate IS NULL");
+            stm.setInt(1, deckToId.get(deckName));
+            stm.setString(2, date.toString());
+            ResultSet cardInfo = stm.executeQuery();
+            cards.addAll(parseReviewsToCard(cardInfo));
+        }
+        con.commit();
+        return cards;
+    }
+
+    private ResultSet getReviewsFromDate(String deckName, LocalDate date) throws SQLException {
         PreparedStatement stm = con.prepareStatement("SELECT * FROM Card WHERE "
                 + "deckId=? AND reviewDate=? OR reviewDate IS NULL");
-        stm.setInt(1, deckToId.get(deck));
-        stm.setString(2, LocalDate.now().toString());
+        stm.setInt(1, deckToId.get(deckName));
+        stm.setString(2, date.toString());
         ResultSet cardInfo = stm.executeQuery();
+        return cardInfo;
+    }
+
+    private HashSet<Card> parseReviewsToCard(ResultSet cardInfo) throws SQLException {
+        HashSet<Card> cards = new HashSet<>();
         if (!cardInfo.isClosed()) {
             while (cardInfo.next()) {
                 Card.CardProficiency level = cardInfo.getString("level").equals("toLearn")
@@ -161,11 +189,10 @@ public class SRS {
                 Card card = new Card(front, back, cardInfo.getInt("cardId"),
                         cardInfo.getString("reviewDate"), cardInfo.getInt("ease"),
                         level, cardInfo.getInt("isSuspended") == 1);
-                todaysCards.add(card);
+                cards.add(card);
             }
         }
-        con.commit();
-        return todaysCards;
+        return cards;
     }
 
     protected boolean addContents(Card card, boolean isFrontFace) throws SQLException {
