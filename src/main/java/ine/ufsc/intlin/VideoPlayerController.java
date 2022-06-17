@@ -5,31 +5,23 @@
  */
 package ine.ufsc.intlin;
 
-//import com.xuggle.mediatool.IMediaReader;
-//import com.xuggle.mediatool.MediaListenerAdapter;
-//import com.xuggle.mediatool.ToolFactory;
-//import com.xuggle.mediatool.event.IVideoPictureEvent;
-//import com.xuggle.xuggler.Global;
-import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.controller.Controller;
 import ine.ufsc.intlin.utils.ModalDialog;
 import ine.ufsc.model.subtitle.BadlyFomattedSubtitleFileException;
 import ine.ufsc.model.subtitle.Subtitle;
-import ine.ufsc.srs.Card;
 import ine.ufsc.srs.CardContent;
 import ine.ufsc.srs.Content;
+import ine.ufsc.utils.Message;
+import ine.ufsc.utils.Observer;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -63,9 +55,7 @@ import javax.imageio.ImageIO;
  *
  * @author Gabriel
  */
-public class VideoPlayerController implements Initializable {
-
-    public static int TYPE_3BYTE_BGR = 5;
+public class VideoPlayerController implements Initializable, Observer {
 
     private Media media;
 
@@ -87,6 +77,8 @@ public class VideoPlayerController implements Initializable {
     private ImageView cameraIcon;
     @FXML
     private VBox transcriptionListView;
+    @FXML
+    private Button saveSubsButton;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -103,13 +95,14 @@ public class VideoPlayerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Controller.instance.attach(this);
     }
 
     public void setMedia(String mediaPath, boolean isAudio) {
         this.media = new Media(mediaPath);
 
         imageView.setVisible(isAudio);
-        cameraIcon.setVisible(!isAudio);
+        cameraIcon.setVisible(!isAudio && Controller.instance.getSelectedLanguage() != null);
 
         MediaPlayer mp = new MediaPlayer(media);
         mp.setOnEndOfMedia(() -> {
@@ -390,11 +383,25 @@ public class VideoPlayerController implements Initializable {
                 dialog.show();
             }
         }
+        saveSubsButton.setDisable(transcriptionListView.getChildren().isEmpty() || Controller.instance.getSelectedLanguage() == null);
         transcriptionListView.getChildren().forEach(child -> VBox.setVgrow(child, Priority.ALWAYS));
     }
 
     private void seekTo(Duration duration) {
         mediaView.getMediaPlayer().seek(duration);
         curSubLabel.setText("");
+    }
+
+    @Override
+    public void update(Message message) {
+        var types = message.getTypes();
+        for (Message.MessageType type : types) {
+            switch (type) {
+                case SRS_HAS_BEEN_LOADED:
+                    cameraIcon.setVisible(true);
+                    saveSubsButton.setDisable(transcriptionListView.getChildren().isEmpty());
+                    break;
+            }
+        }
     }
 }

@@ -35,10 +35,10 @@
                     <menus>
                       <Menu fx:id="settings" mnemonicParsing="false" text="File">
                         <items>
-                          <MenuItem fx:id="languageSettings" mnemonicParsing="false" text="Load language" />
+                          <MenuItem fx:id="languageSettings" mnemonicParsing="false" onAction="#openLanguageLoadPrompt" text="Load language" />
                         </items>
                       </Menu>
-                      <Menu fx:id="help" mnemonicParsing="false" text="Help">
+                      <Menu fx:id="help" mnemonicParsing="false" text="About">
                         <items>
                           <MenuItem fx:id="copyrights" mnemonicParsing="false" text="About" />
                         </items>
@@ -76,15 +76,15 @@
                                                 </AnchorPane>
                                           </content>
                                         </Tab>
-                                        <Tab onSelectionChanged="#buildSRSTab" text="SRS">
+                                        <Tab text="SRS">
                                           <content>
-                                            <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#buildSRSTab" prefHeight="216.0" prefWidth="402.0">
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="216.0" prefWidth="402.0">
                                                    <children>
                                                       <VBox layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
                                                             <AnchorPane nodeOrientation="RIGHT_TO_LEFT" prefHeight="58.0" prefWidth="597.0" VBox.vgrow="ALWAYS">
                                                                <children>
-                                                                  <ImageView fitHeight="31.0" fitWidth="43.0" layoutX="33.0" layoutY="1.0" onMouseClicked="#createDeck" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="533.3333333333334" AnchorPane.topAnchor="1.0">
+                                                                  <ImageView fx:id="createDeckIconButton" fitHeight="31.0" fitWidth="43.0" layoutX="33.0" layoutY="1.0" onMouseClicked="#createDeck" pickOnBounds="true" preserveRatio="true" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="533.3333333333334" AnchorPane.topAnchor="1.0">
                                                                      <image>
                                                                         <Image url="@../../../Icons/icons8-plus-64.png" />
                                                                      </image>
@@ -151,7 +151,7 @@
                                                          <children>
                                                             <StackPane prefHeight="27.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                <children>
-                                                                  <ChoiceBox fx:id="languageSelectionBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#loadSelectionBox" prefHeight="31.0" prefWidth="163.0" styleClass="color-60" StackPane.alignment="CENTER">
+                                                                  <ChoiceBox fx:id="languageSelectionBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="163.0" styleClass="color-60" StackPane.alignment="CENTER">
                                                                      <StackPane.margin>
                                                                         <Insets />
                                                                      </StackPane.margin>
@@ -167,12 +167,12 @@
                                                          <children>
                                                             <HBox alignment="TOP_CENTER" layoutX="0.6666666865348816" prefHeight="81.0" prefWidth="163.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.6666666865348816" AnchorPane.rightAnchor="0.6666666467984328" AnchorPane.topAnchor="0.0">
                                                                <children>
-                                                                  <TextField fx:id="searchTextBox" prefHeight="31.0" prefWidth="129.0" style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
+                                                                  <TextField fx:id="searchTextBox" disable="true" prefHeight="31.0" prefWidth="129.0" style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
                                                                      <HBox.margin>
                                                                         <Insets right="4.0" />
                                                                      </HBox.margin>
                                                                   </TextField>
-                                                                  <Button mnemonicParsing="false" onAction="#searchWord" prefHeight="31.0" prefWidth="30.0" styleClass="color-60" HBox.hgrow="NEVER">
+                                                                  <Button fx:id="searchButton" disable="true" mnemonicParsing="false" onAction="#searchWord" prefHeight="31.0" prefWidth="30.0" styleClass="color-60" HBox.hgrow="NEVER">
                                                                      <cursor>
                                                                         <Cursor fx:constant="HAND" />
                                                                      </cursor>

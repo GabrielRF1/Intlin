@@ -44,11 +44,11 @@ public class IntlinDictionary extends Dictionary {
     @Override
     public ResultSet searchDefinition(String word) throws SQLException {
         PreparedStatement stm = con
-                .prepareStatement("SELECT w.word_id, w.gender, w.word_class, d.def AS definition "
+                .prepareStatement("SELECT w.word, w.word_id, w.gender, w.word_class, d.def AS definition "
                         + "FROM Word w INNER JOIN "
                         + "Definition d on d.word_id = w.word_id "
-                        + "where w.word = ?");
-        stm.setString(1, word);
+                        + "where LOWER(w.word) = ?");
+        stm.setString(1, word.toLowerCase());
         return stm.executeQuery();
     }
 

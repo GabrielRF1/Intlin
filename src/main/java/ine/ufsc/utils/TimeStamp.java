@@ -29,6 +29,6 @@ public class TimeStamp {
 
     @Override
     public String toString() {
-        return String.format("%d:%d:%d,%d", hour, minute, second, millisecond);
+        return String.format("%f:%f:%f,%f", hour, minute, second, millisecond);
     }
 }

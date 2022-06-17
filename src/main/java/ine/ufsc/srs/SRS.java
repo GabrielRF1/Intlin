@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -152,7 +151,7 @@ public class SRS {
     public HashSet<Card> getReviewsFromPeriodByDeckName(LocalDate from, LocalDate to, String deckName) throws SQLException {
         con.setAutoCommit(false);
         HashSet<Card> cards = new HashSet<>();
-        for (LocalDate date = from.plusDays(1); date.isBefore(to); date = date.plusDays(1)) {
+        for (LocalDate date = from; date.isBefore(to); date = date.plusDays(1)) {
             PreparedStatement stm = con.prepareStatement("SELECT * FROM Card WHERE "
                     + "deckId=? AND reviewDate=? OR reviewDate IS NULL");
             stm.setInt(1, deckToId.get(deckName));

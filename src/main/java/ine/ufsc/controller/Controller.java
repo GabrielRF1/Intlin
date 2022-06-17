@@ -13,26 +13,52 @@ import ine.ufsc.model.subtitle.Subtitle;
 import ine.ufsc.model.subtitle.parser.SrtParser;
 import ine.ufsc.srs.Card;
 import ine.ufsc.srs.SRS;
+import ine.ufsc.utils.Message;
+import ine.ufsc.utils.Observable;
+import ine.ufsc.utils.Observer;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Gabriel
  */
-public class Controller {
+public class Controller implements Observable {
 
     public static Controller instance = new Controller();
+
+    private List<Observer> observers = new ArrayList<>();
+
+    @Override
+    public void attach(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void detach(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyUpdate(Message message) {
+        for (Observer observer : observers) {
+            observer.update(message);
+        }
+    }
 
     public static enum SupportedLanguage {
         PORTUGUESE_TO_ENGLISH_INTLIN,
@@ -46,8 +72,6 @@ public class Controller {
     private SupportedLanguage selectedLanguage;
 
     private SRS loadedSRS;
-
-    private boolean srsIsDirty = false;
 
     private final Map<String, HashSet<Card>> reviews;
 
@@ -76,6 +100,18 @@ public class Controller {
                 return "Portuguese to English";
             default:
                 return "invalid";
+        }
+    }
+
+    public void checkAndLoadLastStudiedLanguage() {
+        SupportedLanguage lastStudiedLanguage = ConfigController.instance.getLastStudiedLanguage();
+        if (lastStudiedLanguage != null) {
+            System.out.println("ine.ufsc.controller.Controller.checkAndLoadLastStudiedLanguage()");
+            try {
+                selectLanguage(lastStudiedLanguage);
+            } catch (ClassNotFoundException | SQLException | IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -113,6 +149,10 @@ public class Controller {
         }
         selectedLanguage = languageToLoad;
         loadedSRS = new SRS(supportedLanguageToString(languageToLoad));
+
+        Message.MessageType[] types = {Message.MessageType.UPDATE_SRS, Message.MessageType.SRS_HAS_BEEN_LOADED};
+        Message message = new Message(types);
+        notifyUpdate(message);
     }
 
     public Set<String> getDecks() {
@@ -129,38 +169,42 @@ public class Controller {
         return reviews.get(deckName);
     }
 
-    public void refetchReview(String deckName) throws SQLException {
-        reviews.put(deckName, loadedSRS.getTodaysReviewByDeck(deckName));
-        srsIsDirty = true;
-    }
-
     public void tryAndCreateDeck(String deckName) throws SQLException, SRSNotLoadedException {
         if (selectedLanguage == null) {
             throw new SRSNotLoadedException("You must choose a language before creating decks and cards");
         }
         if (!reviews.keySet().contains(deckName)) {
             loadedSRS.createDeck(deckName);
-            srsIsDirty = true;
+            notifyUpdate(new Message(Message.MessageType.UPDATE_SRS));
         }
     }
 
     public LocalDate answerCard(Card card, Card.Difficulty difficulty) {
-        return card.calcNextReview(difficulty);
+        LocalDate nextReview = card.calcNextReview(difficulty);
+        notifyUpdate(new Message(Message.MessageType.UPDATE_SRS));
+        return nextReview;
     }
 
     public void addCardToDeck(String deckName, Card card) throws SQLException {
         loadedSRS.addToDeck(deckName, card);
-        srsIsDirty = true;
+        notifyUpdate(new Message(Message.MessageType.UPDATE_SRS));
     }
 
     public void updateCards(Card card) throws SQLException {
         loadedSRS.updateCard(card);
-        srsIsDirty = true;
+        notifyUpdate(new Message(Message.MessageType.UPDATE_SRS));
     }
 
     public void setAsReviewed(String deckName, Card card) {
         reviews.get(deckName).remove(card);
-        srsIsDirty = true;
+        ArrayList<Message.MessageType> types = new ArrayList<>();
+        types.add(Message.MessageType.UPDATE_SRS);
+        if (reviews.values().stream().allMatch((cardsFromADeck) -> {
+            return cardsFromADeck.isEmpty();
+        })) {
+            types.add(Message.MessageType.UPDATE_LAST_DATE);
+        }
+        notifyUpdate(new Message(types.toArray(new Message.MessageType[types.size()])));
     }
 
     public LinkedList<Subtitle> parseSubs(File srtFile) throws IOException, BadlyFomattedSubtitleFileException {
@@ -180,6 +224,7 @@ public class Controller {
             IntlinDictionary.IntlinInfo info = new IntlinDictionary.IntlinInfo();
 
             info.wordId = wordRs.getInt("word_id");
+            info.word = wordRs.getString("word");
             info.def = wordRs.getString("definition");
             ResultSet altRS = dict.searchAlternativeForm(info.def);
             while (altRS.next()) {
@@ -204,14 +249,6 @@ public class Controller {
         }
 
         return result;
-    }
-
-    public boolean isSrsDirty() {
-        return srsIsDirty;
-    }
-
-    public void setSrsIsDirty(boolean srsIsDirty) {
-        this.srsIsDirty = srsIsDirty;
     }
 
     public TreeMap<Integer, String> getLinesToSave() {

@@ -59,6 +59,9 @@ public class DeckFragmentController implements Initializable {
             newWindow.setScene(srsScene);
             newWindow.setResizable(false);
             newWindow.setMaximized(true);
+            newWindow.setOnHiding((t) -> {
+                reviewScreenControl.saveCards();
+            });
             newWindow.showAndWait();
         } catch (SQLException ex) {
             Logger.getLogger(DeckFragmentController.class.getName()).log(Level.SEVERE, null, ex);

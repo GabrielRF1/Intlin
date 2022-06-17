@@ -12,6 +12,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
@@ -35,8 +36,6 @@ public class ReviewScreenController implements Initializable {
 
     @FXML
     private ScrollPane cardFrontScrollRegion;
-//    @FXML
-//    private ScrollPane cardBackScrollPane;
     @FXML
     private ScrollPane cardBackScrollRegion;
     @FXML
@@ -87,26 +86,26 @@ public class ReviewScreenController implements Initializable {
         });
     }
 
+    public void saveCards() {
+        (new HashSet<>(reviewCards)).forEach((card) -> {
+            try {
+                Controller.instance.updateCards(card);
+                Controller.instance.setAsReviewed(deckName, card);
+            } catch (SQLException ex) {
+                //tratar
+                Logger.getLogger(ReviewScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+
     public void reviewFinished() {
         buildEndCard();
-        goodB.setOnAction((event) -> {
-            reviewCards.forEach((card) -> {
-                try {
-                    Controller.instance.updateCards(card);
-                    Controller.instance.setAsReviewed(deckName, card);
-                } catch (SQLException ex) {
-                    //tratar
-                    Logger.getLogger(ReviewScreenController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-            Stage stage = (Stage) goodB.getScene().getWindow();
-            stage.close();
-        });
     }
 
     public void nextCard() throws IOException {
         if (curIndex >= reviewCards.size()) {
             reviewFinished();
+            return;
         }
         cur = reviewCards.get(curIndex);
         FXMLLoader front = new FXMLLoader(App.class.getResource("cardFace.fxml"));
@@ -121,16 +120,6 @@ public class ReviewScreenController implements Initializable {
         frontControl.setCardContent(cur.getFront(), Pos.TOP_CENTER);
         backControl.setCardContent(cur.getBack(), Pos.TOP_CENTER);
 
-//        cardFrontScrollPane.getChildren().removeIf((t) -> {
-//            return true;
-//        });
-//
-//        cardBackScrollPane.getChildren().removeIf((t) -> {
-//            return true;
-//        });
-//
-//        cardFrontScrollPane.getChildren().add(cardFront);
-//        cardBackScrollPane.getChildren().add(cardBack);
         cardFrontScrollRegion.setContent(cardFront);
         cardBackScrollRegion.setContent(cardBack);
 

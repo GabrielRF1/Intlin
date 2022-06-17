@@ -7,7 +7,10 @@ package ine.ufsc.intlin;
 
 import globalExceptions.SRSNotLoadedException;
 import ine.ufsc.controller.Controller;
+import ine.ufsc.intlin.utils.ModalDialog;
 import ine.ufsc.model.dictionaries.IntlinDictionary;
+import ine.ufsc.utils.Message;
+import ine.ufsc.utils.Observer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +24,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
@@ -34,13 +40,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Gabriel
  */
-public class MainController implements Initializable {
+public class MainController implements Initializable, Observer {
 
     @FXML
     private StackPane mediaTabPane;
@@ -56,12 +63,14 @@ public class MainController implements Initializable {
     private TextField searchTextBox;
     @FXML
     private Label SRSTitleLabel;
+    @FXML
+    private ImageView createDeckIconButton;
+    @FXML
+    private Button searchButton;
 
     private File chosenMedia;
 
     private Set<Controller.SupportedLanguage> languages;
-
-    private boolean isSRSTabBuilt = false;
 
     /**
      * Initializes the controller class.
@@ -70,11 +79,11 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         chosenMedia = null;
         languages = new HashSet<>();
+        loadSelectionBox();
         languageSelectionBox.setOnAction((t) -> {
             String selected = languageSelectionBox.getSelectionModel().getSelectedItem().toString();
             try {
                 Controller.instance.selectLanguage(Controller.instance.StringLanguageToEnum(selected));
-                buildSRSTab();
             } catch (ClassNotFoundException | SQLException | IOException ex) {
                 Dialog<String> dialog = new Dialog<>();
                 ButtonType ok = new ButtonType("Ok");
@@ -86,6 +95,8 @@ public class MainController implements Initializable {
                 System.out.println("ine.ufsc.intlin.MainController.initialize() " + ex.getMessage());
             }
         });
+        Controller.instance.attach(this);
+        Controller.instance.checkAndLoadLastStudiedLanguage();
     }
 
     public void openMedia() throws IOException {
@@ -182,11 +193,29 @@ public class MainController implements Initializable {
         });
     }
 
-    public void buildSRSTab() throws IOException {
-        if (isSRSTabBuilt && !Controller.instance.isSrsDirty()) {
-            return;
+    public void openLanguageLoadPrompt() {
+        try {
+            FXMLLoader languageSelectionLoader = new FXMLLoader(App.class.getResource("LoadLanguagePrompt.fxml"));
+            Parent selectLanguageNode = languageSelectionLoader.load();
+
+            LoadLanguagePromptController loadLanguageControl = languageSelectionLoader.getController();
+
+            loadLanguageControl.setOptions(Controller.instance.getSupportedlangsList());
+
+            Scene srsScene = new Scene(selectLanguageNode);
+            Stage newWindow = new Stage();
+            newWindow.setTitle("Select a language to study");
+            newWindow.setScene(srsScene);
+            newWindow.setResizable(false);
+            newWindow.showAndWait();
+        } catch (IOException ex) {
+            ModalDialog dialog = new ModalDialog(Alert.AlertType.ERROR, "Could not open load language menu", "An unexpected error has occurred");
+            dialog.show();
         }
-        Controller.instance.setSrsIsDirty(false);
+    }
+
+    public void buildSRSTab() throws IOException {
+
         Controller.SupportedLanguage lang = Controller.instance.getSelectedLanguage();
         if (lang == null) {
             return;
@@ -222,7 +251,6 @@ public class MainController implements Initializable {
         srsController.setDeck(deckFragments);
 
         srsTableVBox.getChildren().add(srsTabNode);
-        isSRSTabBuilt = true;
     }
 
     public void createDeck() throws IOException {
@@ -272,7 +300,7 @@ public class MainController implements Initializable {
                     definitionsPane.getChildren().add(notFound);
                     return;
                 }
-                buildDictResultSection(entries, word);
+                buildDictResultSection(entries);
             } catch (SQLException ex) {
                 Label notFound = new Label();
                 notFound.setText("An error has occurred while trying to find definitions");
@@ -283,9 +311,10 @@ public class MainController implements Initializable {
 
     }
 
-    private void buildDictResultSection(ArrayList<IntlinDictionary.IntlinInfo> entries, String word) throws IOException {
+    private void buildDictResultSection(ArrayList<IntlinDictionary.IntlinInfo> entries) throws IOException {
         ArrayList<Node> definitionsNodes = new ArrayList<>();
         int last = -1;
+        String lastWord = null;
         String lastGender = null;
         String lastAlts = null;
         String lastWordClass = null;
@@ -297,7 +326,7 @@ public class MainController implements Initializable {
                     || (definitionsNodes.size() != 1 && wordId != last && last != -1);
 
             if (reachedBuildCondition) {
-                buildDefCard(word, lastGender, lastAlts, lastWordClass, definitionsNodes);
+                buildDefCard(entry.word, lastGender, lastAlts, lastWordClass, definitionsNodes);
                 definitionsNodes = new ArrayList<>();
                 count = 1;
             }
@@ -305,12 +334,13 @@ public class MainController implements Initializable {
             definitionsNodes.add(buildDefinitionNode(entry, count++));
 
             last = wordId;
+            lastWord = entry.word;
             lastAlts = entry.alts.toString();
             lastGender = entry.gender;
             lastWordClass = entry.wordClass;
         }
         //LAST CARD
-        buildDefCard(word, lastGender, lastAlts, lastWordClass, definitionsNodes);
+        buildDefCard(lastWord, lastGender, lastAlts, lastWordClass, definitionsNodes);
     }
 
     private Node buildDefinitionNode(IntlinDictionary.IntlinInfo entry, int count) throws IOException {
@@ -337,6 +367,31 @@ public class MainController implements Initializable {
         entryController.setAlternatives(alts);
         entryController.setWordClass(wordClass);
         definitionsPane.getChildren().add(entryNode);
+    }
+
+    @Override
+    public void update(Message message) {
+        var types = message.getTypes();
+        for (Message.MessageType type : types) {
+            switch (type) {
+                case UPDATE_SRS: {
+                    try {
+                        buildSRSTab();
+                    } catch (IOException ex) {
+                        ModalDialog dialog = new ModalDialog(Alert.AlertType.ERROR, "Error Building SRS TAB", "An unexpected error has occurred while building the SRS TAB");
+                        dialog.show();
+                    }
+                }
+                case SRS_HAS_BEEN_LOADED:
+                    String selectString = Controller.instance.supportedLanguageToString(Controller.instance.getSelectedLanguage());
+                    languageSelectionBox.getSelectionModel().select(selectString);
+                    createDeckIconButton.setVisible(true);
+                    searchTextBox.setDisable(false);
+                    searchButton.setDisable(false);
+                    break;
+                default:
+            }
+        }
     }
 
 }
