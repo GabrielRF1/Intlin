@@ -5,6 +5,11 @@
  */
 package ine.ufsc.srs;
 
+import ine.ufsc.srs.reviewStrategy.CalcReviewStrategy;
+import ine.ufsc.srs.reviewStrategy.EasyReviewStrategy;
+import ine.ufsc.srs.reviewStrategy.FailReviewStrategy;
+import ine.ufsc.srs.reviewStrategy.GoodReviewStrategy;
+import ine.ufsc.srs.reviewStrategy.HardReviewStrategy;
 import java.time.LocalDate;
 
 /**
@@ -109,94 +114,29 @@ public class Card {
     }
 
     private LocalDate calcBaseReview(Difficulty difficulty) {
-        switch (difficulty) {
-            case fail:
-                if (ease > 0) {
-                    ease -= 0.80;
-                }
-                level = CardProficiency.toLearn;
-                nextReview = LocalDate.now();
-                break;
-            case hard:
-                if (ease > 0) {
-                    ease -= 0.25;
-                }
-                switch (level) {
-                    case toLearn:
-                        nextReview = LocalDate.now();
-                        break;
-                    case learning:
-                        nextReview = LocalDate.now().plusDays(1);
-                        break;
-                    case comfortable:
-                        nextReview = LocalDate.now().plusDays(2);
-                        break;
-                    case mastered:
-                        nextReview = LocalDate.now().plusDays(3);
-                        break;
-                    case acquired:
-                        nextReview = LocalDate.now().plusDays(5);
-                        break;
-                }
-                break;
-            case good:
-                switch (level) {
-                    case toLearn:
-                        level = CardProficiency.learning;
-                        nextReview = LocalDate.now();
-                        break;
-                    case learning:
-                        level = CardProficiency.comfortable;
-                        nextReview = LocalDate.now().plusDays(1);
-                        break;
-                    case comfortable:
-                        level = CardProficiency.mastered;
-                        nextReview = LocalDate.now().plusDays(3);
-                        break;
-                    case mastered:
-                        ease += 0.20;
-                        level = CardProficiency.acquired;
-                        nextReview = LocalDate.now().plusDays(5);
-                        break;
-                    case acquired:
-                        ease += 0.25;
-                        level = CardProficiency.acquired;
-                        nextReview = LocalDate.now().plusWeeks(1);
-                        break;
-                }
-                break;
-            case easy:
-                ease += 0.25;
-                switch (level) {
-                    case toLearn:
-                        level = CardProficiency.comfortable;
-                        nextReview = LocalDate.now().plusDays(1);
-                        break;
-                    case learning:
-                        level = CardProficiency.mastered;
-                        nextReview = LocalDate.now().plusDays(3);
-                        break;
-                    case comfortable:
-                        level = CardProficiency.acquired;
-                        nextReview = LocalDate.now().plusDays(5);
-                        break;
-                    case mastered:
-                        level = CardProficiency.acquired;
-                        nextReview = LocalDate.now().plusWeeks(1);
-                        break;
-                    case acquired:
-                        level = CardProficiency.acquired;
-                        nextReview = LocalDate.now().plusWeeks(2);
-                        break;
-                }
-                break;
-            default: // should not reach
-                nextReview = LocalDate.now();
-                break;
-        }
+        CalcReviewStrategy reviewCalculator = selectStrategy(difficulty);
+        ease = reviewCalculator.updateEase();
+        level = reviewCalculator.updateProficiency();
+        nextReview = reviewCalculator.calcNextReview();
+        
         return nextReview;
     }
-
+    
+    private CalcReviewStrategy selectStrategy(Difficulty answer) {
+        switch(answer) {
+            case easy:
+                return new EasyReviewStrategy(level, ease);
+            case good:
+                return new GoodReviewStrategy(level, ease);
+            case hard:
+                return new HardReviewStrategy(level, ease);
+            case fail:
+                return new FailReviewStrategy(level, ease);
+            default:
+                return new FailReviewStrategy(level, ease);
+        }
+    }
+    
     // used in tests
     protected void setLevel(CardProficiency level) {
         this.level = level;

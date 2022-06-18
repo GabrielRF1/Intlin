@@ -62,6 +62,8 @@ public class Controller implements Observable {
 
     public static enum SupportedLanguage {
         PORTUGUESE_TO_ENGLISH_INTLIN,
+        SPANISH_TO_ENGLISH_INTLIN,
+        ENGLISH_TO_PORTUGUESE_INTLIN,
     }
 
     private final Map<SupportedLanguage, Dictionary> loadedDictionaries;
@@ -98,6 +100,10 @@ public class Controller implements Observable {
         switch (lang) {
             case PORTUGUESE_TO_ENGLISH_INTLIN:
                 return "Portuguese to English";
+            case SPANISH_TO_ENGLISH_INTLIN:
+                return "Spanish to English";
+            case ENGLISH_TO_PORTUGUESE_INTLIN:
+                return "English to Portuguese (Beta)";
             default:
                 return "invalid";
         }
@@ -118,6 +124,10 @@ public class Controller implements Observable {
         switch (lang) {
             case "Portuguese to English":
                 return SupportedLanguage.PORTUGUESE_TO_ENGLISH_INTLIN;
+            case "Spanish to English":
+                return SupportedLanguage.SPANISH_TO_ENGLISH_INTLIN;
+            case "English to Portuguese (Beta)":
+                return SupportedLanguage.ENGLISH_TO_PORTUGUESE_INTLIN;
             default:
                 return null;
         }
@@ -129,6 +139,8 @@ public class Controller implements Observable {
     public boolean isIntlin(SupportedLanguage lang) {
         switch (lang) {
             case PORTUGUESE_TO_ENGLISH_INTLIN:
+            case SPANISH_TO_ENGLISH_INTLIN:
+            case ENGLISH_TO_PORTUGUESE_INTLIN:
                 return true;
             default:
                 return false;
@@ -138,11 +150,23 @@ public class Controller implements Observable {
     public void selectLanguage(SupportedLanguage languageToLoad) throws ClassNotFoundException, SQLException, IOException {
         if (!loadedDictionaries.containsKey(languageToLoad)) {
             switch (languageToLoad) {
-                case PORTUGUESE_TO_ENGLISH_INTLIN:
+                case PORTUGUESE_TO_ENGLISH_INTLIN: {
                     String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "ine" + File.separator + "ufsc" + File.separator + "model" + File.separator + "dictionaries";
                     String name = "pt_en";
                     loadedDictionaries.put(SupportedLanguage.PORTUGUESE_TO_ENGLISH_INTLIN, new IntlinDictionary(name, path));
-                    break;
+                }
+                break;
+                case SPANISH_TO_ENGLISH_INTLIN: {
+                    String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "ine" + File.separator + "ufsc" + File.separator + "model" + File.separator + "dictionaries";
+                    String name = "es_en";
+                    loadedDictionaries.put(SupportedLanguage.SPANISH_TO_ENGLISH_INTLIN, new IntlinDictionary(name, path));
+                }
+                break;
+                case ENGLISH_TO_PORTUGUESE_INTLIN: {
+                    String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "ine" + File.separator + "ufsc" + File.separator + "model" + File.separator + "dictionaries";
+                    String name = "en_pt";
+                    loadedDictionaries.put(SupportedLanguage.ENGLISH_TO_PORTUGUESE_INTLIN, new IntlinDictionary(name, path));
+                }
                 default:
             }
         }

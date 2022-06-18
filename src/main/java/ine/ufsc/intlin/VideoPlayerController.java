@@ -126,7 +126,7 @@ public class VideoPlayerController implements Initializable, Observer {
             seekTo(duration);
         });
     }
-    
+
     public void closeMediaPlayer() {
         mediaView.getMediaPlayer().dispose();
     }
@@ -182,6 +182,19 @@ public class VideoPlayerController implements Initializable, Observer {
         });
     }
 
+    public void dismissLoop() {
+        loopIconButton.setText("∞");
+        loopIconButton.setOnMouseClicked((t) -> {
+            startLoop();
+        });
+
+        mediaView.getMediaPlayer().setStartTime(Duration.ZERO);
+        mediaView.getMediaPlayer().setStopTime(Duration.seconds(media.getDuration().toMillis()));
+        mediaView.getMediaPlayer().setOnEndOfMedia(() -> {
+            onEndVideo();
+        });
+    }
+
     public void loadSubtitle() {
         if (timer != null) {
             pauseVideo();
@@ -203,21 +216,6 @@ public class VideoPlayerController implements Initializable, Observer {
         if (timer != null) {
             playVideo();
         }
-    }
-
-    public void dismissLoop() {
-        loopIconButton.setText("∞");
-        loopEndMilliSeconds = 0;
-        loopStartMilliSeconds = 0;
-        loopIconButton.setOnMouseClicked((t) -> {
-            startLoop();
-        });
-
-        mediaView.getMediaPlayer().setStartTime(Duration.ZERO);
-        mediaView.getMediaPlayer().setStopTime(Duration.seconds(media.getDuration().toMillis()));
-        mediaView.getMediaPlayer().setOnEndOfMedia(() -> {
-            onEndVideo();
-        });
     }
 
     public void startTimerCount() {

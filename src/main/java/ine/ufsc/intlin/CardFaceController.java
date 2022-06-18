@@ -53,9 +53,14 @@ public class CardFaceController implements Initializable {
                     break;
                 case image:
                     File imageFile = (File) content.getElement();
-                    ImageView imageView = new ImageView(imageFile.getAbsolutePath());
-                    contentNode = new Label();
-                    contentNode.setGraphic(imageView);
+                    if (imageFile.exists()) {
+                        ImageView imageView = new ImageView(imageFile.getAbsolutePath());
+                        contentNode = new Label();
+                        contentNode.setGraphic(imageView);
+                    } else {
+                        contentNode = new Label("DELETED: <"+imageFile.getPath()+">");
+                        contentNode.setFont(new Font(30.0));
+                    }
                     break;
                 default:
                     contentNode = new Label("");

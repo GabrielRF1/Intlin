@@ -24,7 +24,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="102.0" prefWidth="300.0" VBox.vgrow="NEVER">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="surface" stylesheets="@styles/mainStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox fx:id="buttonRegionHbox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="surface" stylesheets="@styles/mainStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Button fx:id="failB" mnemonicParsing="false" onAction="#onFailPressed" styleClass="color-10" text="Fail" HBox.hgrow="ALWAYS">
                            <cursor>

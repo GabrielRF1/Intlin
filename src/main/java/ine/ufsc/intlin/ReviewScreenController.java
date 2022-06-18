@@ -6,11 +6,13 @@
 package ine.ufsc.intlin;
 
 import ine.ufsc.controller.Controller;
+import ine.ufsc.intlin.utils.ModalDialog;
 import ine.ufsc.srs.Card;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -22,9 +24,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -38,6 +44,8 @@ public class ReviewScreenController implements Initializable {
     private ScrollPane cardFrontScrollRegion;
     @FXML
     private ScrollPane cardBackScrollRegion;
+    @FXML
+    private HBox buttonRegionHbox;
     @FXML
     private Button easyB;
     @FXML
@@ -92,8 +100,8 @@ public class ReviewScreenController implements Initializable {
                 Controller.instance.updateCards(card);
                 Controller.instance.setAsReviewed(deckName, card);
             } catch (SQLException ex) {
-                //tratar
-                Logger.getLogger(ReviewScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                ModalDialog dialog = new ModalDialog(Alert.AlertType.ERROR, "Could not update flashcards", "An error has occurred while trying to save your reviews. You might have to review your cards again. We apologise for the inconvinience");
+                dialog.show();
             }
         });
     }
@@ -167,17 +175,20 @@ public class ReviewScreenController implements Initializable {
         hardB.setDisable(true);
         failB.setDisable(true);
         easyB.setDisable(true);
+        Label nextReviewDateLabel = new Label("Next review: " + formatDate(day));
+        nextReviewDateLabel.setFont(new Font(16));
+        buttonRegionHbox.getChildren().add(2, nextReviewDateLabel);
 
         goodB.setText("Ok");
         goodB.setOnAction((t) -> {
             cardBackScrollRegion.setVisible(false);
+            buttonRegionHbox.getChildren().remove(2);
             hardB.setVisible(true);
             failB.setVisible(true);
             easyB.setVisible(true);
             hardB.setDisable(false);
             failB.setDisable(false);
             easyB.setDisable(false);
-
             goodB.setText("Good");
             goodB.setOnAction((click) -> {
                 try {
@@ -193,5 +204,15 @@ public class ReviewScreenController implements Initializable {
                 Logger.getLogger(ReviewScreenController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+    }
+
+    private String formatDate(LocalDate date) {
+        if (date.equals(LocalDate.now())) {
+            return "Today";
+        } else if (date.equals(LocalDate.now().plusDays(1))) {
+            return "Tomorrow";
+        } else {
+            return date.format(DateTimeFormatter.ofPattern("MM/dd/uuuu"));
+        }
     }
 }
