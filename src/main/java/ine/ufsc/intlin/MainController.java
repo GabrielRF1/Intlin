@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -39,6 +37,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -72,6 +71,10 @@ public class MainController implements Initializable, Observer {
     private Button searchButton;
     @FXML
     private MenuItem loadMediaMenuButton;
+    @FXML
+    private Pane gettingStartedPane;
+    @FXML 
+    private Pane gettingStartedSRSPane;
 
     private Set<Controller.SupportedLanguage> languages;
 
@@ -171,11 +174,13 @@ public class MainController implements Initializable, Observer {
 
     private void disableLoadButton() {
         loadMediaButton.setVisible(false);
+        gettingStartedPane.setVisible(false);
         loadMediaButton.setDisable(true);
     }
 
     private void enableLoadButton() {
         loadMediaButton.setVisible(true);
+        gettingStartedPane.setVisible(true);
         loadMediaButton.setDisable(false);
         loadMediaMenuButton.setText("Open content");
         loadMediaMenuButton.setOnAction((t) -> {
@@ -302,7 +307,7 @@ public class MainController implements Initializable, Observer {
         if (Controller.instance.getSelectedLanguage() == null) {
             return;
         }
-
+        
         if (!definitionsPane.getChildren().isEmpty()) {
             definitionsPane.getChildren().removeIf((t) -> {
                 return true; //delete all
@@ -406,6 +411,7 @@ public class MainController implements Initializable, Observer {
                     String selectString = Controller.instance.supportedLanguageToString(Controller.instance.getSelectedLanguage());
                     languageSelectionBox.getSelectionModel().select(selectString);
                     createDeckIconButton.setVisible(true);
+                    srsTableVBox.getChildren().remove(gettingStartedSRSPane);
                     searchTextBox.setDisable(false);
                     searchButton.setDisable(false);
                     break;

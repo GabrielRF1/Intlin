@@ -19,6 +19,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -50,7 +51,7 @@
                      <children>
                         <SplitPane dividerPositions="0.9" layoutX="-34.0" orientation="VERTICAL" prefHeight="435.0" prefWidth="634.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <items>
-                              <AnchorPane prefHeight="416.0" prefWidth="600.0">
+                              <AnchorPane prefHeight="181.0" prefWidth="597.0">
                                  <children>
                                     <TabPane prefHeight="265.0" prefWidth="448.0" styleClass="surface" stylesheets="@styles/mainStyle.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <tabs>
@@ -60,6 +61,36 @@
                                                    <children>
                                                       <StackPane fx:id="mediaTabPane" styleClass="surface" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
+                                                            <Pane fx:id="gettingStartedPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="175.0" style="-fx-background-color: white; -fx-border-color: #76c699; -fx-border-width: 2; -fx-border-radius: 5;" StackPane.alignment="CENTER">
+                                                               <children>
+                                                                  <AnchorPane fx:id="gettingStartedPane" prefHeight="256.0" prefWidth="173.0">
+                                                                     <children>
+                                                                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                           <children>
+                                                                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="173.0" styleClass="tab" text="Getting Started" VBox.vgrow="NEVER" />
+                                                                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="173.0" styleClass="tab" text="Welcome to INTLIN" wrapText="true" VBox.vgrow="NEVER" />
+                                                                              <Label alignment="TOP_CENTER" prefHeight="76.0" prefWidth="166.0" text="You can open a piece of material (video, audio or pdf) by using the file menu above or the load button to the right" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+                                                                                 <VBox.margin>
+                                                                                    <Insets left="5.0" right="2.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                              <Label alignment="TOP_CENTER" prefHeight="124.0" prefWidth="173.0" text="Create flashcard, automatically, of contents you studied,  for later reviews in the SRS tab" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+                                                                                 <VBox.margin>
+                                                                                    <Insets left="5.0" right="2.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
+                                                                           </children>
+                                                                           <padding>
+                                                                              <Insets top="10.0" />
+                                                                           </padding>
+                                                                        </VBox>
+                                                                     </children>
+                                                                  </AnchorPane>
+                                                               </children>
+                                                               <StackPane.margin>
+                                                                  <Insets left="32.0" right="450.0" />
+                                                               </StackPane.margin>
+                                                            </Pane>
                                                             <ImageView fx:id="loadMediaButton" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#openMedia" onMouseEntered="#removeShadow" onMouseExited="#createShadow" pickOnBounds="true" preserveRatio="true">
                                                                <image>
                                                                   <Image url="@../../../Icons/icons8-load-from-file-96.png" />
@@ -115,7 +146,34 @@
                                                                      <content>
                                                                         <AnchorPane prefHeight="252.0" prefWidth="597.0">
                                                                            <children>
-                                                                              <VBox fx:id="srsTableVBox" layoutY="-20.0" prefHeight="207.0" prefWidth="597.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                              <VBox fx:id="srsTableVBox" alignment="CENTER" layoutY="-20.0" prefHeight="207.0" prefWidth="597.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                 <children>
+                                                                                    <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="143.0" prefWidth="175.0" style="-fx-background-color: white; -fx-border-color: #76c699; -fx-border-width: 2; -fx-border-radius: 5;" VBox.vgrow="ALWAYS">
+                                                                                       <children>
+                                                                                          <AnchorPane fx:id="gettingStartedPane1" prefHeight="144.0" prefWidth="173.0">
+                                                                                             <children>
+                                                                                                <VBox fx:id="gettingStartedSRSPane" alignment="TOP_CENTER" prefHeight="144.0" prefWidth="173.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                   <children>
+                                                                                                      <Label alignment="CENTER" prefHeight="20.0" prefWidth="173.0" styleClass="tab" text="Getting Started" VBox.vgrow="NEVER" />
+                                                                                                      <Label alignment="CENTER" prefHeight="20.0" prefWidth="173.0" styleClass="tab" text="Welcome to INTLIN" wrapText="true" VBox.vgrow="NEVER" />
+                                                                                                      <Label alignment="TOP_CENTER" prefHeight="76.0" prefWidth="166.0" text="Select the language you wish to study by using file menu or the dictonary section below" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+                                                                                                         <VBox.margin>
+                                                                                                            <Insets left="5.0" right="2.0" />
+                                                                                                         </VBox.margin>
+                                                                                                      </Label>
+                                                                                                   </children>
+                                                                                                   <padding>
+                                                                                                      <Insets top="10.0" />
+                                                                                                   </padding>
+                                                                                                </VBox>
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                       </children>
+                                                                                       <VBox.margin>
+                                                                                          <Insets top="18.0" />
+                                                                                       </VBox.margin>
+                                                                                    </Pane>
+                                                                                 </children></VBox>
                                                                            </children>
                                                                         </AnchorPane>
                                                                      </content>
@@ -134,7 +192,7 @@
                               </AnchorPane>
                               <AnchorPane prefHeight="64.0" prefWidth="597.0">
                                  <children>
-                                    <HBox style="-fx-border-style: solid solid none solid;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <HBox prefWidth="589.0" style="-fx-border-style: solid solid none solid;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <AnchorPane styleClass="surface" stylesheets="@styles/mainStyle.css" HBox.hgrow="ALWAYS">
                                              <children>
@@ -208,7 +266,34 @@
                                                   <content>
                                                     <AnchorPane prefHeight="142.0" prefWidth="407.0" stylesheets="@styles/mainStyle.css">
                                                          <children>
-                                                            <VBox fx:id="definitionsPane" prefHeight="200.0" prefWidth="100.0" styleClass="color-60" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <VBox fx:id="definitionsPane" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="color-60" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                               <children>
+                                                                  <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="163.0" prefWidth="165.0" style="-fx-background-color: white; -fx-border-color: #76c699; -fx-border-width: 2; -fx-border-radius: 5;" VBox.vgrow="ALWAYS">
+                                                                     <children>
+                                                                        <AnchorPane fx:id="gettingStartedPane2" layoutX="1.0" prefHeight="166.0" prefWidth="172.0">
+                                                                           <children>
+                                                                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                 <children>
+                                                                                    <Label alignment="CENTER" prefHeight="20.0" prefWidth="173.0" styleClass="tab" text="Getting Started" VBox.vgrow="NEVER" />
+                                                                                    <Label alignment="CENTER" prefHeight="20.0" prefWidth="173.0" styleClass="tab" text="Welcome to INTLIN" wrapText="true" VBox.vgrow="NEVER" />
+                                                                                    <Label alignment="TOP_CENTER" prefHeight="108.0" prefWidth="165.0" text="Load a language to use the dictonary. Search words you don't know, add them to flashcards, review them periodically" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+                                                                                       <VBox.margin>
+                                                                                          <Insets left="5.0" right="2.0" />
+                                                                                       </VBox.margin>
+                                                                                    </Label>
+                                                                                 </children>
+                                                                                 <padding>
+                                                                                    <Insets top="10.0" />
+                                                                                 </padding>
+                                                                              </VBox>
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </children>
+                                                                     <VBox.margin>
+                                                                        <Insets bottom="16.0" top="16.0" />
+                                                                     </VBox.margin>
+                                                                  </Pane>
+                                                               </children></VBox>
                                                          </children></AnchorPane>
                                                   </content>
                                                 </ScrollPane>
