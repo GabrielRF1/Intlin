@@ -150,9 +150,16 @@ public class Card {
     @Override
     public boolean equals(Object o) {
         if (o instanceof Card) {
-            return Objects.equals(this.id, ((Card) o).id);
+            return Objects.equals(this.hashCode(), ((Card) o).hashCode());
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.id);
+        return hash;
     }
 }
