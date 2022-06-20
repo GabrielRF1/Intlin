@@ -151,9 +151,8 @@ public class Card {
     public boolean equals(Object o) {
         if (o instanceof Card) {
             return Objects.equals(this.hashCode(), ((Card) o).hashCode());
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override
