@@ -56,6 +56,7 @@ public class ReviewScreenController implements Initializable {
     private Button hardB;
 
     ArrayList<Card> reviewCards;
+    HashSet<Card> reviewedCards;
     Card cur;
     int curIndex;
 
@@ -71,6 +72,7 @@ public class ReviewScreenController implements Initializable {
 
     public void setCards(Set<Card> cards, String deck) throws IOException {
         reviewCards = new ArrayList<>(cards);
+        reviewedCards = new HashSet<>();
         deckName = deck;
         if (reviewCards.isEmpty()) {
             buildEndCard();
@@ -95,7 +97,8 @@ public class ReviewScreenController implements Initializable {
     }
 
     public void saveCards() {
-        (new HashSet<>(reviewCards)).forEach((card) -> {
+        reviewedCards.forEach((card) -> {
+            System.out.println("ine.ufsc.intlin.ReviewScreenController.saveCards()");
             try {
                 Controller.instance.updateCards(card);
                 Controller.instance.setAsReviewed(deckName, card);
@@ -168,6 +171,7 @@ public class ReviewScreenController implements Initializable {
         if (day.equals(LocalDate.now())) {
             reviewCards.add(cur);
         }
+        reviewedCards.add(cur);
         cardBackScrollRegion.setVisible(true);
         hardB.setVisible(false);
         failB.setVisible(false);

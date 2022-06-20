@@ -11,6 +11,7 @@ import ine.ufsc.srs.reviewStrategy.FailReviewStrategy;
 import ine.ufsc.srs.reviewStrategy.GoodReviewStrategy;
 import ine.ufsc.srs.reviewStrategy.HardReviewStrategy;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  *
@@ -118,12 +119,12 @@ public class Card {
         ease = reviewCalculator.updateEase();
         level = reviewCalculator.updateProficiency();
         nextReview = reviewCalculator.calcNextReview();
-        
+
         return nextReview;
     }
-    
+
     private CalcReviewStrategy selectStrategy(Difficulty answer) {
-        switch(answer) {
+        switch (answer) {
             case easy:
                 return new EasyReviewStrategy(level, ease);
             case good:
@@ -136,7 +137,7 @@ public class Card {
                 return new FailReviewStrategy(level, ease);
         }
     }
-    
+
     // used in tests
     protected void setLevel(CardProficiency level) {
         this.level = level;
@@ -146,4 +147,12 @@ public class Card {
         this.ease = ease;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Card) {
+            return Objects.equals(this.id, ((Card) o).id);
+        } else {
+            return false;
+        }
+    }
 }
