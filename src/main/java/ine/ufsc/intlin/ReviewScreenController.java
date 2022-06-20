@@ -98,7 +98,6 @@ public class ReviewScreenController implements Initializable {
 
     public void saveCards() {
         reviewedCards.forEach((card) -> {
-            System.out.println("ine.ufsc.intlin.ReviewScreenController.saveCards()");
             try {
                 Controller.instance.updateCards(card);
                 Controller.instance.setAsReviewed(deckName, card);
