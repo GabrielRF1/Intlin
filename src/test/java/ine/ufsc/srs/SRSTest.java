@@ -100,6 +100,7 @@ public class SRSTest {
             back.addText("butter");
             Card card = new Card(front, back);
             SRS instance = testIntance;
+            instance.createDeck("Grammar");
             boolean expResult = true;
             boolean result = instance.addToDeck(deckName, card);
 
@@ -141,7 +142,7 @@ public class SRSTest {
         try {
             System.out.println("getTodaysReview");
             SRS instance = testIntance;
-
+            instance.createDeck("Grammar");
             HashSet<Card> result = instance.getTodaysReviewByDeck("Grammar");
             HashSet<Integer> ids = new HashSet<>();
 
@@ -182,6 +183,7 @@ public class SRSTest {
         try {
             System.out.println("updateCard");
             SRS instance = testIntance;
+            instance.createDeck("Grammar");
             Card card = new Card(new CardContent(), new CardContent());
             instance.addToDeck("Grammar", card);
             card.calcNextReview(Card.Difficulty.easy);
