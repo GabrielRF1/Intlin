@@ -40,11 +40,6 @@
                               <MenuItem fx:id="loadMediaMenuButton" mnemonicParsing="false" onAction="#openMedia" text="Open content" />
                         </items>
                       </Menu>
-                      <Menu fx:id="help" mnemonicParsing="false" text="About">
-                        <items>
-                          <MenuItem fx:id="copyrights" mnemonicParsing="false" text="About" />
-                        </items>
-                      </Menu>
                     </menus>
                   </MenuBar>
                   <AnchorPane prefHeight="397.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
@@ -74,7 +69,7 @@
                                                                                     <Insets left="5.0" right="2.0" />
                                                                                  </VBox.margin>
                                                                               </Label>
-                                                                              <Label alignment="TOP_CENTER" prefHeight="124.0" prefWidth="173.0" text="Create flashcard, automatically, of contents you studied,  for later reviews in the SRS tab" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+                                                                              <Label alignment="TOP_CENTER" prefHeight="124.0" prefWidth="173.0" text="Automatically create flashcard of the contents you studied, so you can later review them in the SRS tab" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
                                                                                  <VBox.margin>
                                                                                     <Insets left="5.0" right="2.0" />
                                                                                  </VBox.margin>
@@ -266,7 +261,7 @@
                                                   <content>
                                                     <AnchorPane prefHeight="142.0" prefWidth="407.0" stylesheets="@styles/mainStyle.css">
                                                          <children>
-                                                            <VBox fx:id="definitionsPane" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="color-60" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <VBox fx:id="definitionsPane" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="color-60" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                <children>
                                                                   <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="163.0" prefWidth="165.0" style="-fx-background-color: white; -fx-border-color: #76c699; -fx-border-width: 2; -fx-border-radius: 5;" VBox.vgrow="ALWAYS">
                                                                      <children>
@@ -293,7 +288,10 @@
                                                                         <Insets bottom="16.0" top="16.0" />
                                                                      </VBox.margin>
                                                                   </Pane>
-                                                               </children></VBox>
+                                                               </children>
+                                                               <padding>
+                                                                  <Insets top="6.0" />
+                                                               </padding></VBox>
                                                          </children></AnchorPane>
                                                   </content>
                                                 </ScrollPane>
