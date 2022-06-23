@@ -1,23 +1,12 @@
 package ine.ufsc.intlin;
 
 import ine.ufsc.controller.ConfigController;
-import ine.ufsc.controller.Controller;
-import ine.ufsc.intlin.utils.ModalDialog;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.control.Alert;
 
 /**
  * JavaFX App

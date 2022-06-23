@@ -131,8 +131,6 @@ public class Card {
                 return new GoodReviewStrategy(level, ease);
             case hard:
                 return new HardReviewStrategy(level, ease);
-            case fail:
-                return new FailReviewStrategy(level, ease);
             default:
                 return new FailReviewStrategy(level, ease);
         }

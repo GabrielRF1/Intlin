@@ -63,54 +63,6 @@ public class IntlinDictionary extends Dictionary {
         return stm.executeQuery();
     }
 
-    public ResultSet searchExtras(String definition) throws SQLException {
-        PreparedStatement stm = con
-                .prepareStatement("SELECT e.extra_id, e.extra "
-                        + "FROM Definition d INNER JOIN "
-                        + "Extra e on d.def_id = e.def_id "
-                        + "where d.def = ?");
-        stm.setString(1, definition);
-        return stm.executeQuery();
-    }
-
-    public ResultSet searchAntonyms(String definition) throws SQLException {
-        PreparedStatement stm = con
-                .prepareStatement("SELECT a.ant_id, a.ant "
-                        + "FROM Definition d INNER JOIN "
-                        + "Antonym a on d.def_id = a.def_id "
-                        + "WHERE d.def = ?");
-        stm.setString(1, definition);
-        return stm.executeQuery();
-    }
-
-    public ResultSet searchSynonyms(String definition) throws SQLException {
-        PreparedStatement stm = con
-                .prepareStatement("SELECT s.syn_id, s.syn "
-                        + "FROM Definition d INNER JOIN "
-                        + "Synonym s on d.def_id = s.def_id "
-                        + "where d.def = ?");
-        stm.setString(1, definition);
-        return stm.executeQuery();
-    }
-
-    public boolean addSynonym(int defId, String syn) throws SQLException {
-        ArrayList<String> values = new ArrayList<>();
-        values.add(syn);
-        return insertSynAntExt("Synonym", values, defId);
-    }
-
-    public boolean addAntonym(int defId, String ant) throws SQLException {
-        ArrayList<String> values = new ArrayList<>();
-        values.add(ant);
-        return insertSynAntExt("Antonym", values, defId);
-    }
-
-    public boolean addExtra(int defId, String extra) throws SQLException {
-        ArrayList<String> values = new ArrayList<>();
-        values.add(extra);
-        return insertSynAntExt("Extra", values, defId);
-    }
-
     @Override
     public boolean addDefinition(Object contents) throws SQLException {
         boolean success = true;
@@ -186,24 +138,6 @@ public class IntlinDictionary extends Dictionary {
         return success;
     }
 
-    public boolean removeSynonym(int SynId) throws SQLException {
-        PreparedStatement stm = con.prepareStatement("DELETE FROM Synonym WHERE syn_id=?");
-        stm.setInt(1, SynId);
-        return (stm.executeUpdate() != 0);
-    }
-
-    public boolean removeAntonym(int antId) throws SQLException {
-        PreparedStatement stm = con.prepareStatement("DELETE FROM Antonym WHERE ant_id=?");
-        stm.setInt(1, antId);
-        return (stm.executeUpdate() != 0);
-    }
-
-    public boolean removeExtra(int extraId) throws SQLException {
-        PreparedStatement stm = con.prepareStatement("DELETE FROM Extra WHERE extra_id=?");
-        stm.setInt(1, extraId);
-        return (stm.executeUpdate() != 0);
-    }
-
     @Override
     public boolean removeWord(int wordId) throws SQLException {
         boolean success = true;
@@ -248,6 +182,85 @@ public class IntlinDictionary extends Dictionary {
         return res != 0;
     }
 
+    @Override
+    protected boolean addWord(Object contents) throws SQLException {
+        IntlinInfo info = (IntlinInfo) contents;
+        PreparedStatement stmInsertWord = con
+                .prepareStatement("INSERT INTO Word(word, word_class, gender) "
+                        + "VALUES(?, ?, ?)");
+        stmInsertWord.setString(1, info.word);
+        stmInsertWord.setString(2, info.wordClass);
+        stmInsertWord.setString(3, info.gender);
+
+        return (stmInsertWord.executeUpdate() != 0);
+    }
+
+    public ResultSet searchExtras(String definition) throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT e.extra_id, e.extra "
+                        + "FROM Definition d INNER JOIN "
+                        + "Extra e on d.def_id = e.def_id "
+                        + "where d.def = ?");
+        stm.setString(1, definition);
+        return stm.executeQuery();
+    }
+
+    public ResultSet searchAntonyms(String definition) throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT a.ant_id, a.ant "
+                        + "FROM Definition d INNER JOIN "
+                        + "Antonym a on d.def_id = a.def_id "
+                        + "WHERE d.def = ?");
+        stm.setString(1, definition);
+        return stm.executeQuery();
+    }
+
+    public ResultSet searchSynonyms(String definition) throws SQLException {
+        PreparedStatement stm = con
+                .prepareStatement("SELECT s.syn_id, s.syn "
+                        + "FROM Definition d INNER JOIN "
+                        + "Synonym s on d.def_id = s.def_id "
+                        + "where d.def = ?");
+        stm.setString(1, definition);
+        return stm.executeQuery();
+    }
+
+    public boolean addSynonym(int defId, String syn) throws SQLException {
+        ArrayList<String> values = new ArrayList<>();
+        values.add(syn);
+        return insertSynAntExt("Synonym", values, defId);
+    }
+
+    public boolean addAntonym(int defId, String ant) throws SQLException {
+        ArrayList<String> values = new ArrayList<>();
+        values.add(ant);
+        return insertSynAntExt("Antonym", values, defId);
+    }
+
+    public boolean addExtra(int defId, String extra) throws SQLException {
+        ArrayList<String> values = new ArrayList<>();
+        values.add(extra);
+        return insertSynAntExt("Extra", values, defId);
+    }
+
+    public boolean removeSynonym(int SynId) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("DELETE FROM Synonym WHERE syn_id=?");
+        stm.setInt(1, SynId);
+        return (stm.executeUpdate() != 0);
+    }
+
+    public boolean removeAntonym(int antId) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("DELETE FROM Antonym WHERE ant_id=?");
+        stm.setInt(1, antId);
+        return (stm.executeUpdate() != 0);
+    }
+
+    public boolean removeExtra(int extraId) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("DELETE FROM Extra WHERE extra_id=?");
+        stm.setInt(1, extraId);
+        return (stm.executeUpdate() != 0);
+    }
+
     public boolean updateGender(int wordId, String newGender) throws SQLException {
         PreparedStatement stm = con.prepareStatement(String.format("UPDATE Word SET gender = \'%s\' WHERE word_id=?", newGender));
         stm.setInt(1, wordId);
@@ -281,19 +294,6 @@ public class IntlinDictionary extends Dictionary {
         stm.setInt(1, extraId);
         int res = stm.executeUpdate();
         return res != 0;
-    }
-
-    @Override
-    protected boolean addWord(Object contents) throws SQLException {
-        IntlinInfo info = (IntlinInfo) contents;
-        PreparedStatement stmInsertWord = con
-                .prepareStatement("INSERT INTO Word(word, word_class, gender) "
-                        + "VALUES(?, ?, ?)");
-        stmInsertWord.setString(1, info.word);
-        stmInsertWord.setString(2, info.wordClass);
-        stmInsertWord.setString(3, info.gender);
-
-        return (stmInsertWord.executeUpdate() != 0);
     }
 
     private void build() throws IOException, SQLException {

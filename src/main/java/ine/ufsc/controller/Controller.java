@@ -41,7 +41,7 @@ public class Controller implements Observable {
 
     public static Controller instance = new Controller();
 
-    private List<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
 
     @Override
     public void attach(Observer o) {
@@ -55,9 +55,9 @@ public class Controller implements Observable {
 
     @Override
     public void notifyUpdate(Message message) {
-        for (Observer observer : observers) {
+        observers.forEach(observer -> {
             observer.update(message);
-        }
+        });
     }
 
     public static enum SupportedLanguage {
@@ -184,6 +184,9 @@ public class Controller implements Observable {
             }
         }
         selectedLanguage = languageToLoad;
+        if (loadedSRS != null) {
+            loadedSRS.closeConnection();
+        }
         loadedSRS = new SRS(supportedLanguageToString(languageToLoad));
 
         Message.MessageType[] types = {Message.MessageType.UPDATE_SRS, Message.MessageType.SRS_HAS_BEEN_LOADED};

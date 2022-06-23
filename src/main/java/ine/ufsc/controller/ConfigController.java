@@ -29,10 +29,10 @@ public class ConfigController implements Observer {
 
     private ConfigController() {
         properties = new Properties();
-        Controller.instance.attach(this);
     }
 
     public void bootUpConfigurations() throws IOException {
+        Controller.instance.attach(this);
         properties.loadFromXML(new FileInputStream("config/config.xml"));
         String lastOpened = properties.getProperty("LastOpened");
         if (lastOpened == null) {
