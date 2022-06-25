@@ -37,6 +37,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -336,6 +338,12 @@ public class MainController implements Initializable, Observer {
 
     }
 
+    public void handleOnKeyPressed(KeyEvent event) throws IOException {
+        if(event.getCode().equals(KeyCode.ENTER)) {
+            searchWord();
+        }
+    }
+    
     private void buildDictResultSection(ArrayList<IntlinDictionary.IntlinInfo> entries) throws IOException {
         ArrayList<Node> definitionsNodes = new ArrayList<>();
         int last = -1;

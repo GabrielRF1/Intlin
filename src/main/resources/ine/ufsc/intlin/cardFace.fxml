@@ -3,4 +3,4 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox fx:id="mainFace" prefHeight="208.0" prefWidth="302.0" spacing="40.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.CardFaceController" />
+<VBox fx:id="mainFace" prefHeight="208.0" prefWidth="302.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ine.ufsc.intlin.CardFaceController" />

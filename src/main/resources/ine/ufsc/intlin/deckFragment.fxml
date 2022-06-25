@@ -46,7 +46,7 @@
             </AnchorPane>
             <AnchorPane HBox.hgrow="ALWAYS">
                <children>
-                  <Label fx:id="reviewCount" alignment="CENTER" prefHeight="57.0" prefWidth="96.0" text="reviewCount" textFill="#76c699" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="reviewCount" alignment="CENTER" prefHeight="57.0" prefWidth="96.0" text="reviewCount" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="13.0" />
                      </font>

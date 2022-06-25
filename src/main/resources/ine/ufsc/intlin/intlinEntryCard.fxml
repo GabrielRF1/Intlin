@@ -72,6 +72,9 @@
                                  </cursor>
                               </ImageView>
                            </children>
+                           <HBox.margin>
+                              <Insets bottom="8.0" />
+                           </HBox.margin>
                         </AnchorPane>
                      </children>
                   </HBox>

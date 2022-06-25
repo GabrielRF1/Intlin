@@ -43,6 +43,9 @@ public class DeckFragmentController implements Initializable {
     public void setData(String name, int count) {
         deckName.setText(name);
         reviewCount.setText(String.valueOf(count));
+        if (count > 0) {
+            reviewCount.setStyle("-fx-text-fill: #76c699;");
+        }
     }
 
     public void openReviewsWindow() throws IOException {

@@ -221,7 +221,7 @@
                                                          <children>
                                                             <HBox alignment="TOP_CENTER" layoutX="0.6666666865348816" prefHeight="81.0" prefWidth="163.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.6666666865348816" AnchorPane.rightAnchor="0.6666666467984328" AnchorPane.topAnchor="0.0">
                                                                <children>
-                                                                  <TextField fx:id="searchTextBox" disable="true" prefHeight="31.0" prefWidth="129.0" style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
+                                                                  <TextField fx:id="searchTextBox" disable="true" onKeyPressed="#handleOnKeyPressed" prefHeight="31.0" prefWidth="129.0" style="-fx-focus-color: #45ad72;" HBox.hgrow="ALWAYS">
                                                                      <HBox.margin>
                                                                         <Insets right="4.0" />
                                                                      </HBox.margin>
