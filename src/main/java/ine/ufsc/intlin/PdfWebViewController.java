@@ -115,7 +115,7 @@ public class PdfWebViewController implements Initializable {
 
     public void loadAudio() {
         FileChooser filechooser = new FileChooser();
-        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("select your media", "*.mp3");
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("select your media", "*.mp3", "*.aif", "*.aiff", "*.wav");
         filechooser.getExtensionFilters().add(filter);
         File file = filechooser.showOpenDialog(null);
         if (file == null) {

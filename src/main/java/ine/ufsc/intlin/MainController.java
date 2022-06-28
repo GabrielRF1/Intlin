@@ -75,7 +75,7 @@ public class MainController implements Initializable, Observer {
     private MenuItem loadMediaMenuButton;
     @FXML
     private Pane gettingStartedPane;
-    @FXML 
+    @FXML
     private Pane gettingStartedSRSPane;
 
     private Set<Controller.SupportedLanguage> languages;
@@ -108,7 +108,10 @@ public class MainController implements Initializable, Observer {
 
     public void openMedia() throws IOException {
         FileChooser filechooser = new FileChooser();
-        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("select your media", "*.mp4", "*.mp3", "*.pdf");
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("select your media",
+                "*.mp4", "*.m4a", "*.m4v", "*.fxm", "*.flv", // video
+                "*.mp3", "*.aif", "*.aiff", "*.wav", // audio
+                "*.pdf");
         filechooser.getExtensionFilters().add(filter);
 
         File file = filechooser.showOpenDialog(null);
@@ -309,7 +312,7 @@ public class MainController implements Initializable, Observer {
         if (Controller.instance.getSelectedLanguage() == null) {
             return;
         }
-        
+
         if (!definitionsPane.getChildren().isEmpty()) {
             definitionsPane.getChildren().removeIf((t) -> {
                 return true; //delete all
@@ -339,11 +342,11 @@ public class MainController implements Initializable, Observer {
     }
 
     public void handleOnKeyPressed(KeyEvent event) throws IOException {
-        if(event.getCode().equals(KeyCode.ENTER)) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
             searchWord();
         }
     }
-    
+
     private void buildDictResultSection(ArrayList<IntlinDictionary.IntlinInfo> entries) throws IOException {
         ArrayList<Node> definitionsNodes = new ArrayList<>();
         int last = -1;
