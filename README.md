@@ -7,3 +7,6 @@ We got the data from mdbg ;)
 
 ## For the icons used in the system
 - Icons8:  https://icons8.com/license
+
+## Running
+    mvn clean javafx:run
